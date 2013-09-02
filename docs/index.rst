@@ -1,11 +1,11 @@
-==========================
+===================================================
 ska
-==========================
+===================================================
 Symmetric-key algorithm encryption. Lets you easily generate signatures for signing (HTTP) requests.
 Allows you to validate signed requests and identify possible validation errors.
 
 Key concepts
-==========================
+===================================================
 Host and server share the Secret Key, which is used to sign requests. Secret key is never sent around.
 
 Each HTTP request is signed on the client side using the shared Secret Key and as an outcome produces
@@ -19,14 +19,112 @@ On the server side, HTTP request is validated using the shared Secret Key. It's 
 whether signature is valid and not expired.
 
 Installation
-==========================
+===================================================
 
     $ pip install ska
 
 Usage examples
-==========================
+===================================================
+Basic usage
+---------------------------------------------------
+
 Client side
---------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Signing URLs is as simple as follows.
+
+Required imports.
+
+>>> from ska import sign_url
+
+Producing a signed URL.
+
+>>> signed_url = sign_url(
+>>>     auth_user='user', secret_key='your-secret_key', url='http://e.com/api/'
+>>> )
+http://e.com/api/?valid_until=1378045287.0&auth_user=user&signature=YlZpLFsjUKBalL4x5trhkeEgqE8%3D
+
+Default lifetime of a signature is 10 minutes (600 seconds). If you want it to be different, provide a
+``lifetime`` argument to ``sign_url`` function.
+
+Default name of the GET param holding the generated signature value is `signature`. If you want it
+to be different, provide a ``signature_param`` argument to ``sign_url`` function.
+
+Default name of the GET param holding the ``auth_user`` value is `auth_user`. If you want it
+to be different, provide a ``auth_user_param`` argument to ``sign_url`` function.
+
+Default name of the GET param holding the ``valid_until`` value is `valid_until`. If you want it
+to be different, provide a ``valid_until_param`` argument to ``sign_url`` function.
+
+With all customisations, it would look as follows.
+
+>>> signed_url = sign_url(
+>>>     auth_user='user', secret_key='your-secret_key', lifetime=120,
+>>>     url='http://e.com/api/', signature_param='signature',
+>>>     auth_user_param='auth_user', valid_until_param='valid_until'
+>>> )
+
+You may now proceed with the signed URL request. If you use the famous ``requests`` library, it would
+be as follows.
+
+>>> import requests
+>>> requests.get(signed_url)
+
+If you for some reason prefer a lower level implementation, read the same section in the
+`Advanced usage` chapter.
+
+Server side
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Validating the signed request data is as simple as follows
+
+Required imports.
+
+>>> from ska import validate_signed_request_data
+
+Validating the signed request data. Note, that ``request.GET`` is given as an example.
+It will most likely vary from what's used in your framework (unless you use Django).
+
+>>> validation_result = validate_signed_request_data(
+>>>     data = request.GET, # Note, that ``request.GET`` is given as example.
+>>>     secret_key = 'your-secret_key'
+>>> )
+
+The ``validate_signed_request_data`` produces a ``ska.SignatureValidationResult`` object,
+which holds the following data:
+
+- `result` (bool): True if data is valid. False otherwise.
+- `reason` (list): List of strings, indicating validation errors. Empty list in case if ``result``
+  is True.
+
+Default name of the GET param holding the signature value is `signature`. If you want it
+to be different, provide a ``signature_param`` argument to ``validate_signed_request_data``
+function.
+
+Default name of the GET param holding the ``auth_user`` value is `auth_user`. If you want it
+to be different, provide a ``auth_user_param`` argument to ``validate_signed_request_data``
+function.
+
+Default name of the GET param holding the ``valid_until`` value is `valid_until`. If you want it
+to be different, provide a ``valid_until_param`` argument to ``validate_signed_request_data``
+function.
+
+With all customisations, it would look as follows.
+
+>>> validation_result = validate_signed_request_data(
+>>>     data = request.GET,
+>>>     secret_key = 'your-secret_key',
+>>>     signature_param='signature',
+>>>     auth_user_param='auth_user', \
+>>>     valid_until_param='valid_until'
+>>> )
+
+If you for some reason prefer a lower level implementation, read the same section in the
+`Advanced usage` chapter.
+
+Advanced usage (low-level)
+---------------------------------------------------
+Client side
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 Required imports.
 
 >>> from ska import Signature, RequestHelper
@@ -38,8 +136,18 @@ Generate a signature.
 >>>     secret_key = 'your-secret-key'
 >>>     )
 
-Create a request helper. Your endpoint operates with certain param names. In order to have the job done
-in an easy way, we feed those params to the request helper and let it make a signed endpoint URL for us.
+Default lifetime of a signature is 10 minutes (600 seconds). If you want it to be different, provide a
+``lifetime`` argument to ``generate_signature`` method.
+
+>>> signature = Signature.generate_signature(
+>>>     auth_user = 'user',
+>>>     secret_key = 'your-secret-key',
+>>>     lifetime = 120 # Signatre lifetime set to 120 seconds.
+>>>     )
+
+Your endpoint operates with certain param names and you need to wrap generated signature params into
+the URL. In order to have the job done in an easy way, create a request helper. Feed names of the
+GET params to the request helper and let it make a signed endpoint URL for you.
 
 >>> request_helper = RequestHelper(
 >>>     signature_param = 'signature',
@@ -49,7 +157,7 @@ in an easy way, we feed those params to the request helper and let it make a sig
 
 Append signature params to the endpoint URL.
 
->>> url = request_helper.signature_to_url(
+>>> signed_url = request_helper.signature_to_url(
 >>>     signature = signature,
 >>>     endpoint_url = 'http://e.com/api/'
 >>> )
@@ -58,10 +166,10 @@ http://e.com/api/?valid_until=1378045287.0&auth_user=user&signature=YlZpLFsjUKBa
 Make a request.
 
 >>> import requests
->>> r = requests.get(url)
+>>> r = requests.get(signed_url)
 
 Server side
---------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Required imports.
 
 >>> from ska import RequestHelper
@@ -92,20 +200,30 @@ Your implementation further depends on you, but may look as follows.
 >>>     # Validation not passed.
 >>>     raise Http404(validation_result.reason)
 
+You can also just validate the signature by calling ``validate_signature`` method of
+the ``ska.Signature``.
+
+>>> Signature.validate_signature(
+>>>     signature = 'EBS6ipiqRLa6TY5vxIvZU30FpnM=',
+>>>     auth_user = 'user',
+>>>     secret_key = 'your-secret-key',
+>>>     valid_until = '1377997396.0'
+>>>     )
+
 License
-==================================
+===================================================
 GPL 2.0/LGPL 2.1
 
 Support
-==================================
+===================================================
 For any issues contact me at the e-mail given in the `Author` section.
 
 Author
-==================================
+===================================================
 Artur Barseghyan <artur.barseghyan@gmail.com>
 
 Indices and tables
-==================
+===================================================
 
 * :ref:`genindex`
 * :ref:`modindex`

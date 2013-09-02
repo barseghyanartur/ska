@@ -1,8 +1,8 @@
 __title__ = 'ska'
-__version__ = '0.1'
-__build__ = 0x000001
+__version__ = '0.2'
+__build__ = 0x000002
 __author__ = 'Artur Barseghyan'
-__all__ = ('Signature', 'RequestHelper')
+__all__ = ('Signature', 'RequestHelper', 'sign_url')
 
 import urllib
 import datetime
@@ -11,8 +11,8 @@ import hmac
 from base64 import b64decode, b64encode
 from hashlib import sha1
 
-TIMESTAMP_FORMAT = "%Y-%m-%dT%H:%M:%S"
-SIGNATURE_LIFETIME = 600 # In seconds
+from ska.defaults import SIGNATURE_LIFETIME, TIMESTAMP_FORMAT
+from ska.defaults import DEFAULT_SIGNATURE_PARAM, DEFAULT_AUTH_USER_PARAM, DEFAULT_VALID_UNTIL_PARAM
 
 _ = lambda x: x # For future integrations with gettext
 
@@ -336,3 +336,88 @@ class RequestHelper(object):
             )
 
         return validation_result
+
+def sign_url(auth_user, secret_key, valid_until=None, lifetime=SIGNATURE_LIFETIME, url='', \
+             signature_param='signature', auth_user_param='auth_user', \
+             valid_until_param='valid_until'):
+    """
+    Signs the URL.
+
+    :param str auth_user: Username of the user making the request.
+    :param str secret_key: The shared secret key.
+    :param float|str valid_until: Unix timestamp. If not given, generated automatically (now + lifetime).
+    :param int lifetime: Signature lifetime in seconds.
+    :param str url: URL to be signed.
+    :param str signature_param: Name of the GET param name which would hold the generated signature value.
+    :param str auth_user_param: Name of the GET param name which would hold the ``auth_user`` value.
+    :param str valid_until_param: Name of the GET param name which would hold the ``valid_until`` value.
+    :return str:
+
+    :example:
+    Required imports.
+
+    >>> from ska import sign_url
+
+    Producing a signed URL.
+
+    >>> signed_url = sign_url(
+    >>>     auth_user='user', secret_key='your-secret_key', lifetime=120, \
+    >>>     url='http://e.com/api/', signature_param=DEFAULT_SIGNATURE_PARAM,
+    >>>     auth_user_param=DEFAULT_AUTH_USER_PARAM, valid_until_param=DEFAULT_VALID_UNTIL_PARAM
+    >>> )
+    http://e.com/api/?valid_until=1378045287.0&auth_user=user&signature=YlZpLFsjUKBalL4x5trhkeEgqE8%3D
+    """
+    if lifetime is None:
+        lifetime=SIGNATURE_LIFETIME
+
+    assert isinstance(lifetime, int)
+
+    signature = Signature.generate_signature(
+        auth_user = auth_user,
+        secret_key = secret_key,
+        valid_until = valid_until,
+        lifetime = lifetime
+        )
+
+    request_helper = RequestHelper(
+        signature_param = signature_param,
+        auth_user_param = auth_user_param,
+        valid_until_param = valid_until_param
+    )
+
+    signed_url = request_helper.signature_to_url(
+        signature = signature,
+        endpoint_url = url
+    )
+
+    return signed_url
+
+def validate_signed_request_data(data, secret_key, signature_param=DEFAULT_SIGNATURE_PARAM, \
+                                 auth_user_param=DEFAULT_AUTH_USER_PARAM, \
+                                 valid_until_param=DEFAULT_VALID_UNTIL_PARAM):
+    """
+    Validates the signed request data.
+
+    :param dict data: Dictionary holding the HTTP request GET data.
+    :param str secret_key: The shared secret key.
+    :param str signature_param: Name of the GET param name which holds the signature value.
+    :param str auth_user_param: Name of the GET param name which holds the ``auth_user`` value.
+    :param str valid_until_param: Name of the GET param name which holds the ``valid_until`` value.
+    :return ska.SignatureValidationResult: A ``ska.SignatureValidationResult`` object with the
+        following properties:
+            - `result` (bool): True if data is valid. False otherwise.
+            - `reason` (list): List of strings, indicating validation errors. Empty list in case
+              if `result` is True.
+    """
+    request_helper = RequestHelper(
+        signature_param = signature_param,
+        auth_user_param = auth_user_param,
+        valid_until_param = valid_until_param
+    )
+
+    validation_result = request_helper.validate_request_data(
+        data = data,
+        secret_key = secret_key
+    )
+
+    return validation_result

@@ -6,12 +6,12 @@ try:
 except:
   readme = ''
 
-version = '0.1'
+version = '0.2'
 
 setup(
     name = 'ska',
     version = version,
-    description = ("Signing requests using symmetric-key algorithm."),
+    description = ("Signing (HTTP) requests using symmetric-key algorithm."),
     long_description = readme,
     classifiers = [
         "Programming Language :: Python",
@@ -19,7 +19,7 @@ setup(
         'Intended Audience :: Developers',
         'Operating System :: OS Independent',
     ],
-    keywords = 'signing http requests, symmetric-key algorithm, python',
+    keywords = 'signing (HTTP) requests, symmetric-key algorithm, signing URLs, python',
     author = 'Artur Barseghyan',
     author_email = 'artur.barseghyan@gmail.com',
     package_dir = {'':'src'},

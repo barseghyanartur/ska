@@ -1,6 +1,6 @@
 __title__ = 'ska.tests'
-__version__ = '0.1'
-__build__ = 0x000001
+__version__ = '0.2'
+__build__ = 0x000002
 __author__ = 'Artur Barseghyan'
 
 import unittest
@@ -8,7 +8,7 @@ import datetime
 import time
 from urlparse import urlparse, parse_qs
 
-from ska import Signature, RequestHelper, TIMESTAMP_FORMAT
+from ska import Signature, RequestHelper, TIMESTAMP_FORMAT, sign_url, validate_signed_request_data
 
 PRINT_INFO = True
 TRACK_TIME = False
@@ -32,7 +32,8 @@ def print_info(func):
 
         print '\n\n%s' % func.__name__
         print '============================'
-        print '""" %s """' % func.__doc__.strip()
+        if func.__doc__:
+            print '""" %s """' % func.__doc__.strip()
         print '----------------------------'
         if result is not None: print result
         if TRACK_TIME:
@@ -310,6 +311,84 @@ class URLHelperTest(unittest.TestCase):
         self.assertTrue(not validation_result.result)
 
         return workflow
+
+class ShortcutsTest(unittest.TestCase):
+    """
+    Tests for ``sign_url`` and ``validate_signed_request_data`` shortcut functions.
+    """
+    def setUp(self):
+        self.auth_user = 'user'
+        self.secret_key = 'secret'
+        self.endpoint_url = 'http://e.com/api/'
+
+    @print_info
+    def test_01_sign_url_and_validate_signed_request_data(self):
+        """
+        Tests for ``sign_url`` and ``validate_signed_request_data`` shortcut functions.
+        """
+        workflow = []
+
+        signed_url = sign_url(
+            auth_user = self.auth_user,
+            secret_key = self.secret_key,
+            url = self.endpoint_url
+        )
+
+        workflow.append(('URL generated', signed_url))
+
+        # Now parsing back the URL params and test the 
+        request_data = parse_url_params(signed_url)
+
+        validation_result = validate_signed_request_data(
+            data = request_data,
+            secret_key = self.secret_key
+            )
+
+        workflow.append(('Signature is valid', validation_result.result))
+        workflow.append(('Reason not valid', validation_result.reason))
+
+        self.assertTrue(validation_result.result)
+
+        return workflow
+
+    @print_info
+    def test_02_sign_url_and_validate_signed_request_data_fail(self):
+        """
+        Fail tests for ``sign_url`` and ``validate_signed_request_data`` shortcut functions.
+        """
+        workflow = []
+
+        datetime_timelap = Signature.datetime_to_unix_timestamp(
+            datetime.datetime.now() - datetime.timedelta(seconds=300)
+            )
+
+        workflow.append(('Valid until used', datetime_timelap))
+        workflow.append(('Valid until used (human readable)', timestap_to_human_readable(datetime_timelap)))
+
+        signed_url = sign_url(
+            auth_user = self.auth_user,
+            secret_key = self.secret_key,
+            url = self.endpoint_url,
+            valid_until = datetime_timelap
+        )
+
+        workflow.append(('URL generated', signed_url))
+
+        # Now parsing back the URL params and test the
+        request_data = parse_url_params(signed_url)
+
+        validation_result = validate_signed_request_data(
+            data = request_data,
+            secret_key = self.secret_key
+            )
+
+        workflow.append(('Signature is valid', validation_result.result))
+        workflow.append(('Reason not valid', validation_result.reason))
+
+        self.assertTrue(not validation_result.result)
+
+        return workflow
+
 
 if __name__ == "__main__":
     # Tests
