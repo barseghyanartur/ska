@@ -1,0 +1,10 @@
+*.py[cod]
+.hgignore~
+.gitignore~
+.hg/
+
+builddocs/
+builddocs.zip
+build/
+dist/
+src/ska.egg-info

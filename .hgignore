@@ -1,0 +1,10 @@
+syntax: regexp
+\.pyc$
+\.hgignore~
+\.git
+
+^builddocs/
+builddocs.zip
+^build/
+^dist/
+^src/ska.egg-info
