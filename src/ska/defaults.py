@@ -1,15 +1,18 @@
 """
 Application defaults.
 
-- `SIGNATURE_LIFETIME` (int): Signature lifetime in seconds.
+- `SIGNATURE_LIFETIME` (int): Signature lifetime in seconds. Default value is 600 (seconds).
 - `DEFAULT_SIGNATURE_PARAM` (str): Default name of the GET param holding the generated signature value.
+  Default value is `signature`.
 - `DEFAULT_AUTH_USER_PARAM` (str): Default name of the GET param holding the ``auth_user`` value.
+  Default value is `auth_user`.
 - `DEFAULT_VALID_UNTIL_PARAM` (str): Default name of the GET param holding the ``valid_until`` value.
+  Default value is `valid_until`.
 """
 
-__title__ = 'ska'
-__version__ = '0.2'
-__build__ = 0x000002
+__title__ = 'ska.defaults'
+__version__ = '0.3'
+__build__ = 0x000003
 __author__ = 'Artur Barseghyan'
 __all__ = ('TIMESTAMP_FORMAT', 'SIGNATURE_LIFETIME', 'DEFAULT_SIGNATURE_PARAM', 'DEFAULT_AUTH_USER_PARAM', \
            'DEFAULT_VALID_UNTIL_PARAM', 'DEBUG')

@@ -80,8 +80,9 @@ Required imports.
 
 >>> from ska import validate_signed_request_data
 
-Validating the signed request data. Note, that ``request.GET`` is given as an example.
-It will most likely vary from what's used in your framework (unless you use Django).
+Validating the signed request data. Note, that ``data`` value is expected to be a dictionary;
+``request.GET`` is given as an example. It will most likely vary from what's used in your
+framework (unless you use Django).
 
 >>> validation_result = validate_signed_request_data(
 >>>     data = request.GET, # Note, that ``request.GET`` is given as example.
@@ -119,6 +120,41 @@ With all customisations, it would look as follows.
 
 If you for some reason prefer a lower level implementation, read the same section in the
 `Advanced usage` chapter.
+
+Command line usage
+---------------------------------------------------
+It's possible to generate a signed URL from command line.
+
+:Arguments:
+
+  -h, --help            show this help message and exit
+
+  -au AUTH_USER, --auth-user AUTH_USER
+                        `auth_user` value
+
+  -sk SECRET_KEY, --secret-key SECRET_KEY
+                        `secret_key` value
+
+  -vu VALID_UNTIL, --valid-until VALID_UNTIL
+                        `valid_until` value
+
+  -l LIFETIME, --lifetime LIFETIME
+                        `lifetime` value
+
+  -u URL, --url URL     URL to sign
+
+  -sp SIGNATURE_PARAM, --signature-param SIGNATURE_PARAM
+                        GET param holding the `signature` value
+
+  -aup AUTH_USER_PARAM, --auth-user-param AUTH_USER_PARAM
+                        GET param holding the `auth_user` value
+
+  -vup VALID_UNTIL_PARAM, --valid-until-param VALID_UNTIL_PARAM
+                        GET param holding the `auth_user` value
+
+:Example:
+
+    $ python src/ska/generate_signed_url.py -au user -sk your-secret-key
 
 Advanced usage (low-level)
 ---------------------------------------------------

@@ -1,11 +1,10 @@
 __title__ = 'ska.tests'
-__version__ = '0.2'
-__build__ = 0x000002
+__version__ = '0.3'
+__build__ = 0x000003
 __author__ = 'Artur Barseghyan'
 
 import unittest
 import datetime
-import time
 from urlparse import urlparse, parse_qs
 
 from ska import Signature, RequestHelper, TIMESTAMP_FORMAT, sign_url, validate_signed_request_data
