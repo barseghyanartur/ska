@@ -123,7 +123,8 @@ If you for some reason prefer a lower level implementation, read the same sectio
 
 Command line usage
 ---------------------------------------------------
-It's possible to generate a signed URL from command line.
+It's possible to generate a signed URL from command line using the `ska.generate_signed_url`
+module.
 
 :Arguments:
 
