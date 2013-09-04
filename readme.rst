@@ -94,7 +94,7 @@ If you for some reason prefer a lower level implementation, read the same sectio
 
 Server side
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Validating the signed request data is as simple as follows
+Validating the signed request data is as simple as follows.
 
 Required imports.
 
