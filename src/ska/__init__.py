@@ -1,6 +1,6 @@
 __title__ = 'ska'
-__version__ = '0.4'
-__build__ = 0x000004
+__version__ = '0.5'
+__build__ = 0x000005
 __author__ = 'Artur Barseghyan'
 __all__ = ('Signature', 'RequestHelper', 'sign_url')
 
@@ -11,7 +11,7 @@ import hmac
 from base64 import b64decode, b64encode
 from hashlib import sha1
 
-from ska.defaults import SIGNATURE_LIFETIME, TIMESTAMP_FORMAT
+from ska.defaults import SIGNATURE_LIFETIME, TIMESTAMP_FORMAT, DEFAULT_URL_SUFFIX
 from ska.defaults import DEFAULT_SIGNATURE_PARAM, DEFAULT_AUTH_USER_PARAM, DEFAULT_VALID_UNTIL_PARAM
 
 _ = lambda x: x # For future integrations with gettext
@@ -246,12 +246,14 @@ class RequestHelper(object):
         self.auth_user_param = auth_user_param
         self.valid_until_param = valid_until_param
 
-    def signature_to_url(self, signature, endpoint_url=''):
+    def signature_to_url(self, signature, endpoint_url='', suffix=DEFAULT_URL_SUFFIX):
         """
         URL encodes the signature params.
 
         :param ska.Signature signature:
         :param str endpoint_url:
+        :param str suffix: Suffix to add after the ``endpoint_url`` and before the appended
+            signature params.
         :return str:
 
         :example:
@@ -288,7 +290,7 @@ class RequestHelper(object):
             self.auth_user_param: signature.auth_user,
             self.valid_until_param: signature.valid_until,
         }
-        return "%s?%s" % (endpoint_url, urllib.urlencode(params))
+        return "%s%s%s" % (endpoint_url, suffix, urllib.urlencode(params))
 
     def signature_to_dict(self, signature):
         """
@@ -384,8 +386,8 @@ class RequestHelper(object):
         return validation_result
 
 def sign_url(auth_user, secret_key, valid_until=None, lifetime=SIGNATURE_LIFETIME, url='', \
-             signature_param='signature', auth_user_param='auth_user', \
-             valid_until_param='valid_until'):
+             suffix=DEFAULT_URL_SUFFIX, signature_param='signature', \
+             auth_user_param='auth_user', valid_until_param='valid_until'):
     """
     Signs the URL.
 
@@ -394,6 +396,7 @@ def sign_url(auth_user, secret_key, valid_until=None, lifetime=SIGNATURE_LIFETIM
     :param float|str valid_until: Unix timestamp. If not given, generated automatically (now + lifetime).
     :param int lifetime: Signature lifetime in seconds.
     :param str url: URL to be signed.
+    :param str suffix: Suffix to add after the ``endpoint_url`` and before the appended signature params.
     :param str signature_param: Name of the GET param name which would hold the generated signature value.
     :param str auth_user_param: Name of the GET param name which would hold the ``auth_user`` value.
     :param str valid_until_param: Name of the GET param name which would hold the ``valid_until`` value.
@@ -433,7 +436,8 @@ def sign_url(auth_user, secret_key, valid_until=None, lifetime=SIGNATURE_LIFETIM
 
     signed_url = request_helper.signature_to_url(
         signature = signature,
-        endpoint_url = url
+        endpoint_url = url,
+        suffix = suffix
     )
 
     return signed_url

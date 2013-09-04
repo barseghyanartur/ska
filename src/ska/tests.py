@@ -1,6 +1,6 @@
 __title__ = 'ska.tests'
-__version__ = '0.4'
-__build__ = 0x000004
+__version__ = '0.5'
+__build__ = 0x000005
 __author__ = 'Artur Barseghyan'
 
 import unittest
@@ -106,7 +106,7 @@ class SignatureTest(unittest.TestCase):
         particular example, the host time is 5 minutes ahead the server time.
         """
         workflow = []
-        
+
         datetime_timelap = Signature.datetime_to_unix_timestamp(
             datetime.datetime.now() + datetime.timedelta(seconds=300)
             )
@@ -314,7 +314,7 @@ class URLHelperTest(unittest.TestCase):
 
 class ShortcutsTest(unittest.TestCase):
     """
-    Tests for ``sign_url`` and ``validate_signed_request_data`` shortcut functions.
+    Tests for ``sign_url``, ``signature_to_dict`` and ``validate_signed_request_data`` shortcut functions.
     """
     def setUp(self):
         self.auth_user = 'user'

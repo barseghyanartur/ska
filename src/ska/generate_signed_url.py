@@ -1,6 +1,6 @@
 __title__ = 'ska.generate_signed_url'
-__version__ = '0.4'
-__build__ = 0x000004
+__version__ = '0.5'
+__build__ = 0x000005
 __author__ = 'Artur Barseghyan'
 __all__ = ('main',)
 
@@ -28,6 +28,7 @@ def main():
                         metavar="VALID_UNTIL")
     parser.add_argument("-l", "--lifetime", dest="lifetime", type=int, help="`lifetime` value", metavar="LIFETIME")
     parser.add_argument("-u", "--url", dest="url", type=str, help="URL to sign", metavar="URL")
+    parser.add_argument("-s", "--suffix", dest="suffix", type=str, help="Added after the `url`.", metavar="SUFFIX")
     parser.add_argument("-sp", "--signature-param", dest="signature_param", type=str, \
                         help="GET param holding the `signature` value", metavar="SIGNATURE_PARAM")
     parser.add_argument("-aup", "--auth-user-param", dest="auth_user_param", type=str, \
@@ -53,6 +54,9 @@ def main():
 
     if args.url:
         kwargs.update({'url': args.url})
+
+    if args.suffix:
+        kwargs.update({'suffix': args.suffix})
 
     if args.signature_param:
         kwargs.update({'signature_param': args.signature_param})

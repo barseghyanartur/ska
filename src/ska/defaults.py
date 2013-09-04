@@ -8,14 +8,16 @@ Application defaults.
   Default value is `auth_user`.
 - `DEFAULT_VALID_UNTIL_PARAM` (str): Default name of the GET param holding the ``valid_until`` value.
   Default value is `valid_until`.
+- `DEFAULT_URL_SUFFIX` (str): Suffix to add after the ``endpoint_url`` and before the appended signature
+  params.
 """
 
 __title__ = 'ska.defaults'
-__version__ = '0.4'
-__build__ = 0x000004
+__version__ = '0.5'
+__build__ = 0x000005
 __author__ = 'Artur Barseghyan'
 __all__ = ('TIMESTAMP_FORMAT', 'SIGNATURE_LIFETIME', 'DEFAULT_SIGNATURE_PARAM', 'DEFAULT_AUTH_USER_PARAM', \
-           'DEFAULT_VALID_UNTIL_PARAM', 'DEBUG')
+           'DEFAULT_VALID_UNTIL_PARAM', 'DEFAULT_URL_SUFFIX', 'DEBUG')
 
 TIMESTAMP_FORMAT = "%Y-%m-%dT%H:%M:%S"
 
@@ -30,5 +32,8 @@ DEFAULT_AUTH_USER_PARAM = 'auth_user'
 
 # Default name of the GET param holding the ``valid_until`` value.
 DEFAULT_VALID_UNTIL_PARAM = 'valid_until'
+
+# Suffix to add after the ``endpoint_url`` and before the appended signature params.
+DEFAULT_URL_SUFFIX = '?'
 
 DEBUG = False

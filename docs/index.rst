@@ -20,8 +20,17 @@ whether signature is valid and not expired.
 
 Installation
 ===================================================
+Latest stable version from PyPi.
 
     $ pip install ska
+
+Latest stable version from bitbucket.
+
+    $ pip install -e hg+https://bitbucket.org/barseghyanartur/ska@stable#egg=ska
+
+Latest stable version from github.
+
+    $ pip install -e git+https://github.com/barseghyanartur/ska@stable#egg=ska
 
 Usage examples
 ===================================================
@@ -55,6 +64,10 @@ to be different, provide a ``auth_user_param`` argument to ``sign_url`` function
 Default name of the (GET) param holding the ``valid_until`` value is `valid_until`. If you want it
 to be different, provide a ``valid_until_param`` argument to ``sign_url`` function.
 
+Note, that by default a suffix '?' is added after the given ``url`` and generated signature params.
+If you want that suffix to be custom or gone, provide a ``suffix`` argument to the ``sign_url``
+function.
+
 With all customisations, it would look as follows.
 
 >>> signed_url = sign_url(
@@ -69,8 +82,8 @@ be as follows.
 >>> import requests
 >>> requests.get(signed_url)
 
-If we somehow want to use POST method, we would then want to get a dictionary back,
-in order to append it to the POST data later. We would then do as follows.
+If you want to use POST method instead, you would likely want to get a dictionary back,
+in order to append it to the POST data later.
 
 Required imports.
 
