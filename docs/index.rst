@@ -8,14 +8,14 @@ Key concepts
 ===================================================
 Host and server share the Secret Key, which is used to sign requests. Secret key is never sent around.
 
-Each HTTP request is signed on the client side using the shared Secret Key and as an outcome produces
+Each (HTTP) request is signed on the client side using the shared Secret Key and as an outcome produces
 the triple (``signature``, ``auth_user``, ``valid_until``) which are used to sign the requests.
 
 - `signature` (str): Signature generated.
 - `auth_user` (str): User making the request. Can be anything.
 - `valid_until` (float|str): Signature expiration time (Unix timestamp).
 
-On the server side, HTTP request is validated using the shared Secret Key. It's being checked
+On the server side, (HTTP) request is validated using the shared Secret Key. It's being checked
 whether signature is valid and not expired.
 
 Installation
@@ -46,13 +46,13 @@ http://e.com/api/?valid_until=1378045287.0&auth_user=user&signature=YlZpLFsjUKBa
 Default lifetime of a signature is 10 minutes (600 seconds). If you want it to be different, provide a
 ``lifetime`` argument to ``sign_url`` function.
 
-Default name of the GET param holding the generated signature value is `signature`. If you want it
+Default name of the (GET) param holding the generated signature value is `signature`. If you want it
 to be different, provide a ``signature_param`` argument to ``sign_url`` function.
 
-Default name of the GET param holding the ``auth_user`` value is `auth_user`. If you want it
+Default name of the (GET) param holding the ``auth_user`` value is `auth_user`. If you want it
 to be different, provide a ``auth_user_param`` argument to ``sign_url`` function.
 
-Default name of the GET param holding the ``valid_until`` value is `valid_until`. If you want it
+Default name of the (GET) param holding the ``valid_until`` value is `valid_until`. If you want it
 to be different, provide a ``valid_until_param`` argument to ``sign_url`` function.
 
 With all customisations, it would look as follows.
@@ -68,6 +68,26 @@ be as follows.
 
 >>> import requests
 >>> requests.get(signed_url)
+
+If we somehow want to use POST method, we would then want to get a dictionary back,
+in order to append it to the POST data later. We would then do as follows.
+
+Required imports.
+
+>>> from ska import signature_to_dict
+
+Producing a dictionary containing the signature data, ready to be put into the request (for
+example POST) data. All customisations mentioned above for the ``sign_url`` function, also
+apply to the ``signature_to_dict``.
+
+>>> signature_dict = signature_to_dict(
+>>>     auth_user='user', secret_key='your-secret_key'
+>>> )
+{
+    'signature': 'YlZpLFsjUKBalL4x5trhkeEgqE8=',
+    'auth_user': 'user',
+    'valid_until': '1378045287.0'
+}
 
 If you for some reason prefer a lower level implementation, read the same section in the
 `Advanced usage` chapter.
@@ -96,15 +116,15 @@ which holds the following data:
 - `reason` (list): List of strings, indicating validation errors. Empty list in case if ``result``
   is True.
 
-Default name of the GET param holding the signature value is `signature`. If you want it
+Default name of the (GET) param holding the signature value is `signature`. If you want it
 to be different, provide a ``signature_param`` argument to ``validate_signed_request_data``
 function.
 
-Default name of the GET param holding the ``auth_user`` value is `auth_user`. If you want it
+Default name of the (GET) param holding the ``auth_user`` value is `auth_user`. If you want it
 to be different, provide a ``auth_user_param`` argument to ``validate_signed_request_data``
 function.
 
-Default name of the GET param holding the ``valid_until`` value is `valid_until`. If you want it
+Default name of the (GET) param holding the ``valid_until`` value is `valid_until`. If you want it
 to be different, provide a ``valid_until_param`` argument to ``validate_signed_request_data``
 function.
 
@@ -145,13 +165,13 @@ module.
   -u URL, --url URL     URL to sign
 
   -sp SIGNATURE_PARAM, --signature-param SIGNATURE_PARAM
-                        GET param holding the `signature` value
+                        (GET) param holding the `signature` value
 
   -aup AUTH_USER_PARAM, --auth-user-param AUTH_USER_PARAM
-                        GET param holding the `auth_user` value
+                        (GET) param holding the `auth_user` value
 
   -vup VALID_UNTIL_PARAM, --valid-until-param VALID_UNTIL_PARAM
-                        GET param holding the `auth_user` value
+                        (GET) param holding the `auth_user` value
 
 :Example:
 
@@ -184,7 +204,7 @@ Default lifetime of a signature is 10 minutes (600 seconds). If you want it to b
 
 Your endpoint operates with certain param names and you need to wrap generated signature params into
 the URL. In order to have the job done in an easy way, create a request helper. Feed names of the
-GET params to the request helper and let it make a signed endpoint URL for you.
+(GET) params to the request helper and let it make a signed endpoint URL for you.
 
 >>> request_helper = RequestHelper(
 >>>     signature_param = 'signature',

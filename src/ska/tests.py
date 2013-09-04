@@ -1,13 +1,14 @@
 __title__ = 'ska.tests'
-__version__ = '0.3'
-__build__ = 0x000003
+__version__ = '0.4'
+__build__ = 0x000004
 __author__ = 'Artur Barseghyan'
 
 import unittest
 import datetime
 from urlparse import urlparse, parse_qs
 
-from ska import Signature, RequestHelper, TIMESTAMP_FORMAT, sign_url, validate_signed_request_data
+from ska import Signature, RequestHelper, TIMESTAMP_FORMAT
+from ska import sign_url, validate_signed_request_data, signature_to_dict
 
 PRINT_INFO = True
 TRACK_TIME = False
@@ -335,7 +336,7 @@ class ShortcutsTest(unittest.TestCase):
 
         workflow.append(('URL generated', signed_url))
 
-        # Now parsing back the URL params and test the 
+        # Now parsing back the URL params and validate the signature data
         request_data = parse_url_params(signed_url)
 
         validation_result = validate_signed_request_data(
@@ -373,7 +374,7 @@ class ShortcutsTest(unittest.TestCase):
 
         workflow.append(('URL generated', signed_url))
 
-        # Now parsing back the URL params and test the
+        # Now parsing back the URL params and validate the signature data
         request_data = parse_url_params(signed_url)
 
         validation_result = validate_signed_request_data(
@@ -388,6 +389,33 @@ class ShortcutsTest(unittest.TestCase):
 
         return workflow
 
+    @print_info
+    def test_03_signature_to_dict_and_validate_signed_request_data(self):
+        """
+        Tests for ``signature_to_dict`` and ``validate_signed_request_data`` shortcut functions.
+        """
+        workflow = []
+
+        signature_dict = signature_to_dict(
+            auth_user = self.auth_user,
+            secret_key = self.secret_key
+        )
+
+        workflow.append(('Dictionary created', signature_dict))
+
+        # Now validate the signature data
+
+        validation_result = validate_signed_request_data(
+            data = signature_dict,
+            secret_key = self.secret_key
+            )
+
+        workflow.append(('Signature is valid', validation_result.result))
+        workflow.append(('Reason not valid', validation_result.reason))
+
+        self.assertTrue(validation_result.result)
+
+        return workflow
 
 if __name__ == "__main__":
     # Tests

@@ -1,6 +1,6 @@
 __title__ = 'ska'
-__version__ = '0.2'
-__build__ = 0x000002
+__version__ = '0.4'
+__build__ = 0x000004
 __author__ = 'Artur Barseghyan'
 __all__ = ('Signature', 'RequestHelper', 'sign_url')
 
@@ -290,6 +290,52 @@ class RequestHelper(object):
         }
         return "%s?%s" % (endpoint_url, urllib.urlencode(params))
 
+    def signature_to_dict(self, signature):
+        """
+        Puts signature into a dictionary, which can later on be used to send when sending
+        (POST) requests to the server.
+
+        :param ska.Signature signature:
+        :return dict:
+
+        :example:
+
+        Required imports.
+
+        >>> from ska import Signature, RequestHelper
+
+        Generate signature.
+
+        >>> signature = Signature.generate_signature(
+        >>>     auth_user = 'user',
+        >>>     secret_key = 'your-secret-key'
+        >>>     )
+
+        Create a request helper.
+
+        >>> request_helper = RequestHelper(
+        >>>     signature_param = 'signature',
+        >>>     auth_user_param = 'auth_user',
+        >>>     valid_until_param = 'valid_until'
+        >>> )
+
+        Appending signature params to the endpoint URL.
+
+        >>> signed_dict = request_helper.signature_to_dict(
+        >>>     signature = signature
+        >>> )
+        {
+            'signature': 'YlZpLFsjUKBalL4x5trhkeEgqE8=',
+            'auth_user': 'user',
+            'valid_until': '1378045287.0'
+        }
+        """
+        return {
+            self.signature_param: signature.signature,
+            self.auth_user_param: signature.auth_user,
+            self.valid_until_param: signature.valid_until,
+        }
+
     def validate_request_data(self, data, secret_key):
         """
         Validates the request data.
@@ -392,17 +438,83 @@ def sign_url(auth_user, secret_key, valid_until=None, lifetime=SIGNATURE_LIFETIM
 
     return signed_url
 
+
+def signature_to_dict(auth_user, secret_key, valid_until=None, lifetime=SIGNATURE_LIFETIME, \
+                      signature_param='signature', auth_user_param='auth_user', \
+                      valid_until_param='valid_until'):
+    """
+    Returns a dictionary containing the signature data params.
+
+    :param str auth_user: Username of the user making the request.
+    :param str secret_key: The shared secret key.
+    :param float|str valid_until: Unix timestamp. If not given, generated
+        automatically (now + lifetime).
+    :param int lifetime: Signature lifetime in seconds.
+    :param str signature_param: Name of the (for example POST) param name which would hold the
+        generated ``signature`` value.
+    :param str auth_user_param: Name of the (for example POST) param name which would hold
+        the ``auth_user`` value.
+    :param str valid_until_param: Name of the (for example POST) param name which would hold
+        the ``valid_until`` value.
+    :return str:
+
+    :example:
+    Required imports.
+
+    >>> from ska import signature_to_dict
+
+    Producing a dictionary with signature data.
+
+    >>> signature_dict = signature_to_dict(
+    >>>     auth_user='user', secret_key='your-secret_key', lifetime=120, \
+    >>>     signature_param=DEFAULT_SIGNATURE_PARAM, auth_user_param=DEFAULT_AUTH_USER_PARAM, \
+    >>>     valid_until_param=DEFAULT_VALID_UNTIL_PARAM
+    >>> )
+    {
+        'signature': 'YlZpLFsjUKBalL4x5trhkeEgqE8=',
+        'auth_user': 'user',
+        'valid_until': '1378045287.0'
+    }
+    """
+    if lifetime is None:
+        lifetime=SIGNATURE_LIFETIME
+
+    assert isinstance(lifetime, int)
+
+    signature = Signature.generate_signature(
+        auth_user = auth_user,
+        secret_key = secret_key,
+        valid_until = valid_until,
+        lifetime = lifetime
+        )
+
+    request_helper = RequestHelper(
+        signature_param = signature_param,
+        auth_user_param = auth_user_param,
+        valid_until_param = valid_until_param
+    )
+
+    signature_dict = request_helper.signature_to_dict(
+        signature = signature
+    )
+
+    return signature_dict
+
+
 def validate_signed_request_data(data, secret_key, signature_param=DEFAULT_SIGNATURE_PARAM, \
                                  auth_user_param=DEFAULT_AUTH_USER_PARAM, \
                                  valid_until_param=DEFAULT_VALID_UNTIL_PARAM):
     """
     Validates the signed request data.
 
-    :param dict data: Dictionary holding the HTTP request GET data.
+    :param dict data: Dictionary holding the (HTTP) request (for example GET or POST) data.
     :param str secret_key: The shared secret key.
-    :param str signature_param: Name of the GET param name which holds the signature value.
-    :param str auth_user_param: Name of the GET param name which holds the ``auth_user`` value.
-    :param str valid_until_param: Name of the GET param name which holds the ``valid_until`` value.
+    :param str signature_param: Name of the (for example GET or POST) param name which holds
+        the ``signature`` value.
+    :param str auth_user_param: Name of the (for example GET or POST) param name which holds
+        the ``auth_user`` value.
+    :param str valid_until_param: Name of the (foe example GET or POST) param name which holds
+        the ``valid_until`` value.
     :return ska.SignatureValidationResult: A ``ska.SignatureValidationResult`` object with the
         following properties:
             - `result` (bool): True if data is valid. False otherwise.

@@ -11,8 +11,8 @@ Application defaults.
 """
 
 __title__ = 'ska.defaults'
-__version__ = '0.3'
-__build__ = 0x000003
+__version__ = '0.4'
+__build__ = 0x000004
 __author__ = 'Artur Barseghyan'
 __all__ = ('TIMESTAMP_FORMAT', 'SIGNATURE_LIFETIME', 'DEFAULT_SIGNATURE_PARAM', 'DEFAULT_AUTH_USER_PARAM', \
            'DEFAULT_VALID_UNTIL_PARAM', 'DEBUG')
