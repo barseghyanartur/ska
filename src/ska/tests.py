@@ -1,11 +1,12 @@
 __title__ = 'ska.tests'
-__version__ = '0.5'
-__build__ = 0x000005
+__version__ = '0.6'
+__build__ = 0x000006
 __author__ = 'Artur Barseghyan'
 
 import unittest
 import datetime
-from urlparse import urlparse, parse_qs
+from six import print_
+from six.moves.urllib.parse import urlparse, parse_qs
 
 from ska import Signature, RequestHelper, TIMESTAMP_FORMAT
 from ska import sign_url, validate_signed_request_data, signature_to_dict
@@ -30,15 +31,16 @@ def print_info(func):
         if TRACK_TIME:
             timer.stop() # Stop timer
 
-        print '\n\n%s' % func.__name__
-        print '============================'
+        print_('\n\n%s' % func.__name__)
+        print_('============================')
         if func.__doc__:
-            print '""" %s """' % func.__doc__.strip()
-        print '----------------------------'
-        if result is not None: print result
+            print_('""" %s """' % func.__doc__.strip())
+        print_('----------------------------')
+        if result is not None:
+            print_(result)
         if TRACK_TIME:
-            print 'done in %s seconds' % timer.duration
-        print '\n++++++++++++++++++++++++++++'
+            print_('done in %s seconds' % timer.duration)
+        print_('\n++++++++++++++++++++++++++++')
 
         return result
     return inner
@@ -217,9 +219,16 @@ class SignatureTest(unittest.TestCase):
         return workflow
 
 def parse_url_params(url):
+    """
+    Parses URL params.
+
+    :param str url:
+    :return dict:
+    """
     data = parse_qs(urlparse(url).query)
     for k, v in data.items():
         data[k] = v[0]
+
 
     return data
 

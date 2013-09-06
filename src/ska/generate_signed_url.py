@@ -1,10 +1,11 @@
 __title__ = 'ska.generate_signed_url'
-__version__ = '0.5'
-__build__ = 0x000005
+__version__ = '0.6'
+__build__ = 0x000006
 __author__ = 'Artur Barseghyan'
 __all__ = ('main',)
 
 import argparse
+from six import print_
 
 from ska import sign_url
 
@@ -69,9 +70,9 @@ def main():
 
     try:
         signed_url = sign_url(**kwargs)
-        print signed_url
-    except Exception, e:
-        print e
+        print_(signed_url)
+    except Exception as e:
+        print_(e)
 
 if __name__ == "__main__":
     main()

@@ -1,15 +1,15 @@
 __title__ = 'ska'
-__version__ = '0.5'
-__build__ = 0x000005
+__version__ = '0.6'
+__build__ = 0x000006
 __author__ = 'Artur Barseghyan'
 __all__ = ('Signature', 'RequestHelper', 'sign_url')
 
-import urllib
 import datetime
 import time
 import hmac
 from base64 import b64decode, b64encode
 from hashlib import sha1
+from six.moves.urllib.parse import urlencode
 
 from ska.defaults import SIGNATURE_LIFETIME, TIMESTAMP_FORMAT, DEFAULT_URL_SUFFIX
 from ska.defaults import DEFAULT_SIGNATURE_PARAM, DEFAULT_AUTH_USER_PARAM, DEFAULT_VALID_UNTIL_PARAM
@@ -89,6 +89,9 @@ class Signature(object):
             )
         False
         """
+        if isinstance(signature, str):
+            signature = signature.encode()
+
         sig = cls.generate_signature(auth_user=auth_user, secret_key=secret_key, valid_until=valid_until)
 
         if not return_object:
@@ -131,7 +134,7 @@ class Signature(object):
         """
         l = [str(timestamp), auth_user]
 
-        return "_".join(l)
+        return ("_".join(l)).encode()
 
     @staticmethod
     def make_secret_key(secret_key):
@@ -141,7 +144,7 @@ class Signature(object):
         :param str secret_key:
         :return str:
         """
-        return secret_key #return b64encode(secret_key)
+        return secret_key.encode() #return b64encode(secret_key)
 
     @classmethod
     def generate_signature(cls, auth_user, secret_key, valid_until=None, lifetime=SIGNATURE_LIFETIME):
@@ -183,7 +186,7 @@ class Signature(object):
         """
         try:
             return dt.strftime(TIMESTAMP_FORMAT)
-        except Exception, e:
+        except Exception as e:
             pass
 
     @staticmethod
@@ -196,7 +199,7 @@ class Signature(object):
         """
         try:
             return time.mktime(dt.timetuple())
-        except Exception, e:
+        except Exception as e:
             pass
 
     @classmethod
@@ -290,7 +293,7 @@ class RequestHelper(object):
             self.auth_user_param: signature.auth_user,
             self.valid_until_param: signature.valid_until,
         }
-        return "%s%s%s" % (endpoint_url, suffix, urllib.urlencode(params))
+        return "%s%s%s" % (endpoint_url, suffix, urlencode(params))
 
     def signature_to_dict(self, signature):
         """
