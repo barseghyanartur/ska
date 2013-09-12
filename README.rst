@@ -280,13 +280,6 @@ the ``ska.Signature``.
 >>>     valid_until = '1377997396.0'
 >>>     )
 
-Indices and tables
-===================================================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
 License
 ===================================================
 GPL 2.0/LGPL 2.1

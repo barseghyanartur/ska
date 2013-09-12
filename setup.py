@@ -2,11 +2,11 @@ import os
 from setuptools import setup, find_packages
 
 try:
-  readme = open(os.path.join(os.path.dirname(__file__), 'readme.rst')).read()
+  readme = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 except:
   readme = ''
 
-version = '0.6'
+version = '0.7'
 
 setup(
     name = 'ska',
@@ -31,5 +31,7 @@ setup(
     url = 'https://bitbucket.org/barseghyanartur/ska',
     package_dir = {'':'src'},
     packages = find_packages(where='./src'),
-    install_requires = ['six',]
+    install_requires = [
+        'six==1.4.1',
+    ]
 )

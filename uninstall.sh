@@ -1,3 +1,4 @@
+reset
 pip uninstall ska -y
 rm build -rf
 rm dist -rf

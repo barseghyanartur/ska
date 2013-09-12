@@ -1,6 +1,6 @@
 __title__ = 'ska'
-__version__ = '0.6'
-__build__ = 0x000006
+__version__ = '0.7'
+__build__ = 0x000007
 __author__ = 'Artur Barseghyan'
 __all__ = ('Signature', 'RequestHelper', 'sign_url')
 
@@ -35,7 +35,7 @@ class SignatureValidationResult(object):
         self.reason = reason
 
     def __str__(self):
-        return self.result
+        return str(self.result)
     __unicode__ = __str__
     __repr__ = __str__
 
