@@ -1,7 +1,9 @@
 syntax: regexp
 \.pyc$
 \.hgignore~
-\.git
+\.gitignore~
+\.git/
+\.tox
 
 ^builddocs/
 builddocs.zip
