@@ -14,7 +14,7 @@ def browse(request, template_name='foo/browse.html'):
     :param str template_name:
     :return django.http.HttpResponse:
     """
-    queryset = FooItem._default_manager.all().order_by('-date_published')
+    queryset = FooItem._default_manager.all()
 
     context = {'items': queryset}
 

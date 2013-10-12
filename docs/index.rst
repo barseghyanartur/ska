@@ -288,6 +288,8 @@ Django integration
 ---------------------------------------------------
 'ska` comes with Django model- and view-decorators for producing signed URLs and and validating the endpoints.
 
+See the (https://github.com/barseghyanartur/ska/tree/stable/example) for a working example project.
+
 Django model method decorator ``sign_url``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This is most likely be used in module `models` (models.py).
