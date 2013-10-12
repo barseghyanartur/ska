@@ -288,8 +288,13 @@ Django integration
 ---------------------------------------------------
 'ska` comes with Django model- and view-decorators for producing signed URLs and and validating the endpoints.
 
-Django model method decorator (file models.py)
+Django model method decorator ``sign_url``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This is most likely be used in module `models` (models.py).
+
+Imagine, you have a some objects listing and you want to protect the URLs to be viewed by authorised parties
+only. You would then use ``get_signed_absolute_url`` method when rendering the listing (HTML).
+
 >>> from django.db import models
 >>> from django.utils.translation import ugettext_lazy as _
 >>> from django.core.urlresolvers import reverse
@@ -310,8 +315,14 @@ Django model method decorator (file models.py)
 >>>     def get_signed_absolute_url(self):
 >>>         return reverse('foo.detail', kwargs={'slug': self.slug})
 
-Django model method decorator (file views.py)
+Django view decorator ``validate_signed_request``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+To be used to protect views (file views.py). Should be applied to views (endpoints) that require
+signed requests. If checks are not successful, a ``ska.contrib.django.ska.http.HttpResponseUnauthorized``
+is returned, which is a subclass of Django's ``django.http.HttpResponse``. You can provide your own
+template for 401 error. Simply point the ``SKA_UNAUTHORISED_REQUEST_ERROR_TEMPLATE`` in `settings`
+module to the right template. See `ska/contrib/django/ska/templates/ska/401.html` as a template example.
+
 >>> from ska.contrib.django.ska.decorators import validate_signed_request
 >>>
 >>> # Your view that shall be protected

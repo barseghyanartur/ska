@@ -147,6 +147,7 @@ INSTALLED_APPS = (
 )
 
 SKA_SECRET_KEY = 'secret-key'
+#SKA_UNAUTHORISED_REQUEST_ERROR_TEMPLATE = 'ska/401.html'
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

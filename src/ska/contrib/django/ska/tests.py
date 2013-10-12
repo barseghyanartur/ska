@@ -135,12 +135,6 @@ else:
 split_sentences = lambda f: f.split('?')
 change_date = lambda: bool(random.randint(0, 1))
 
-CHANGE_MESSAGE_FACTORY = (
-    'Changed title',
-    'Changed slug',
-    'Changed body',
-    'Changed date_published',
-)
 WORDS = split_words(FACTORY)
 SENTENCES = split_sentences(FACTORY)
 NUM_ITEMS = 10
@@ -248,6 +242,7 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
             response = c.get(absolute_url, {})
             self.assertTrue(response.status_code in (401,))
             workflow.append(('Response status code for unsigned URL', response.status_code))
+            workflow.append(('Response content for unsigned URL', response.content))
 
             return workflow
 
