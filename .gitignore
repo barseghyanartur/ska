@@ -2,8 +2,11 @@
 .hgignore~
 .gitignore~
 .hg/
-.tox
+.tox/
 
+example/static
+example/db/example.db
+example/tmp
 builddocs/
 builddocs.zip
 build/

@@ -1,11 +1,12 @@
+from __future__ import print_function
+
 __title__ = 'ska.tests'
-__version__ = '0.7'
-__build__ = 0x000007
+__version__ = '0.8'
+__build__ = 0x000008
 __author__ = 'Artur Barseghyan'
 
 import unittest
 import datetime
-from six import print_
 from six.moves.urllib.parse import urlparse, parse_qs
 
 from ska import Signature, RequestHelper, TIMESTAMP_FORMAT
@@ -31,16 +32,16 @@ def print_info(func):
         if TRACK_TIME:
             timer.stop() # Stop timer
 
-        print_('\n\n%s' % func.__name__)
-        print_('============================')
+        print('\n\n%s' % func.__name__)
+        print('============================')
         if func.__doc__:
-            print_('""" %s """' % func.__doc__.strip())
-        print_('----------------------------')
+            print('""" %s """' % func.__doc__.strip())
+        print('----------------------------')
         if result is not None:
-            print_(result)
+            print(result)
         if TRACK_TIME:
-            print_('done in %s seconds' % timer.duration)
-        print_('\n++++++++++++++++++++++++++++')
+            print('done in %s seconds' % timer.duration)
+        print('\n++++++++++++++++++++++++++++')
 
         return result
     return inner

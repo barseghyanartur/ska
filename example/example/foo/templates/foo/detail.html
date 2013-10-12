@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+
+{% block content %}
+    <h1>{% trans "Foo detail" %}</h1>
+
+    <h2>{{ item.title }}</h2>
+    <p>{{ item.body }}</p>
+
+    <a href="{% url 'foo.browse' %}">{% trans "Back to foo home" %}</a>
+{% endblock content %}

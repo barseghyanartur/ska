@@ -5,8 +5,11 @@ syntax: regexp
 \.git/
 \.tox
 
+^example/static
+^example/db/example.db
+^example/tmp
 ^builddocs/
-builddocs.zip
+^builddocs.zip
 ^build/
 ^dist/
 ^src/ska.egg-info

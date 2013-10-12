@@ -2,7 +2,8 @@
 ska
 ===================================================
 Symmetric-key algorithm encryption. Lets you easily generate signatures for signing (HTTP) requests.
-Allows you to validate signed requests and identify possible validation errors.
+Allows you to validate signed requests and identify possible validation errors. Uses sha1/hmac for
+signature encryption.
 
 Key concepts
 ===================================================
@@ -20,7 +21,7 @@ whether signature is valid and not expired.
 
 Installation
 ===================================================
-Latest stable version from PyPi.
+Latest stable version from PyPI.
 
     $ pip install ska
 
@@ -34,8 +35,11 @@ Latest stable version from github.
 
 Usage examples
 ===================================================
+For integration with Django, see the `Django integration` section.
+
 Basic usage
 ---------------------------------------------------
+Pure Python usage.
 
 Client side
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -161,30 +165,30 @@ module.
 
 :Arguments:
 
-  -h, --help            show this help message and exit
-
-  -au AUTH_USER, --auth-user AUTH_USER
-                        `auth_user` value
-
-  -sk SECRET_KEY, --secret-key SECRET_KEY
-                        `secret_key` value
-
-  -vu VALID_UNTIL, --valid-until VALID_UNTIL
-                        `valid_until` value
-
-  -l LIFETIME, --lifetime LIFETIME
-                        `lifetime` value
-
-  -u URL, --url URL     URL to sign
-
-  -sp SIGNATURE_PARAM, --signature-param SIGNATURE_PARAM
-                        (GET) param holding the `signature` value
-
-  -aup AUTH_USER_PARAM, --auth-user-param AUTH_USER_PARAM
-                        (GET) param holding the `auth_user` value
-
-  -vup VALID_UNTIL_PARAM, --valid-until-param VALID_UNTIL_PARAM
-                        (GET) param holding the `auth_user` value
+>>>  -h, --help            show this help message and exit
+>>>
+>>>  -au AUTH_USER, --auth-user AUTH_USER
+>>>                        `auth_user` value
+>>>
+>>>  -sk SECRET_KEY, --secret-key SECRET_KEY
+>>>                        `secret_key` value
+>>>
+>>>  -vu VALID_UNTIL, --valid-until VALID_UNTIL
+>>>                        `valid_until` value
+>>>
+>>>  -l LIFETIME, --lifetime LIFETIME
+>>>                        `lifetime` value
+>>>
+>>>  -u URL, --url URL     URL to sign
+>>>
+>>>  -sp SIGNATURE_PARAM, --signature-param SIGNATURE_PARAM
+>>>                        (GET) param holding the `signature` value
+>>>
+>>>  -aup AUTH_USER_PARAM, --auth-user-param AUTH_USER_PARAM
+>>>                        (GET) param holding the `auth_user` value
+>>>
+>>>  -vup VALID_UNTIL_PARAM, --valid-until-param VALID_UNTIL_PARAM
+>>>                        (GET) param holding the `auth_user` value
 
 :Example:
 
@@ -279,6 +283,41 @@ the ``ska.Signature``.
 >>>     secret_key = 'your-secret-key',
 >>>     valid_until = '1377997396.0'
 >>>     )
+
+Django integration
+---------------------------------------------------
+'ska` comes with Django model- and view-decorators for producing signed URLs and and validating the endpoints.
+
+Django model method decorator (file models.py)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>> from django.db import models
+>>> from django.utils.translation import ugettext_lazy as _
+>>> from django.core.urlresolvers import reverse
+>>>
+>>> from ska.contrib.django.ska.decorators import sign_url
+>>>
+>>> class FooItem(models.Model):
+>>>     title = models.CharField(_("Title"), max_length=100)
+>>>     slug = models.SlugField(unique=True, verbose_name=_("Slug"))
+>>>     body = models.TextField(_("Body"))
+>>>
+>>>     # Unsigned absolute URL, which goes to the foo item detail page.
+>>>     def get_absolute_url(self):
+>>>         return reverse('foo.detail', kwargs={'slug': self.slug})
+>>>
+>>>     # Signed absolute URL, which goes to the foo item detail page.
+>>>     @sign_url()
+>>>     def get_signed_absolute_url(self):
+>>>         return reverse('foo.detail', kwargs={'slug': self.slug})
+
+Django model method decorator (file views.py)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>> from ska.contrib.django.ska.decorators import validate_signed_request
+>>>
+>>> # Your view that shall be protected
+>>> @validate_signed_request()
+>>> def detail(request, slug, template_name='foo/detail.html'):
+>>>     # Your code
 
 License
 ===================================================

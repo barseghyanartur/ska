@@ -1,0 +1,6 @@
+Django==1.5.4
+Pillow==2.1.0
+radar==0.3
+six==1.4.1
+selenium==2.35.0
+#-e git+https://github.com/barseghyanartur/ska/@stable#egg=ska

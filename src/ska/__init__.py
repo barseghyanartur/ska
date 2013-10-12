@@ -389,8 +389,8 @@ class RequestHelper(object):
         return validation_result
 
 def sign_url(auth_user, secret_key, valid_until=None, lifetime=SIGNATURE_LIFETIME, url='', \
-             suffix=DEFAULT_URL_SUFFIX, signature_param='signature', \
-             auth_user_param='auth_user', valid_until_param='valid_until'):
+             suffix=DEFAULT_URL_SUFFIX, signature_param=DEFAULT_SIGNATURE_PARAM, \
+             auth_user_param=DEFAULT_AUTH_USER_PARAM, valid_until_param=DEFAULT_VALID_UNTIL_PARAM):
     """
     Signs the URL.
 

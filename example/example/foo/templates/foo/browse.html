@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+
+{% block content %}
+    <h1>{% trans "Foo listing" %}</h1>
+
+    <ul>
+        {% for item in items%}
+        <li>
+            <a href="{{ item.get_absolute_url }}" class="unsigned">{{ item }}</a> | 
+            <a href="{{ item.get_signed_absolute_url }}" class="signed">{{ item }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+
+{% endblock content %}
