@@ -1,7 +1,31 @@
 from __future__ import absolute_import
 
 """
-jskjfkfjkl
+- ``validate_signed_request``: Function decorator. Validate request signature. Applies appropriate validation
+  mechanism to the request data. Assumes ``SKA_SECRET_KEY`` to be in ``settings`` module.
+
+  Arguments to be used with `ska.validate_signed_request_data` shortcut function.
+
+  :param str secret_key: The shared secret key.
+  :param str signature_param: Name of the (for example GET or POST) param name which holds
+      the ``signature`` value.
+  :param str auth_user_param: Name of the (for example GET or POST) param name which holds
+      the ``auth_user`` value.
+  :param str valid_until_param: Name of the (foe example GET or POST) param name which holds
+      the ``valid_until`` value.
+
+- ``sign_url``: Method decorator (to be used in models). Signs the URL.
+
+  Arguments to be used with `ska.sign_url` shortcut function.
+
+  :param str auth_user: Username of the user making the request.
+  :param str secret_key: The shared secret key.
+  :param float|str valid_until: Unix timestamp. If not given, generated automatically (now + lifetime).
+  :param int lifetime: Signature lifetime in seconds.
+  :param str suffix: Suffix to add after the ``endpoint_url`` and before the appended signature params.
+  :param str signature_param: Name of the GET param name which would hold the generated signature value.
+  :param str auth_user_param: Name of the GET param name which would hold the ``auth_user`` value.
+  :param str valid_until_param: Name of the GET param name which would hold the ``valid_until`` value.
 """
 
 __title__ = 'ska.contrib.django.ska.decorators'
@@ -25,11 +49,18 @@ from django.shortcuts import render
 
 class ValidateSignedRequest(object):
     """
-    Function decorator. Validate request signature. Detects whether request is GET or POST and applied
-    appropriate validation mechanism. Assumes ``SKA_SECRET_KEY`` to be in ``settings`` module.
+    Function decorator. Validate request signature. Applies appropriate validation mechanism to the request
+    data. Assumes ``SKA_SECRET_KEY`` to be in ``settings`` module.
 
-    :attribute str secret_key:
-    :attribute str signature_param:
+    Arguments to be used with `ska.validate_signed_request_data` shortcut function.
+
+    :attribute str secret_key: The shared secret key.
+    :attribute str signature_param: Name of the (for example GET or POST) param name which holds
+        the ``signature`` value.
+    :attribute str auth_user_param: Name of the (for example GET or POST) param name which holds
+        the ``auth_user`` value.
+    :attribute str valid_until_param: Name of the (foe example GET or POST) param name which holds
+        the ``valid_until`` value.
     """
     def __init__(self, secret_key=SECRET_KEY, signature_param=DEFAULT_SIGNATURE_PARAM, \
                  auth_user_param=DEFAULT_AUTH_USER_PARAM, valid_until_param=DEFAULT_VALID_UNTIL_PARAM):
@@ -76,6 +107,17 @@ validate_signed_request = ValidateSignedRequest
 class SignAbsoluteURL(object):
     """
     Method decorator (to be used in models). Signs the URL.
+
+    Arguments to be used with `ska.sign_url` shortcut function.
+
+    :attribute str auth_user: Username of the user making the request.
+    :attribute str secret_key: The shared secret key.
+    :attribute float|str valid_until: Unix timestamp. If not given, generated automatically (now + lifetime).
+    :attribute int lifetime: Signature lifetime in seconds.
+    :attribute str suffix: Suffix to add after the ``endpoint_url`` and before the appended signature params.
+    :attribute str signature_param: Name of the GET param name which would hold the generated signature value.
+    :attribute str auth_user_param: Name of the GET param name which would hold the ``auth_user`` value.
+    :attribute str valid_until_param: Name of the GET param name which would hold the ``valid_until`` value.
     """
     def __init__(self, auth_user=AUTH_USER, secret_key=SECRET_KEY, valid_until=None, lifetime=SIGNATURE_LIFETIME, \
                  suffix=DEFAULT_URL_SUFFIX, signature_param=DEFAULT_SIGNATURE_PARAM, \
