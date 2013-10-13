@@ -5,7 +5,7 @@ Base on MoSCoW principle. Must haves and should haves are planned to be worked o
 
 Must haves
 ------------------------------------
-- Django decorators for to be used in views for signature validation.
+- Better documentation for `ska.contrib.django.ska` module.
 - Find and implement the best way of making `ska` timezone aware.
 
 Should haves

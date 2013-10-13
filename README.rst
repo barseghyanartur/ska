@@ -19,6 +19,11 @@ the triple (``signature``, ``auth_user``, ``valid_until``) which are used to sig
 On the server side, (HTTP) request is validated using the shared Secret Key. It's being checked
 whether signature is valid and not expired.
 
+Prerequisites
+===================================================
+- Core `ska` module requires Python 2.6.8+, 2.7.+, 3.3.+
+- Django `ska` module (`ska.contrib.django.ska`) requires the mentioned above plus Django 1.5.+
+
 Installation
 ===================================================
 Latest stable version from PyPI.
