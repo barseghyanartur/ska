@@ -6,7 +6,7 @@ try:
 except:
   readme = ''
 
-version = '0.8'
+version = '0.9'
 
 setup(
     name = 'ska',
@@ -33,6 +33,8 @@ setup(
     packages = find_packages(where='./src'),
     include_package_data = True,
     install_requires = [
-        'six==1.4.1',
+        #'six==1.4.1',
+        #'six>=1.1.0',
+        'six>=1.4.0'
     ]
 )

@@ -1,8 +1,8 @@
 from __future__ import print_function
 
 __title__ = 'ska.contrib.django.ska.tests'
-__version__ = '0.8'
-__build__ = 0x000008
+__version__ = '0.9'
+__build__ = 0x000009
 __author__ = 'Artur Barseghyan'
 
 import unittest
@@ -39,10 +39,10 @@ def print_info(func):
 # +++++++++++++++++++++++++++++++++++++++++++++++
 import random
 
-from six import PY2, PY3
+from six import PY3
 from six.moves import range
 
-if PY2:
+if not PY3:
     from string import translate, maketrans, punctuation
 else:
     from string import punctuation
@@ -127,7 +127,7 @@ FACTORY = """
     dictum id.
     """
 
-if PY2:
+if not PY3:
     split_words = lambda f: list(set(translate(f.lower(), maketrans(punctuation, ' ' * len(punctuation))).split()))
 else:
     split_words = lambda f: list(set(f.lower().translate(str.maketrans("", "", punctuation)).split()))
@@ -165,7 +165,7 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
             i = FooItem()
             random_name = words[random.randint(0, len(words) - 1)]
 
-            if PY2:
+            if not PY3:
                 i.title = unicode(random_name).capitalize()
                 i.body = unicode(SENTENCES[random.randint(0, len(SENTENCES) - 1)])
             else:

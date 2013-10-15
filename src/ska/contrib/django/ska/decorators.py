@@ -29,12 +29,12 @@ from __future__ import absolute_import
 """
 
 __title__ = 'ska.contrib.django.ska.decorators'
-__version__ = '0.8'
-__build__ = 0x000008
+__version__ = '0.9'
+__build__ = 0x000009
 __author__ = 'Artur Barseghyan'
 __all__ = ('validate_signed_request', 'sign_url')
 
-from six import PY2, text_type
+from six import PY3, text_type
 
 from ska import validate_signed_request_data, sign_url as ska_sign_url
 from ska.defaults import SIGNATURE_LIFETIME, DEFAULT_URL_SUFFIX, DEFAULT_SIGNATURE_PARAM, DEFAULT_AUTH_USER_PARAM
@@ -133,7 +133,7 @@ class SignAbsoluteURL(object):
 
     def __call__(self, func):
         def inner(this, *args, **kwargs):
-            if PY2:
+            if not PY3:
                 url = text_type(func(this, *args, **kwargs))
             else:
                 url = func(this, *args, **kwargs)

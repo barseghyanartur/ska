@@ -7,8 +7,8 @@
 """
 
 __title__ = 'ska.contrib.django.ska.settings'
-__version__ = '0.8'
-__build__ = 0x000008
+__version__ = '0.9'
+__build__ = 0x000009
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __all__ = ('UNAUTHORISED_REQUEST_ERROR_MESSAGE', 'UNAUTHORISED_REQUEST_ERROR_TEMPLATE', 'AUTH_USER', 'SECRET_KEY')
 

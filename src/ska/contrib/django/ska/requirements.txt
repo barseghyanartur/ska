@@ -1,4 +1,4 @@
 Django==1.5.4
 radar==0.3
-six==1.4.1
+#six>=1.4.0
 #-e git+https://github.com/barseghyanartur/ska/@stable#egg=ska

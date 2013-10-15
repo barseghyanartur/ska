@@ -1,6 +1,6 @@
 __title__ = 'ska'
-__version__ = '0.7'
-__build__ = 0x000007
+__version__ = '0.9'
+__build__ = 0x000009
 __author__ = 'Artur Barseghyan'
 __all__ = ('Signature', 'RequestHelper', 'sign_url')
 
