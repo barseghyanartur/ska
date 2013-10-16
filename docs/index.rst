@@ -19,6 +19,11 @@ the triple (``signature``, ``auth_user``, ``valid_until``) which are used to sig
 On the server side, (HTTP) request is validated using the shared Secret Key. It's being checked
 whether signature is valid and not expired.
 
+Prerequisites
+===================================================
+- Core `ska` module requires Python 2.6.8+, 2.7.+, 3.3.+
+- Django `ska` module (`ska.contrib.django.ska`) requires the mentioned above plus Django 1.5.+
+
 Installation
 ===================================================
 Latest stable version from PyPI.
@@ -286,7 +291,22 @@ the ``ska.Signature``.
 
 Django integration
 ---------------------------------------------------
-'ska` comes with Django model- and view-decorators for producing signed URLs and and validating the endpoints.
+'ska` comes with Django model- and view-decorators for producing signed URLs and and validating the
+endpoints.
+
+Secret key (str) must be defined in `settings` module of your project.
+
+>>> SKA_SECRET_KEY = 'my-secret-key'
+
+The following variables can be overridden in `settings` module of your project.
+
+- `SKA_UNAUTHORISED_REQUEST_ERROR_MESSAGE` (str): Plain text error message. Defaults to
+  "Unauthorised request. {0}".
+- `SKA_UNAUTHORISED_REQUEST_ERROR_TEMPLATE` (str): Path to 401 template that should be rendered in
+  case of 401
+  responses. Defaults to empty string (not provided).
+- `SKA_AUTH_USER` (str): The ``auth_user`` argument for ``ska.sign_url`` function. Defaults to
+  "ska-auth-user".
 
 See the (https://github.com/barseghyanartur/ska/tree/stable/example) for a working example project.
 
@@ -294,8 +314,8 @@ Django model method decorator ``sign_url``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This is most likely be used in module `models` (models.py).
 
-Imagine, you have a some objects listing and you want to protect the URLs to be viewed by authorised parties
-only. You would then use ``get_signed_absolute_url`` method when rendering the listing (HTML).
+Imagine, you have a some objects listing and you want to protect the URLs to be viewed by authorised
+parties only. You would then use ``get_signed_absolute_url`` method when rendering the listing (HTML).
 
 >>> from django.db import models
 >>> from django.utils.translation import ugettext_lazy as _
@@ -317,13 +337,26 @@ only. You would then use ``get_signed_absolute_url`` method when rendering the l
 >>>     def get_signed_absolute_url(self):
 >>>         return reverse('foo.detail', kwargs={'slug': self.slug})
 
+Note, that ``sign_url`` decorator accepts the following optional arguments.
+
+- `auth_user` (str): Username of the user making the request.
+- `secret_key`: The shared secret key. If set, overrides the ``SKA_SECRET_KEY`` variable set in
+  the `settings` module of your project.
+- `valid_until` (float or str ): Unix timestamp. If not given, generated automatically (now + lifetime).
+- `lifetime` (int): Signature lifetime in seconds.
+- `suffix` (str): Suffix to add after the ``endpoint_url`` and before the appended signature params.
+- `signature_param` (str): Name of the GET param name which would hold the generated signature value.
+- `auth_user_param` (str): Name of the GET param name which would hold the ``auth_user`` value.
+- `valid_until_param` (str): Name of the GET param name which would hold the ``valid_until`` value.
+
 Django view decorator ``validate_signed_request``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 To be used to protect views (file views.py). Should be applied to views (endpoints) that require
 signed requests. If checks are not successful, a ``ska.contrib.django.ska.http.HttpResponseUnauthorized``
 is returned, which is a subclass of Django's ``django.http.HttpResponse``. You can provide your own
 template for 401 error. Simply point the ``SKA_UNAUTHORISED_REQUEST_ERROR_TEMPLATE`` in `settings`
-module to the right template. See `ska/contrib/django/ska/templates/ska/401.html` as a template example.
+module to the right template. See `ska/contrib/django/ska/templates/ska/401.html` as a template
+example.
 
 >>> from ska.contrib.django.ska.decorators import validate_signed_request
 >>>
@@ -331,6 +364,17 @@ module to the right template. See `ska/contrib/django/ska/templates/ska/401.html
 >>> @validate_signed_request()
 >>> def detail(request, slug, template_name='foo/detail.html'):
 >>>     # Your code
+
+Note, that ``validate_signed_request`` decorator accepts the following optional arguments.
+
+- `secret_key` (str) : The shared secret key. If set, overrides the ``SKA_SECRET_KEY`` variable
+  set in the `settings` module of your project.
+- `signature_param` (str): Name of the (for example GET or POST) param name which holds
+  the ``signature`` value.
+- `auth_user_param` (str): Name of the (for example GET or POST) param name which holds
+  the ``auth_user`` value.
+- `valid_until_param` (str): Name of the (foe example GET or POST) param name which holds
+  the ``valid_until`` value.
 
 Documentation
 ==================================
