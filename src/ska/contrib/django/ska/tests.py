@@ -40,7 +40,12 @@ def print_info(func):
 import random
 
 from six import PY3
-from six.moves import range
+
+try:
+    from six.moves import range as xrange
+except ImportError:
+    if PY3:
+        xrange = range
 
 if not PY3:
     from string import translate, maketrans, punctuation
@@ -160,7 +165,7 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
 
         random_date = radar.random_datetime()
 
-        for index in range(num_items):
+        for index in xrange(num_items):
             # Saving an item to database
             i = FooItem()
             random_name = words[random.randint(0, len(words) - 1)]
