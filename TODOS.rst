@@ -10,6 +10,8 @@ Must haves
 
 Should haves
 ------------------------------------
+- Authentication backend for Django (users to log into their accounts using ska generated hashes).
+- Authentication PAS plugin for Plone (similar to auth backend for Django)
 
 Could haves
 ------------------------------------
