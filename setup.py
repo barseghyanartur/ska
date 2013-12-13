@@ -6,7 +6,7 @@ try:
 except:
   readme = ''
 
-version = '0.9'
+version = '1.0'
 
 setup(
     name = 'ska',
@@ -28,13 +28,13 @@ setup(
     keywords = 'signing (HTTP) requests, symmetric-key algorithm, signing URLs, python',
     author = 'Artur Barseghyan',
     author_email = 'artur.barseghyan@gmail.com',
-    url = 'https://bitbucket.org/barseghyanartur/ska',
+    url = 'https://github.com/barseghyanartur/ska',
     package_dir = {'':'src'},
     packages = find_packages(where='./src'),
     include_package_data = True,
     install_requires = [
         #'six==1.4.1',
-        #'six>=1.1.0',
-        'six>=1.4.0'
+        'six>=1.1.0',
+        #'six>=1.4.0'
     ]
 )

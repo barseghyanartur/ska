@@ -13,9 +13,9 @@ Application defaults.
 """
 
 __title__ = 'ska.defaults'
-__version__ = '0.9'
-__build__ = 0x000009
 __author__ = 'Artur Barseghyan'
+__copyright__ = 'Copyright (c) 2013 Artur Barseghyan'
+__license__ = 'GPL 2.0/LGPL 2.1'
 __all__ = ('TIMESTAMP_FORMAT', 'SIGNATURE_LIFETIME', 'DEFAULT_SIGNATURE_PARAM', 'DEFAULT_AUTH_USER_PARAM', \
            'DEFAULT_VALID_UNTIL_PARAM', 'DEFAULT_URL_SUFFIX', 'DEBUG')
 

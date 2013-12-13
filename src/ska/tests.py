@@ -1,13 +1,22 @@
 from __future__ import print_function
 
 __title__ = 'ska.tests'
-__version__ = '0.9'
-__build__ = 0x000009
 __author__ = 'Artur Barseghyan'
+__copyright__ = 'Copyright (c) 2013 Artur Barseghyan'
+__license__ = 'GPL 2.0/LGPL 2.1'
 
 import unittest
 import datetime
-from six.moves.urllib.parse import urlparse, parse_qs
+
+from six import PY3
+
+try:
+    from six.moves.urllib.parse import urlparse, parse_qs
+except ImportError as e:
+    if PY3:
+        from urllib.parse import urlparse, parse_qs
+    else:
+        from urlparse import urlparse, parse_qs
 
 from ska import Signature, RequestHelper, TIMESTAMP_FORMAT
 from ska import sign_url, validate_signed_request_data, signature_to_dict

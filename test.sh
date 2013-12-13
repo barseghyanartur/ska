@@ -4,7 +4,7 @@ reset
 ./install.sh
 pip uninstall six -y
 pip uninstall six -y
-pip install six==1.4.0
+pip install six==1.1.0
 python src/ska/tests.py
 
 # django-ska tests

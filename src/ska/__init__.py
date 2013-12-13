@@ -1,7 +1,9 @@
 __title__ = 'ska'
-__version__ = '0.9'
-__build__ = 0x000009
+__version__ = '1.0'
+__build__ = 0x00000A
 __author__ = 'Artur Barseghyan'
+__copyright__ = 'Copyright (c) 2013 Artur Barseghyan'
+__license__ = 'GPL 2.0/LGPL 2.1'
 __all__ = ('Signature', 'RequestHelper', 'sign_url')
 
 import datetime
@@ -9,7 +11,16 @@ import time
 import hmac
 from base64 import b64decode, b64encode
 from hashlib import sha1
-from six.moves.urllib.parse import urlencode
+
+from six import PY3
+
+try:
+    from six.moves.urllib.parse import urlencode
+except ImportError as e:
+    if PY3:
+        from urllib.parse import urlencode
+    else:
+        from urllib import urlencode
 
 from ska.defaults import SIGNATURE_LIFETIME, TIMESTAMP_FORMAT, DEFAULT_URL_SUFFIX
 from ska.defaults import DEFAULT_SIGNATURE_PARAM, DEFAULT_AUTH_USER_PARAM, DEFAULT_VALID_UNTIL_PARAM

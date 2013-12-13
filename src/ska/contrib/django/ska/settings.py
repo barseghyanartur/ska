@@ -7,9 +7,9 @@
 """
 
 __title__ = 'ska.contrib.django.ska.settings'
-__version__ = '0.9'
-__build__ = 0x000009
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
+__copyright__ = 'Copyright (c) 2013 Artur Barseghyan'
+__license__ = 'GPL 2.0/LGPL 2.1'
 __all__ = ('UNAUTHORISED_REQUEST_ERROR_MESSAGE', 'UNAUTHORISED_REQUEST_ERROR_TEMPLATE', 'AUTH_USER', 'SECRET_KEY')
 
 from django.conf import settings
