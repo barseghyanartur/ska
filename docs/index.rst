@@ -447,7 +447,11 @@ the server.
 >>>         'signed_url': signed_url,
 >>>     }
 >>>
->>>     return render_to_response(template_name, context, context_instance=RequestContext(request))
+>>>     return render_to_response(
+>>>         template_name,
+>>>         context,
+>>>         context_instance = RequestContext(request)
+>>>         )
 
 Security notes
 +++++++++++++++++++++++++++++++++++++++++++++++++++
