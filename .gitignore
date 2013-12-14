@@ -1,5 +1,6 @@
 *.py[cod]
 .hgignore~
+.hgtags
 .gitignore~
 .travis.yml~
 .hg/
