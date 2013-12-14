@@ -42,5 +42,4 @@ Release history
 -------------------------------------
 2013-09-05
 
-- Initial production release. Use this version, if you're running Python 2, and the `six` package
-  is pinned to version earlier than 1.4.1 as a dependancy for your software.
+- Initial production release.
