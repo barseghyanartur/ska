@@ -90,6 +90,12 @@ STATICFILES_FINDERS = (
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '6sf18c*w971i8a-m^1coasrmur2k6+q5_kyn*)s@(*_dk5q3&r'
 
+
+AUTHENTICATION_BACKENDS = (
+    'ska.contrib.django.ska.backends.SkaAuthenticationBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.debug',
@@ -148,6 +154,7 @@ INSTALLED_APPS = (
 
 SKA_SECRET_KEY = 'secret-key'
 SKA_UNAUTHORISED_REQUEST_ERROR_TEMPLATE = 'ska/401.html'
+SKA_REDIRECT_AFTER_LOGIN = '/foo/logged-in/'
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

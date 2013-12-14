@@ -8,6 +8,7 @@ from django.conf.urls.static import static
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    url(r'^ska/', include('ska.contrib.django.ska.urls')),
     url(r'^foo/', include('foo.urls')),
     url(r'^admin/', include(admin.site.urls)),
 )

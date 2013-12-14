@@ -1,6 +1,13 @@
 =====================================
 Release history
 =====================================
+1.1
+-------------------------------------
+2013-12-14
+
+- Class based views validation decorator added.
+- Authentication backend for Django based on authentication tokens generated with `ska`.
+
 1.0
 -------------------------------------
 2013-12-13

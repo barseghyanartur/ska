@@ -9,9 +9,20 @@
         {% for item in items%}
         <li>
             <a href="{{ item.get_absolute_url }}" class="unsigned">{{ item }}</a> | 
-            <a href="{{ item.get_signed_absolute_url }}" class="signed">{{ item }}</a>
+            <a href="{{ item.get_signed_absolute_url }}" class="signed">{{ item }}</a> |
+            <a href="{{ item.get_signed_class_based_absolute_url }}" class="signed">{{ item }} ({% trans "class based" %})</a>
         </li>
         {% endfor %}
+    </ul>
+
+    <h1>{% trans "Log in" %}</h1>
+    <ul>
+    {% for remote_ska_login_url, signed_remote_ska_login_url in remote_ska_login_urls %}
+        <li>
+            <a href="{{ remote_ska_login_url }}" class="login">{% trans "Log into Django site using `ska` (fail)" %} - {{ forloop.counter0 }}</a> |
+            <a href="{{ signed_remote_ska_login_url }}" class="login">{% trans "Log into Django site using `ska` (success)" %} - {{ forloop.counter0 }}</a>
+        </li>
+    {% endfor %}
     </ul>
 
 {% endblock content %}

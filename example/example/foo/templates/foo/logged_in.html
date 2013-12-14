@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+
+{% block content %}
+    <h1>{% trans "Logged in!" %}</h1>
+
+    <p>
+        <a href="javascript:;" class="logged-in">
+        {% blocktrans with request.user.username as username %}
+            You are logged in as `{{ username }}`!
+        {% endblocktrans %}
+        </a>
+    </p>
+
+{% endblock content %}

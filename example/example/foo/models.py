@@ -41,3 +41,14 @@ class FooItem(models.Model):
         return reverse('foo.detail', kwargs={'slug': self.slug})
     get_signed_absolute_url.allow_tags = True
     get_signed_absolute_url.short_description = _('Signed URL')
+
+    @sign_url()
+    def get_signed_class_based_absolute_url(self):
+        """
+        Absolute URL, which goes to the foo item detail page.
+
+        :return str:
+        """
+        return reverse('foo.class-based.detail', kwargs={'slug': self.slug})
+    get_signed_absolute_url.allow_tags = True
+    get_signed_absolute_url.short_description = _('Signed URL')

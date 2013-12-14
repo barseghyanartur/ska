@@ -8,8 +8,11 @@ Base on MoSCoW principle. Must haves and should haves are planned to be worked o
 
 Must haves
 ------------------------------------
++ Class based views validation decorator.
 - Better documentation for `ska.contrib.django.ska` module.
 - Find and implement the best way of making `ska` timezone aware.
+- Make it easy to add additional data (such as user data, for auth backend) to the
+  URL.
 
 Should haves
 ------------------------------------
