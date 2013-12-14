@@ -1,7 +1,7 @@
 ===================================================
 ska
 ===================================================
-Symmetric-key algorithm encryption. Lets you easily generate signatures for signing (HTTP) requests.
+Lets you easily generate signatures for signing (HTTP) requests, using symmetric-key algorithm encryption.
 Allows you to validate signed requests and identify possible validation errors. Uses sha1/hmac for
 signature encryption.
 
@@ -18,6 +18,19 @@ the triple (``signature``, ``auth_user``, ``valid_until``) which are used to sig
 
 On the server side, (HTTP) request is validated using the shared Secret Key. It's being checked
 whether signature is valid and not expired.
+
+Features
+===================================================
+Core `ska` module
+---------------------------------------------------
+- Sign URLs.
+- Validate URLs.
+
+Django `ska` module (`ska.contrib.django.ska`)
+---------------------------------------------------
+- Model and view (including class-based views) decorators for signing and validating the URLs.
+- Authentication backend for Django based on the signatures (tokens) generated using `ska`, which
+  allows you to get a password-less login to Django web site.
 
 Prerequisites
 ===================================================
@@ -375,6 +388,45 @@ Note, that ``validate_signed_request`` decorator accepts the following optional 
   the ``auth_user`` value.
 - `valid_until_param` (str): Name of the (foe example GET or POST) param name which holds
   the ``valid_until`` value.
+
+Authentication backend
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+See the `example` project for as a real world example.
+
+Server side
++++++++++++++++++++++++++++++++++++++++++++++++++++
+On the server side, where users are supposed to log in, the following shall be present.
+
+settings.py
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>>> AUTHENTICATION_BACKENDS = (
+>>>     'ska.contrib.django.ska.backends.SkaAuthenticationBackend',
+>>>     'django.contrib.auth.backends.ModelBackend',
+>>> )
+
+>>> INSTALLED_APPS = (
+>>>     # ...
+>>>     'ska.contrib.django.ska',
+>>>     # ...
+>>> )
+
+>>> SKA_SECRET_KEY = 'secret-key'
+>>> SKA_UNAUTHORISED_REQUEST_ERROR_TEMPLATE = 'ska/401.html'
+>>> SKA_REDIRECT_AFTER_LOGIN = '/foo/logged-in/'
+
+urls.py
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>>> urlpatterns = patterns('',
+>>>     url(r'^ska/', include('ska.contrib.django.ska.urls')),
+>>>     url(r'^admin/', include(admin.site.urls)),
+>>> )
+
+Client side
++++++++++++++++++++++++++++++++++++++++++++++++++++
+On the client application side, the only thing that shall be present is the `ska` module for Django and
+of course the same ``SECRET_KEY`` as on the server side. Further, the server `ska` login URL (in our case
+"/ska/login/") shall be signed using `ska` (for example, using `sign_url` function). The `auth_user` param
+would be used as a Django username.
 
 License
 ===================================================
