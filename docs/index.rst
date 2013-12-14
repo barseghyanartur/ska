@@ -426,7 +426,34 @@ Client side
 On the client application side, the only thing that shall be present is the `ska` module for Django and
 of course the same ``SECRET_KEY`` as on the server side. Further, the server `ska` login URL (in our case
 "/ska/login/") shall be signed using `ska` (for example, using `sign_url` function). The `auth_user` param
-would be used as a Django username.
+would be used as a Django username. See the example below.
+
+>>> from ska import sign_url
+>>> from ska.contrib.django.ska.settings import SECRET_KEY
+>>>
+>>> server_ska_login_url = 'https://server-url.com/ska/login/'
+>>>
+>>> signed_url = sign_url(
+>>>     auth_user = 'test_ska_user_0',
+>>>     secret_key = SECRET_KEY,
+>>>     url = server_ska_login_url
+>>>     )
+
+Put this code, for instance, put it to your template context and show to the user for authenticating to
+the server.
+
+>>> def auth_to_server(request, template_name='auth_to_server.html'):
+>>>     context = {
+>>>         'signed_url': signed_url,
+>>>     }
+>>>
+>>>     return render_to_response(template_name, context, context_instance=RequestContext(request))
+
+Security notes
++++++++++++++++++++++++++++++++++++++++++++++++++++
+From point of security, in current implementation, you should be serving both: (1) server
+page (/ska/login/) and (2) the client page, which contains the authentication link, via secure
+HTTP connection.
 
 License
 ===================================================
