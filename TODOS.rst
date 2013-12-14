@@ -16,6 +16,7 @@ Must haves
 - Make it easy to add additional data (such as user data, for auth backend) to the
   URL.
 - Add tests for Django auth backend.
+- Demo (quick installer) for Django app.
 
 Should haves
 ------------------------------------
