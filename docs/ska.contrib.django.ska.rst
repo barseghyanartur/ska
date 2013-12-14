@@ -1,6 +1,14 @@
 ska Package
 ===========
 
+:mod:`backends` Module
+------------------
+
+.. automodule:: ska.contrib.django.ska.backends
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`conf` Module
 ------------------
 
@@ -45,6 +53,22 @@ ska Package
 ----------------------
 
 .. automodule:: ska.contrib.django.ska.settings
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`urls` Module
+------------------
+
+.. automodule:: ska.contrib.django.ska.urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`views` Module
+------------------
+
+.. automodule:: ska.contrib.django.ska.views
     :members:
     :undoc-members:
     :show-inheritance:

@@ -25,6 +25,14 @@ ska Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`helpers` Module
+---------------------------------
+
+.. automodule:: ska.helpers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Subpackages
 -----------
 
