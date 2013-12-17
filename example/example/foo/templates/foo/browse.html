@@ -4,25 +4,29 @@
 
 {% block content %}
     <h1>{% trans "Foo listing" %}</h1>
-
-    <ul>
+    <p>
+        {% blocktrans %}
+        Below you can see the list of URLs, divided into 3 categories: (1) Fail, (2) success and (3) success
+        (class based). Fail URLs obviously fail (401 Unauthorized). The other two should work.
+        {% endblocktrans %}
+    </p>
+    <table>
+        <thead>
+            <tr>
+                <td><strong>{% trans "Fail" %}</strong></td>
+                <td><strong>{% trans "Success" %}</strong></td>
+                <td><strong>{% trans "Success (class based)" %}</strong></td>
+            </tr>
+        </thead>
+        <tbody>
         {% for item in items%}
-        <li>
-            <a href="{{ item.get_absolute_url }}" class="unsigned">{{ item }}</a> | 
-            <a href="{{ item.get_signed_absolute_url }}" class="signed">{{ item }}</a> |
-            <a href="{{ item.get_signed_class_based_absolute_url }}" class="signed">{{ item }} ({% trans "class based" %})</a>
-        </li>
+        <tr>
+            <td><a href="{{ item.get_absolute_url }}" class="unsigned">{{ item }}</a></td>
+            <td><a href="{{ item.get_signed_absolute_url }}" class="signed">{{ item }}</a></td>
+            <td><a href="{{ item.get_signed_class_based_absolute_url }}" class="signed">{{ item }}</a></td>
+        </tr>
         {% endfor %}
-    </ul>
-
-    <h1>{% trans "Log in" %}</h1>
-    <ul>
-    {% for remote_ska_login_url, signed_remote_ska_login_url in remote_ska_login_urls %}
-        <li>
-            <a href="{{ remote_ska_login_url }}" class="login">{% trans "Log into Django site using `ska` (fail)" %} - {{ forloop.counter0 }}</a> |
-            <a href="{{ signed_remote_ska_login_url }}" class="login">{% trans "Log into Django site using `ska` (success)" %} - {{ forloop.counter0 }}</a>
-        </li>
-    {% endfor %}
-    </ul>
+        </tbody>
+    </table>
 
 {% endblock content %}

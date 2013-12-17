@@ -1,0 +1,20 @@
+/* 
+    Document   : example
+    Created on : Dec 17, 2013, 10:31:55 PM
+    Author     : Artur Barseghyan
+    Description:
+        `ska` example project basic styles.
+*/
+
+table {
+    border: 0;
+}
+
+table thead td {
+    background-color: #eee;
+}
+
+table td {
+    border: #333 1px solid;
+    padding: 10px;
+}

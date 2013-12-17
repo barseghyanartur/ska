@@ -7,6 +7,9 @@
 - `USER_CREATE_CALLBACK` (str): User create callback (when user is created in auth backend).
 - `USER_INFO_CALLBACK` (str): User info callback.
 - `REDIRECT_AFTER_LOGIN` (str): Redirect after login.
+- `DB_STORE_SIGNATURES` (bool): If set to True, signatures are stored in the database.
+- `DB_PERFORM_SIGNATURE_CHECK` (bool): If set to True, an extra check is fired on whether the token has
+  already been used or not.
 """
 
 __title__ = 'ska.contrib.django.ska.defaults'
@@ -15,7 +18,8 @@ __copyright__ = 'Copyright (c) 2013 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
 __all__ = (
     'AUTH_USER', 'UNAUTHORISED_REQUEST_ERROR_MESSAGE', 'UNAUTHORISED_REQUEST_ERROR_TEMPLATE',
-    'USER_GET_CALLBACK', 'USER_CREATE_CALLBACK', 'USER_INFO_CALLBACK', 'REDIRECT_AFTER_LOGIN'
+    'USER_GET_CALLBACK', 'USER_CREATE_CALLBACK', 'USER_INFO_CALLBACK', 'REDIRECT_AFTER_LOGIN',
+    'DB_STORE_SIGNATURES', 'DB_PERFORM_SIGNATURE_CHECK'
 )
 
 ugettext = lambda s: s
@@ -30,3 +34,6 @@ USER_GET_CALLBACK = None
 USER_CREATE_CALLBACK = None
 USER_INFO_CALLBACK = None
 REDIRECT_AFTER_LOGIN = ''
+
+DB_STORE_SIGNATURES = False
+DB_PERFORM_SIGNATURE_CHECK = False

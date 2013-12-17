@@ -4,12 +4,16 @@ __copyright__ = 'Copyright (c) 2013 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
 __all__ = ('SkaAuthenticationBackend',)
 
-from django.contrib.auth.models import User, UNUSABLE_PASSWORD
-
-from ska import validate_signed_request_data
+from ska import validate_signed_request_data, Signature
 from ska.helpers import get_callback_func
 from ska.defaults import DEFAULT_SIGNATURE_PARAM, DEFAULT_AUTH_USER_PARAM, DEFAULT_VALID_UNTIL_PARAM
+
+from django.contrib.auth.models import User, UNUSABLE_PASSWORD
+from django.db import IntegrityError
+
 from ska.contrib.django.ska.settings import SECRET_KEY, USER_GET_CALLBACK, USER_CREATE_CALLBACK, USER_INFO_CALLBACK
+from ska.contrib.django.ska.models import Signature as SignatureModel
+from ska.contrib.django.ska.settings import DB_STORE_SIGNATURES, DB_PERFORM_SIGNATURE_CHECK
 
 class SkaAuthenticationBackend(object):
     """
@@ -34,6 +38,22 @@ class SkaAuthenticationBackend(object):
 
         # Get the username from request.
         auth_user = request.REQUEST.get(DEFAULT_AUTH_USER_PARAM)
+        signature = request.REQUEST.get(DEFAULT_SIGNATURE_PARAM)
+        valid_until = request.REQUEST.get(DEFAULT_VALID_UNTIL_PARAM)
+
+        # Storing the signatures to database if set to be so.
+        if DB_STORE_SIGNATURES:
+            token = SignatureModel(
+                auth_user = auth_user,
+                signature = signature,
+                valid_until = Signature.unix_timestamp_to_date(valid_until)
+            )
+            try:
+                token.save()
+            except IntegrityError as e:
+                if DB_PERFORM_SIGNATURE_CHECK:
+                    # Token has already been used. Do not authenticate.
+                    return None
 
         # Try to get user. If doesn't exist - create.
         try:

@@ -10,6 +10,8 @@ import os
 
 PROJECT_DIR = lambda base : os.path.join(os.path.dirname(__file__), base).replace('\\','/')
 
+SKA_TEST_USER_USERNAME = 'test_admin'
+SKA_TEST_USER_PASSWORD = 'test'
 PRINT_INFO = True
 
 def print_info(func):
@@ -155,11 +157,32 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
 
     from django.test import Client
     from django.utils.text import slugify
+    from django.contrib.auth.models import User
 
     from foo.models import FooItem
 
 # *********************************************************************
 # *********************************************************************
+
+    def create_admin_user():
+        """
+        Create a user for testing the dashboard.
+
+        TODO: At the moment an admin account is being tested. Automated tests with diverse accounts are
+        to be implemented.
+        """
+        u = User()
+        u.username = SKA_TEST_USER_USERNAME
+        u.email = 'admin@dev.django-ska.com'
+        u.is_superuser = True
+        u.is_staff = True
+        u.set_password(SKA_TEST_USER_PASSWORD)
+
+        try:
+            u.save()
+        except Exception as e:
+            pass
+
     def generate_data(num_items=NUM_ITEMS):
         words = WORDS[:]
 

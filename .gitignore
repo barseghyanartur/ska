@@ -14,3 +14,4 @@ builddocs.zip
 build/
 dist/
 src/ska.egg-info
+src/ska/contrib/plone/

@@ -6,6 +6,8 @@ urlpatterns = patterns('foo.views',
     # Listing URL
     url(r'^$', view='browse', name='foo.browse'),
 
+    url(r'^authenticate/$', view='authenticate', name='foo.authenticate'),
+
     url(r'^logged-in/$', view='logged_in', name='foo.logged_in'),
 
     # Class based detail view URL

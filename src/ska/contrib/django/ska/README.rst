@@ -1,6 +1,11 @@
 ===================================================
 ska.contrib.django.ska
 ===================================================
+Django `ska` integration.
+
+- Model and view (including class-based views) decorators for signing and validating the URLs.
+- Authentication backend for Django based on the signatures (tokens) generated using `ska`, which
+  allows you to get a password-less login to Django web site.
 
 Prerequisites
 ===================================================
@@ -47,8 +52,10 @@ Usage and examples
 ===================================================
 See the (https://github.com/barseghyanartur/ska/tree/stable/example) for a working example project.
 
-foo/models.py
+Signing URLs
 ---------------------------------------------------
+foo/models.py
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The following code is given as an example. Note the ``sign_url`` decorator used in ``get_signed_absolute_url``
 method.
 
@@ -73,7 +80,7 @@ method.
 >>>         return reverse('foo.detail', kwargs={'slug': self.slug})
 
 foo/views.py
----------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The following code is given as an example. Note the ``validate_signed_request`` decorator used in ``detail``
 view function.
 
@@ -83,6 +90,91 @@ view function.
 >>> @validate_signed_request()
 >>> def detail(request, slug, template_name='foo/detail.html'):
 >>>     # Your code
+
+Authentication backend
+---------------------------------------------------
+Allows you to get a password-less login to Django web site. By default, number of logins using the
+same token is not limited. If you wish that single tokens become invalid after first use, set
+the following variables to True in your projects' Django settings module.
+
+>>> SKA_DB_STORE_SIGNATURES = True
+>>> SKA_DB_PERFORM_SIGNATURE_CHECK = True
+
+Server side
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+On the server side, where users are supposed to log in, the following shall be present.
+
+settings.py
++++++++++++++++++++++++++++++++++++++++++++++++++++
+>>> AUTHENTICATION_BACKENDS = (
+>>>     'ska.contrib.django.ska.backends.SkaAuthenticationBackend',
+>>>     'django.contrib.auth.backends.ModelBackend',
+>>> )
+
+>>> INSTALLED_APPS = (
+>>>     # ...
+>>>     'ska.contrib.django.ska',
+>>>     # ...
+>>> )
+
+>>> SKA_SECRET_KEY = 'secret-key'
+>>> SKA_UNAUTHORISED_REQUEST_ERROR_TEMPLATE = 'ska/401.html'
+>>> SKA_REDIRECT_AFTER_LOGIN = '/foo/logged-in/'
+
+urls.py
++++++++++++++++++++++++++++++++++++++++++++++++++++
+>>> urlpatterns = patterns('',
+>>>     url(r'^ska/', include('ska.contrib.django.ska.urls')),
+>>>     url(r'^admin/', include(admin.site.urls)),
+>>> )
+
+Purging of old signature data
++++++++++++++++++++++++++++++++++++++++++++++++++++
+If you have lots of visitors and the ``SKA_DB_STORE_SIGNATURES`` set to True, your database
+grows. If you wish to get rid of old signature token data, you may want to execute the following
+command using a cron job.
+
+    $ ./manage.py ska_purge_stored_signature_data
+
+Client side
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+On the client application side, the only thing that shall be present is the `ska` module for Django and
+of course the same ``SECRET_KEY`` as on the server side. Further, the server `ska` login URL (in our case
+"/ska/login/") shall be signed using `ska` (for example, using `sign_url` function). The `auth_user` param
+would be used as a Django username. See the example below.
+
+>>> from ska import sign_url
+>>> from ska.contrib.django.ska.settings import SECRET_KEY
+>>>
+>>> server_ska_login_url = 'https://server-url.com/ska/login/'
+>>>
+>>> signed_url = sign_url(
+>>>     auth_user = 'test_ska_user_0',
+>>>     secret_key = SECRET_KEY,
+>>>     url = server_ska_login_url
+>>>     )
+
+Put this code, for instance, put it to your template context and show to the user for authenticating to
+the server.
+
+>>> def auth_to_server(request, template_name='auth_to_server.html'):
+>>>     # Some code + obtaining the `signed_url` (code shown above)
+>>>     context = {
+>>>         'signed_url': signed_url,
+>>>     }
+>>>
+>>>     return render_to_response(
+>>>         template_name,
+>>>         context,
+>>>         context_instance = RequestContext(request)
+>>>         )
+
+Security notes
++++++++++++++++++++++++++++++++++++++++++++++++++++
+From point of security, you should be serving the following pages via HTTP secure connection:
+
+- The server login page (/ska/login/).
+- The client page containing the authentication links.
 
 License
 ===================================================

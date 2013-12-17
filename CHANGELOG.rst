@@ -1,6 +1,17 @@
 =====================================
 Release history
 =====================================
+1.2
+-------------------------------------
+2013-12-17
+
+- Optionally storing the authentication tokens into the database, when used with Django
+  auth backend.
+- Optionally checking, if signature token has already been used to log into Django. If
+  so, ignoring the login attempt. A management command is added to purge old signature
+  data.
+- Demo (quick installer) added.
+
 1.1
 -------------------------------------
 2013-12-14

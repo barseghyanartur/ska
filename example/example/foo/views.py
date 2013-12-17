@@ -20,6 +20,20 @@ def browse(request, template_name='foo/browse.html'):
     """
     queryset = FooItem._default_manager.all()
 
+    context = {
+        'items': queryset,
+    }
+
+    return render_to_response(template_name, context, context_instance=RequestContext(request))
+
+def authenticate(request, template_name='foo/authenticate.html'):
+    """
+    Authenticate.
+
+    :param django.http.HttpRequest request:
+    :param str template_name:
+    :return django.http.HttpResponse:
+    """
     remote_ska_login_urls = []
 
     for i in range(10):
@@ -32,7 +46,6 @@ def browse(request, template_name='foo/browse.html'):
         remote_ska_login_urls.append((remote_ska_login_url, signed_remote_ska_login_url))
 
     context = {
-        'items': queryset,
         'remote_ska_login_urls': remote_ska_login_urls,
     }
 

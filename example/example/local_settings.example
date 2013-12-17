@@ -1,4 +1,4 @@
-# Django settings for resato_portal project.
+# Django settings for example_portal project.
 import os
 PROJECT_DIR = lambda base : os.path.abspath(os.path.join(os.path.dirname(__file__), base).replace('\\','/'))
 
@@ -26,3 +26,5 @@ EMAIL_FILE_PATH = PROJECT_DIR(os.path.join('..', 'tmp'))
 DEFAULT_FROM_EMAIL = '<no-reply@example.com>'
 
 SKA_UNAUTHORISED_REQUEST_ERROR_TEMPLATE = 'ska/401.html'
+SKA_DB_STORE_SIGNATURES = True
+SKA_DB_PERFORM_SIGNATURE_CHECK = True

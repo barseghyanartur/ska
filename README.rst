@@ -391,7 +391,9 @@ Note, that ``validate_signed_request`` decorator accepts the following optional 
 
 Authentication backend
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-See the `example` project for as a real world example.
+Allows you to get a password-less login to Django web site. By default, number of logins using the
+same token is not limited. If you wish that single tokens become invalid after first use, set
+the following variables to True in your projects' Django settings module.
 
 Server side
 +++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -421,6 +423,14 @@ urls.py
 >>>     url(r'^admin/', include(admin.site.urls)),
 >>> )
 
+Purging of old signature data
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+If you have lots of visitors and the ``SKA_DB_STORE_SIGNATURES`` set to True, your database
+grows. If you wish to get rid of old signature token data, you may want to execute the following
+command using a cron job.
+
+    $ ./manage.py ska_purge_stored_signature_data
+    
 Client side
 +++++++++++++++++++++++++++++++++++++++++++++++++++
 On the client application side, the only thing that shall be present is the `ska` module for Django and
@@ -443,6 +453,7 @@ Put this code, for instance, put it to your template context and show to the use
 the server.
 
 >>> def auth_to_server(request, template_name='auth_to_server.html'):
+>>>     # Some code + obtaining the `signed_url` (code shown above)
 >>>     context = {
 >>>         'signed_url': signed_url,
 >>>     }
@@ -455,9 +466,10 @@ the server.
 
 Security notes
 +++++++++++++++++++++++++++++++++++++++++++++++++++
-From point of security, in current implementation, you should be serving both: (1) server
-page (/ska/login/) and (2) the client page, which contains the authentication link, via secure
-HTTP connection.
+From point of security, you should be serving the following pages via HTTP secure connection:
+
+- The server login page (/ska/login/).
+- The client page containing the authentication links.
 
 License
 ===================================================

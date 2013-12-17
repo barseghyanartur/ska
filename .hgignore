@@ -14,3 +14,4 @@ syntax: regexp
 ^build/
 ^dist/
 ^src/ska.egg-info
+^src/ska/contrib/plone/
