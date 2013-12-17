@@ -430,6 +430,9 @@ Allows you to get a password-less login to Django web site. By default, number o
 same token is not limited. If you wish that single tokens become invalid after first use, set
 the following variables to True in your projects' Django settings module.
 
+>>> SKA_DB_STORE_SIGNATURES = True
+>>> SKA_DB_PERFORM_SIGNATURE_CHECK = True
+
 Server side
 +++++++++++++++++++++++++++++++++++++++++++++++++++
 On the server side, where users are supposed to log in, the following shall be present.
