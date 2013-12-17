@@ -15,10 +15,10 @@ class Signature(models.Model):
     Token
 
     :Properties:
-        - `user` (django.contrib.auth.models.User: User owning the plugin.
-        - `layout_uid` (str): Users' preferred layout.
-        - `title` (str): Dashboard title.
-        - `is_public` (bool): If set to True, available as public (read-only mode).
+        - `signature` (str): Signature generated.
+        - `auth_user` (str): Auth user.
+        - `valid_until` (datetime.datetime): Valid until.
+        - `created` (datetime.datetime): Time added.
     """
     signature = models.CharField(_("Signature"), max_length=255)
     auth_user = models.CharField(_("Auth user"), max_length=255)

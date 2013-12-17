@@ -5,7 +5,7 @@ __all__ = ('Command',)
 
 from django.core.management.base import BaseCommand
 
-from ska.contrib.django.ska.tests import create_admin_user
+from ska.contrib.django.ska.tests import create_admin_user, generate_data
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
@@ -13,4 +13,4 @@ class Command(BaseCommand):
         Purges old signature data (valid_until < now).
         """
         create_admin_user()
-
+        generate_data()
