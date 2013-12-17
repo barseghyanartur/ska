@@ -305,8 +305,43 @@ the ``ska.Signature``.
 Django integration
 ---------------------------------------------------
 'ska` comes with Django model- and view-decorators for producing signed URLs and and validating the
-endpoints.
+endpoints, as well as with authentication backend, which allows password-less login into Django
+web site using `ska` generated signature tokens.
 
+Demo
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In order to be able to quickly evaluate the `ska`, a demo app (with a quick installer) has been created
+(works on Ubuntu/Debian, may work on other Linux systems as well, although not guaranteed). Follow the
+instructions below for having the demo running within a minute.
+
+Grab the latest `ska_example_app_installer.sh`:
+
+    $ wget https://raw.github.com/barseghyanartur/ska/stable/example/ska_example_app_installer.sh
+
+Assign execute rights to the installer and run the `django_dash_example_app_installer.sh`:
+
+    $ chmod +x ska_example_app_installer.sh
+
+    $ ./ska_example_app_installer.sh
+
+Open your browser and test the app.
+
+Foo listing (ska protected views):
+
+- URL: http://127.0.0.1:8001/foo/
+
+Authentication page (ska authentication backend):
+
+- URL: http://127.0.0.1:8001/foo/authenticate/
+
+Django admin interface:
+
+- URL: http://127.0.0.1:8001/admin/
+- Admin username: test_admin
+- Admin password: test
+
+Configuration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Secret key (str) must be defined in `settings` module of your project.
 
 >>> SKA_SECRET_KEY = 'my-secret-key'
@@ -391,7 +426,9 @@ Note, that ``validate_signed_request`` decorator accepts the following optional 
 
 Authentication backend
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-See the `example` project for as a real world example.
+Allows you to get a password-less login to Django web site. By default, number of logins using the
+same token is not limited. If you wish that single tokens become invalid after first use, set
+the following variables to True in your projects' Django settings module.
 
 Server side
 +++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -421,6 +458,14 @@ urls.py
 >>>     url(r'^admin/', include(admin.site.urls)),
 >>> )
 
+Purging of old signature data
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+If you have lots of visitors and the ``SKA_DB_STORE_SIGNATURES`` set to True, your database
+grows. If you wish to get rid of old signature token data, you may want to execute the following
+command using a cron job.
+
+    $ ./manage.py ska_purge_stored_signature_data
+
 Client side
 +++++++++++++++++++++++++++++++++++++++++++++++++++
 On the client application side, the only thing that shall be present is the `ska` module for Django and
@@ -443,6 +488,7 @@ Put this code, for instance, put it to your template context and show to the use
 the server.
 
 >>> def auth_to_server(request, template_name='auth_to_server.html'):
+>>>     # Some code + obtaining the `signed_url` (code shown above)
 >>>     context = {
 >>>         'signed_url': signed_url,
 >>>     }
@@ -455,9 +501,10 @@ the server.
 
 Security notes
 +++++++++++++++++++++++++++++++++++++++++++++++++++
-From point of security, in current implementation, you should be serving both: (1) server
-page (/ska/login/) and (2) the client page, which contains the authentication link, via secure
-HTTP connection.
+From point of security, you should be serving the following pages via HTTP secure connection:
+
+- The server login page (/ska/login/).
+- The client page containing the authentication links.
 
 License
 ===================================================

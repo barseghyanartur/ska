@@ -305,8 +305,43 @@ the ``ska.Signature``.
 Django integration
 ---------------------------------------------------
 'ska` comes with Django model- and view-decorators for producing signed URLs and and validating the
-endpoints.
+endpoints, as well as with authentication backend, which allows password-less login into Django
+web site using `ska` generated signature tokens.
 
+Demo
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In order to be able to quickly evaluate the `ska`, a demo app (with a quick installer) has been created
+(works on Ubuntu/Debian, may work on other Linux systems as well, although not guaranteed). Follow the
+instructions below for having the demo running within a minute.
+
+Grab the latest `ska_example_app_installer.sh`:
+
+    $ wget https://raw.github.com/barseghyanartur/ska/stable/example/ska_example_app_installer.sh
+
+Assign execute rights to the installer and run the `django_dash_example_app_installer.sh`:
+
+    $ chmod +x ska_example_app_installer.sh
+
+    $ ./ska_example_app_installer.sh
+
+Open your browser and test the app.
+
+Foo listing (ska protected views):
+
+- URL: http://127.0.0.1:8001/foo/
+
+Authentication page (ska authentication backend):
+
+- URL: http://127.0.0.1:8001/foo/authenticate/
+
+Django admin interface:
+
+- URL: http://127.0.0.1:8001/admin/
+- Admin username: test_admin
+- Admin password: test
+
+Configuration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Secret key (str) must be defined in `settings` module of your project.
 
 >>> SKA_SECRET_KEY = 'my-secret-key'

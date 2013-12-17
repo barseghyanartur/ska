@@ -1,12 +1,15 @@
 wget -O ska_example_app_installer.tar.gz https://github.com/barseghyanartur/ska/archive/stable.tar.gz
+#wget -O ska_example_app_installer.tar.gz https://github.com/barseghyanartur/ska/archive/master.tar.gz
 virtualenv ska
 source ska/bin/activate
 mkdir ska_example_app_installer/
 tar -xvf ska_example_app_installer.tar.gz -C ska_example_app_installer
 cd ska_example_app_installer/ska-stable/example/example/
-pip install Django
-pip install -r ../requirements.txt
+#cd ska_example_app_installer/ska-master/example/example/
+pip install Django==1.5.5
+pip install -r ../../src/ska/contrib/django/ska/requirements.txt
 pip install -e git+https://github.com/barseghyanartur/ska@stable#egg=ska
+#pip install -e git+https://github.com/barseghyanartur/ska@master#egg=ska
 mkdir ../media/
 mkdir ../media/static/
 mkdir ../static/
