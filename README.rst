@@ -487,8 +487,8 @@ would be used as a Django username. See the example below.
 >>>     url = server_ska_login_url
 >>>     )
 
-Put this code, for instance, put it to your template context and show to the user for authenticating to
-the server.
+Put this code, for instance, in your view and then make the generated URL available in template context 
+and render it as a URL so that user can click on it for authenticating to the server.
 
 >>> def auth_to_server(request, template_name='auth_to_server.html'):
 >>>     # Some code + obtaining the `signed_url` (code shown above)
