@@ -41,7 +41,7 @@ class SkaAuthenticationBackend(object):
         else:
             secret_key = SECRET_KEY
 
-        logger.debug('secret_key: {0}'.format(secret_key))
+        #logger.debug('secret_key: {0}'.format(secret_key))
 
         #validation_result = validate_signed_request_data(
         #    data = request.REQUEST,
