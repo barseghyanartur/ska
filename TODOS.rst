@@ -33,12 +33,14 @@ Must haves
 - Add tests for Django auth backend.
 - Make sure (perform a check), that given request variables do not overlap with reserved
   words: auth_user, valid_until, signature, extra.
+- Find and implement the best way of making `ska` timezone aware. Likely, reserve another
+  keyword for it and pass in ``extra`` argument on the sender side. On the recipient side,
+  if present - use when validating.
 
 Should haves
 ------------------------------------
 - Update the tests (mkdirs) so that database creation for Django ska app works
   smoothly.
-- Find and implement the best way of making `ska` timezone aware.
 
 Could haves
 ------------------------------------
