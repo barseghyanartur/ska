@@ -11,7 +11,7 @@ version = '1.4'
 setup(
     name = 'ska',
     version = version,
-    description = ("Sign- and validate data (dictionaries, strings) using symmetric-key algorithm."),
+    description = ("Sign- and validate- data (dictionaries, strings) using symmetric-key algorithm."),
     long_description = readme,
     classifiers = [
         "Programming Language :: Python",
