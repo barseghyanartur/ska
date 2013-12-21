@@ -29,6 +29,7 @@ Must haves
 - Allow to define a custom callback per provider.
 - Make sure (perform a check), that given request variables do not overlap with reserved
   words: auth_user, valid_until, signature, extra.
+- Log errors of authentication backend.
 
 Should haves
 ------------------------------------
