@@ -1,36 +1,43 @@
 ===================================================
 ska
 ===================================================
-Lets you easily generate signatures for signing (HTTP) requests, using symmetric-key algorithm encryption.
-Allows you to validate signed requests and identify possible validation errors. Uses sha1/hmac for
-signature encryption.
+Lets you easily sign data, using symmetric-key algorithm encryption. Allows you to validate signed data
+and identify possible validation errors. Uses sha1/hmac for signature encryption. Comes with
+shortcut function for signing (and validating) dictionaries and URLs.
 
 Key concepts
 ===================================================
-Host and server share the Secret Key, which is used to sign requests. Secret key is never sent around.
+Hosts, that communicate with each other, share the Secret Key, which is used to sign data (requests).
+Secret key is never sent around.
 
-Each (HTTP) request is signed on the client side using the shared Secret Key and as an outcome produces
-the triple (``signature``, ``auth_user``, ``valid_until``) which are used to sign the requests.
+One of the cases is signing of HTTP requests. Each (HTTP) request is signed on the sender side using the
+shared Secret Key and as an outcome produces the triple (``signature``, ``auth_user``, ``valid_until``)
+which are used to sign the requests.
 
 - `signature` (str): Signature generated.
 - `auth_user` (str): User making the request. Can be anything.
 - `valid_until` (float|str): Signature expiration time (Unix timestamp).
 
-On the server side, (HTTP) request is validated using the shared Secret Key. It's being checked
+On the recipient side, (HTTP request) data is validated using the shared Secret Key. It's being checked
 whether signature is valid and not expired.
 
 Features
 ===================================================
 Core `ska` module
 ---------------------------------------------------
-- Sign URLs.
+- Sign dictionaries.
+- Validate signed dictionaries.
+- Sign URLs. Append and sign additional URL data.
 - Validate URLs.
 
 Django `ska` module (`ska.contrib.django.ska`)
 ---------------------------------------------------
-- Model and view (including class-based views) decorators for signing and validating the URLs.
+- Model decorators for signing absolute URLs. View (including class-based views) decorators for protecting
+  views to authorised parties only (no authentication required).
 - Authentication backend for Django based on the signatures (tokens) generated using `ska`, which
-  allows you to get a password-less login to Django web site.
+  allows you to get a password-less login to Django web site. Multiple Secret Keys (per provider)
+  supported. Comes with handy callbacks (possible to customise per provider) for various states of
+  authentication.
 
 Prerequisites
 ===================================================
@@ -59,7 +66,7 @@ Basic usage
 ---------------------------------------------------
 Pure Python usage.
 
-Client side
+Sender side
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Signing URLs is as simple as follows.
 
@@ -157,7 +164,7 @@ Adding of additional data to the signature works in the same way.
 If you for some reason prefer a lower level implementation, read the same section in the
 `Advanced usage` chapter.
 
-Server side
+Recipient side
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Validating the signed request data is as simple as follows.
 
@@ -244,7 +251,7 @@ module.
 
 Advanced usage (low-level)
 ---------------------------------------------------
-Client side
+Sender side
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Required imports.
@@ -290,7 +297,7 @@ Make a request.
 >>> import requests
 >>> r = requests.get(signed_url)
 
-Server side
+Recipient side
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Required imports.
 
@@ -466,9 +473,10 @@ the following variables to True in your projects' Django settings module.
 >>> SKA_DB_STORE_SIGNATURES = True
 >>> SKA_DB_PERFORM_SIGNATURE_CHECK = True
 
-Server side
+Recipient side
 +++++++++++++++++++++++++++++++++++++++++++++++++++
-On the server side, where users are supposed to log in, the following shall be present.
+Recipient is the host (Django site), to which the sender tries to get authenticated (log in). On the
+recipient side the following shall be present.
 
 settings.py
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -528,9 +536,12 @@ command using a cron job.
 
     $ ./manage.py ska_purge_stored_signature_data
 
-Client side
+Sender side
 +++++++++++++++++++++++++++++++++++++++++++++++++++
-On the client application side, the only thing that shall be present is the `ska` module for Django and
+Sender is the host (another Django web site) from which users authenticate to the Recipient using signed
+URLs.
+
+On the sender side, the only thing necessary to be present is the `ska` module for Django and
 of course the same ``SECRET_KEY`` as on the server side. Further, the server `ska` login URL (in our case
 "/ska/login/") shall be signed using `ska` (for example, using `sign_url` function). The `auth_user` param
 would be used as a Django username. See the example below.
@@ -578,9 +589,9 @@ From point of security, you should be serving the following pages via HTTP secur
 
 Multiple secret keys
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Imagine, you have a site to which you want to offer a password-less login for various clients and
-you don't want them all to have one shared secret key, but rather have their own one. Moreover,
-you specifically want to execute very custom callbacks not only for each separate client, but
+Imagine, you have a site to which you want to offer a password-less login for various clients/senders
+and you don't want them all to have one shared secret key, but rather have their own one. Moreover,
+you specifically want to execute very custom callbacks not only for each separate client/sender, but
 also for different sort of users authenticating.
 
 In order to make the stated above possible, the concept of providers is introduced. You can define
@@ -642,7 +653,6 @@ For any issues contact me at the e-mail given in the `Author` section.
 Author
 ===================================================
 Artur Barseghyan <artur.barseghyan@gmail.com>
-
 
 Documentation
 ===================================================
