@@ -27,7 +27,7 @@ install:
   - if [[ $TRAVIS_PYTHON_VERSION == '3.3' && $SIXMIN == false ]]; then pip uninstall six -y; fi
   - if [[ $TRAVIS_PYTHON_VERSION == '3.3' && $SIXMIN == false ]]; then pip install six==1.4.1; fi
   - pip install -r src/ska/contrib/django/ska/requirements.txt
-  - mkdir example/db/
+  - mkdir -p example/logs example/db example/static example/tmp example/media example/media/foo-images example/media/static
   - python example/example/manage.py syncdb --noinput --traceback -v 3
 # Command to run tests
 script: 
