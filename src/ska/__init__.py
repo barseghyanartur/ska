@@ -4,7 +4,10 @@ __build__ = 0x00000D
 __author__ = 'Artur Barseghyan'
 __copyright__ = 'Copyright (c) 2013 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
-__all__ = ('Signature', 'RequestHelper', 'sign_url')
+__all__ = (
+    'sign_url', 'signature_to_dict', 'validate_signed_request_data', 'extract_signed_request_data',
+    'Signature', 'RequestHelper', 'SignatureValidationResult',
+    )
 
 import datetime
 import time
@@ -22,7 +25,10 @@ except ImportError as e:
     else:
         from urllib import urlencode
 
-from ska.helpers import dict_keys, dict_to_ordered_list, sorted_urlencode, extract_extra_from_request_data
+from ska.helpers import (
+    dict_keys, dict_to_ordered_list, sorted_urlencode, extract_signed_data as extract_signed_data
+    )
+from ska.exceptions import InvalidData, ImproperlyConfigured
 from ska.defaults import (
     SIGNATURE_LIFETIME, TIMESTAMP_FORMAT, DEFAULT_URL_SUFFIX,
     DEFAULT_SIGNATURE_PARAM, DEFAULT_AUTH_USER_PARAM, DEFAULT_VALID_UNTIL_PARAM,
@@ -30,6 +36,10 @@ from ska.defaults import (
     )
 
 _ = lambda x: x # For future integrations with gettext
+
+# *******************************************************************************************************
+# ******************************************* Signature *************************************************
+# *******************************************************************************************************
 
 class SignatureValidationResult(object):
     """
@@ -280,6 +290,9 @@ class Signature(object):
             else:
                 return None
 
+# *******************************************************************************************************
+# **************************************** Request helper ***********************************************
+# *******************************************************************************************************
 
 class RequestHelper(object):
     """
@@ -436,7 +449,7 @@ class RequestHelper(object):
         auth_user = data.get(self.auth_user_param, '')
         valid_until = data.get(self.valid_until_param, '')
 
-        extra = extract_extra_from_request_data(data=data, extra=data.get(self.extra_param, '').split(','))
+        extra = extract_signed_data(data=data, extra=data.get(self.extra_param, '').split(','))
 
         validation_result = Signature.validate_signature(
             signature = signature,
@@ -448,6 +461,27 @@ class RequestHelper(object):
             )
 
         return validation_result
+
+    def extract_signed_data(self, data, secret_key=None, validate=False, fail_silently=False):
+        """
+        Extracts signed data from the request.
+        """
+        if validate:
+            if not secret_key:
+                if fail_silently:
+                    return {}
+                raise ImproperlyConfigured("You should provide `secret_key` if `validate` is set to True.")
+            validation_result = self.validate_request_data(data, secret_key)
+            if not validation_result.result:
+                if fail_silently:
+                    return {}
+                raise InvalidData(validation_result.reason)
+
+        return extract_signed_data(data=data, extra=data.get(self.extra_param, '').split(','))
+
+# *******************************************************************************************************
+# ************************************ Shortcut functions ***********************************************
+# *******************************************************************************************************
 
 def sign_url(auth_user, secret_key, valid_until=None, lifetime=SIGNATURE_LIFETIME, url='', \
              suffix=DEFAULT_URL_SUFFIX, signature_param=DEFAULT_SIGNATURE_PARAM, \
@@ -513,7 +547,6 @@ def sign_url(auth_user, secret_key, valid_until=None, lifetime=SIGNATURE_LIFETIM
 
     return signed_url
 
-
 def signature_to_dict(auth_user, secret_key, valid_until=None, lifetime=SIGNATURE_LIFETIME, \
                       signature_param=DEFAULT_SIGNATURE_PARAM, auth_user_param=DEFAULT_AUTH_USER_PARAM, \
                       valid_until_param=DEFAULT_VALID_UNTIL_PARAM, extra={}, \
@@ -578,7 +611,6 @@ def signature_to_dict(auth_user, secret_key, valid_until=None, lifetime=SIGNATUR
 
     return signature_dict
 
-
 def validate_signed_request_data(data, secret_key, signature_param=DEFAULT_SIGNATURE_PARAM, \
                                  auth_user_param=DEFAULT_AUTH_USER_PARAM, \
                                  valid_until_param=DEFAULT_VALID_UNTIL_PARAM, \
@@ -613,3 +645,38 @@ def validate_signed_request_data(data, secret_key, signature_param=DEFAULT_SIGNA
     )
 
     return validation_result
+
+def extract_signed_request_data(data, secret_key=None, signature_param=DEFAULT_SIGNATURE_PARAM, \
+                                auth_user_param=DEFAULT_AUTH_USER_PARAM, \
+                                valid_until_param=DEFAULT_VALID_UNTIL_PARAM, \
+                                extra_param=DEFAULT_EXTRA_PARAM, validate=False, fail_silently=False):
+    """
+    Validates the signed request data.
+
+    :param dict data: Dictionary holding the (HTTP) request (for example GET or POST) data.
+    :param str secret_key: The shared secret key.
+    :param str signature_param: Name of the (for example GET or POST) param name which holds
+        the ``signature`` value.
+    :param str auth_user_param: Name of the (for example GET or POST) param name which holds
+        the ``auth_user`` value.
+    :param str valid_until_param: Name of the (foe example GET or POST) param name which holds
+        the ``valid_until`` value.
+    :param str extra_param: Name of the (foe example GET or POST) param name which holds
+        the ``extra`` value.
+    :param bool validate: If set to True, request data is validated before returning the result.
+    :param bool fail_silently: If set to True, exceptions are ommitted.
+    :return dict: Dictionary with signed request data.
+    """
+    request_helper = RequestHelper(
+        signature_param = signature_param,
+        auth_user_param = auth_user_param,
+        valid_until_param = valid_until_param,
+        extra_param = extra_param
+    )
+
+    return request_helper.extract_signed_data(
+        data,
+        secret_key = secret_key,
+        validate = validate,
+        fail_silently = fail_silently
+        )

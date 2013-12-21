@@ -27,8 +27,8 @@ __all__ = (
 
 from django.conf import settings
 
+from ska.exceptions import ImproperlyConfigured
 from ska.contrib.django.ska.conf import get_setting
-from ska.contrib.django.ska.exceptions import ImproperlyConfigured
 
 UNAUTHORISED_REQUEST_ERROR_MESSAGE = get_setting('UNAUTHORISED_REQUEST_ERROR_MESSAGE')
 UNAUTHORISED_REQUEST_ERROR_TEMPLATE = get_setting('UNAUTHORISED_REQUEST_ERROR_TEMPLATE')

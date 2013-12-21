@@ -41,7 +41,12 @@ def authenticate(request, template_name='foo/authenticate.html'):
         signed_remote_ska_login_url = sign_url(
             auth_user = 'test_ska_user_{0}'.format(i),
             secret_key = SECRET_KEY,
-            url = remote_ska_login_url
+            url = remote_ska_login_url,
+            extra = {
+                'email': 'test_ska_user_{0}@mail.example.com'.format(i),
+                'first_name': 'John {0}'.format(i),
+                'last_name': 'Doe {0}'.format(i),
+            }
             )
         remote_ska_login_urls.append((remote_ska_login_url, signed_remote_ska_login_url))
 

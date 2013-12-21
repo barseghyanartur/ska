@@ -39,7 +39,7 @@ from six import PY3, text_type
 from ska import validate_signed_request_data, sign_url as ska_sign_url
 from ska.defaults import (
     SIGNATURE_LIFETIME, DEFAULT_URL_SUFFIX, DEFAULT_SIGNATURE_PARAM, DEFAULT_AUTH_USER_PARAM,
-    DEFAULT_VALID_UNTIL_PARAM
+    DEFAULT_VALID_UNTIL_PARAM, DEFAULT_EXTRA_PARAM
     )
 from ska.contrib.django.ska.settings import (
     SECRET_KEY, AUTH_USER, UNAUTHORISED_REQUEST_ERROR_MESSAGE,
@@ -52,11 +52,13 @@ from django.shortcuts import render
 
 class BaseValidateSignedRequest(object):
     def __init__(self, secret_key=SECRET_KEY, signature_param=DEFAULT_SIGNATURE_PARAM, \
-                 auth_user_param=DEFAULT_AUTH_USER_PARAM, valid_until_param=DEFAULT_VALID_UNTIL_PARAM):
+                 auth_user_param=DEFAULT_AUTH_USER_PARAM, valid_until_param=DEFAULT_VALID_UNTIL_PARAM, \
+                 extra_param=DEFAULT_EXTRA_PARAM):
         self.secret_key = secret_key
         self.signature_param = signature_param
         self.auth_user_param = auth_user_param
         self.valid_until_param = valid_until_param
+        self.extra_param = extra_param
 
 class ValidateSignedRequest(BaseValidateSignedRequest):
     """
@@ -72,6 +74,8 @@ class ValidateSignedRequest(BaseValidateSignedRequest):
         the ``auth_user`` value.
     :attribute str valid_until_param: Name of the (foe example GET or POST) param name which holds
         the ``valid_until`` value.
+    :attribute str extra_param: Name of the (foe example GET or POST) param name which holds
+        the ``extra`` value.
 
     :example:
 
@@ -89,7 +93,8 @@ class ValidateSignedRequest(BaseValidateSignedRequest):
                 secret_key = self.secret_key,
                 signature_param = self.signature_param,
                 auth_user_param = self.auth_user_param,
-                valid_until_param = self.valid_until_param
+                valid_until_param = self.valid_until_param,
+                extra_param = self.extra_param
                 )
             if validation_result.result is True:
                 # If validated, just return the func as is.
@@ -130,6 +135,8 @@ class MethodValidateSignedRequest(BaseValidateSignedRequest):
         the ``auth_user`` value.
     :attribute str valid_until_param: Name of the (foe example GET or POST) param name which holds
         the ``valid_until`` value.
+    :attribute str extra_param: Name of the (foe example GET or POST) param name which holds
+        the ``extra`` value.
 
     :example:
 
@@ -148,7 +155,8 @@ class MethodValidateSignedRequest(BaseValidateSignedRequest):
                 secret_key = self.secret_key,
                 signature_param = self.signature_param,
                 auth_user_param = self.auth_user_param,
-                valid_until_param = self.valid_until_param
+                valid_until_param = self.valid_until_param,
+                extra_param = self.extra_param
                 )
             if validation_result.result is True:
                 # If validated, just return the func as is.
@@ -189,6 +197,8 @@ class SignAbsoluteURL(object):
     :attribute str signature_param: Name of the GET param name which would hold the generated signature value.
     :attribute str auth_user_param: Name of the GET param name which would hold the ``auth_user`` value.
     :attribute str valid_until_param: Name of the GET param name which would hold the ``valid_until`` value.
+    :attribute dict extra: Dict of extra params to append to signed URL.
+    :attribute str extra_param: Name of the GET param name which would hold the ``extra`` value.
 
     :example:
 
@@ -205,7 +215,8 @@ class SignAbsoluteURL(object):
     """
     def __init__(self, auth_user=AUTH_USER, secret_key=SECRET_KEY, valid_until=None, lifetime=SIGNATURE_LIFETIME, \
                  suffix=DEFAULT_URL_SUFFIX, signature_param=DEFAULT_SIGNATURE_PARAM, \
-                 auth_user_param=DEFAULT_AUTH_USER_PARAM, valid_until_param=DEFAULT_VALID_UNTIL_PARAM):
+                 auth_user_param=DEFAULT_AUTH_USER_PARAM, valid_until_param=DEFAULT_VALID_UNTIL_PARAM, \
+                 extra={}, extra_param=DEFAULT_EXTRA_PARAM):
         self.auth_user = auth_user
         self.secret_key = secret_key
         self.valid_until = valid_until
@@ -214,6 +225,8 @@ class SignAbsoluteURL(object):
         self.signature_param = signature_param
         self.auth_user_param = auth_user_param
         self.valid_until_param = valid_until_param
+        self.extra = extra
+        self.extra_param = extra_param
 
     def __call__(self, func):
         def inner(this, *args, **kwargs):
@@ -231,7 +244,9 @@ class SignAbsoluteURL(object):
                 suffix = self.suffix,
                 signature_param = self.signature_param,
                 auth_user_param = self.auth_user_param,
-                valid_until_param = self.valid_until_param
+                valid_until_param = self.valid_until_param,
+                extra = self.extra,
+                extra_param = self.extra_param
                 )
         return inner
 

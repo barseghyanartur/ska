@@ -15,7 +15,7 @@ Must haves
   commands for purging the tracking data.
 + Demo (quick installer) for Django app.
 + Populate foo model data in demo app.
-- Make it easy to add additional data (such as user data, for auth backend) to the
++ Make it easy to add additional data (such as user data, for auth backend) to the
   URL. Sign additional data (affect the signature hash) when providing extra params.
   In that case, provider (see later on) would be just one of those; NOTE, that it
   shall be a reserved "term").
@@ -27,6 +27,8 @@ Must haves
   Based on the UID, locally an appropriate provider would be picked. The
   default secret_key would stay intact.
 - Allow to define a custom callback per provider.
+- Make sure (perform a check), that given request variables do not overlap with reserved
+  words: auth_user, valid_until, signature, extra.
 
 Should haves
 ------------------------------------

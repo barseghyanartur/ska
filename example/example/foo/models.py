@@ -42,10 +42,13 @@ class FooItem(models.Model):
     get_signed_absolute_url.allow_tags = True
     get_signed_absolute_url.short_description = _('Signed URL')
 
-    @sign_url()
+    @sign_url(extra={'email': 'john.doe@mail.example.com', 'first_name': 'John', 'last_name': 'Doe', 'age': 64})
     def get_signed_class_based_absolute_url(self):
         """
-        Absolute URL, which goes to the foo item detail page.
+        Absolute URL, which goes to the foo item detail page. Note, that we add extra params here.
+        When authenticating using this URLs, user would have the information shown saved into his profile.
+        This is given purely as example. Normally, you wouldn't be adding emails and other user data in
+        such a way, however - it's a very quick way of showing how it works.
 
         :return str:
         """

@@ -5,7 +5,10 @@ Release history
 -------------------------------------
 2013-12-21
 
-- Make it possible to add additional data to the signed request.
+- Make it possible to add additional data to the signed request by providing an
+  additional ``extra`` argument.
+- Reflect the new functionality in Django app.
+- Better documentation.
 
 1.2
 -------------------------------------

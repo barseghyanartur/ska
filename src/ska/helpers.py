@@ -3,7 +3,7 @@ __author__ = 'Artur Barseghyan'
 __copyright__ = 'Copyright (c) 2013 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
 __all__ = (
-    'get_callback_func', 'dict_keys', 'dict_to_ordered_list', 'sorted_urlencode'
+    'get_callback_func', 'dict_keys', 'dict_to_ordered_list', 'sorted_urlencode', 'extract_signed_data'
     )
 
 from six import PY3
@@ -74,7 +74,7 @@ def sorted_urlencode(data, quoted=True):
         res = quote(res)
     return res
 
-def extract_extra_from_request_data(data, extra):
+def extract_signed_data(data, extra):
     """
     Filters out non-white-listed items from the ``extra`` dictionary given.
 

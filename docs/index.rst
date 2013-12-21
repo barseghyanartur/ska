@@ -98,6 +98,18 @@ With all customisations, it would look as follows.
 >>>     auth_user_param='auth_user', valid_until_param='valid_until'
 >>> )
 
+It's also possible to add additional data to the request by providing a ``extra`` argument (dict). In
+that case, data given in ``extra``, would be signed as well (affects the signature).
+
+>>> sign_url(
+>>>     auth_user = 'user', secret_key = 'your-secret_key', url = 'http://e.com/api/',
+>>>     extra = {
+>>>         'email': 'doe@example.com',
+>>>         'last_name': 'Doe',
+>>>         'first_name': 'Joe',
+>>>     }
+>>>     )
+
 You may now proceed with the signed URL request. If you use the famous ``requests`` library, it would
 be as follows.
 
@@ -424,6 +436,9 @@ Note, that ``validate_signed_request`` decorator accepts the following optional 
 - `valid_until_param` (str): Name of the (foe example GET or POST) param name which holds
   the ``valid_until`` value.
 
+If you're using class based views, use the ``m_validate_signed_request`` decorator instead
+of ``validate_signed_request``.
+
 Authentication backend
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Allows you to get a password-less login to Django web site. By default, number of logins using the
@@ -461,6 +476,29 @@ urls.py
 >>>     url(r'^admin/', include(admin.site.urls)),
 >>> )
 
+Callbacks
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+There are 3 callbacks implemented in authentication backend.
+
+- `USER_GET_CALLBACK` (string): Fired if user was successfully fetched from database (existing user).
+- `USER_CREATE_CALLBACK` (string): Fired right after user has been created (user didn't exist).
+- `USER_INFO_CALLBACK` (string): Fired upon successful authentication.
+
+Example of a callback function:
+
+>>> def my_callback(user, request, signed_request_data)
+>>>     # Your code
+
+...where:
+
+- `user` is ``django.contrib.auth.models.User`` instance.
+- `request` is ``django.http.HttpRequest`` instance.
+- `signed_request_data` is dictionary with signed request data.
+
+For example, if you need to assign user to some local Django group, you could specify the group
+name on the client side (add it to the ``extra`` dictionary) and based on that, add the user to
+the group in the callback.
+
 Purging of old signature data
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 If you have lots of visitors and the ``SKA_DB_STORE_SIGNATURES`` set to True, your database
@@ -485,10 +523,18 @@ would be used as a Django username. See the example below.
 >>>     auth_user = 'test_ska_user_0',
 >>>     secret_key = SECRET_KEY,
 >>>     url = server_ska_login_url
+>>>     extra = {
+>>>         'email': 'john.doe@mail.example.com',
+>>>         'first_name': 'John',
+>>>         'last_name': 'Doe',
+>>>     }
 >>>     )
 
-Put this code, for instance, put it to your template context and show to the user for authenticating to
-the server.
+Note, that you ``extra`` dictionary is optional! If `email`, `first_name` and `last_name` keys are present,
+upon successul validation, the data would be saved into users' profile.
+
+Put this code, for instance, in your view and then make the generated URL available in template context
+and render it as a URL so that user can click on it for authenticating to the server.
 
 >>> def auth_to_server(request, template_name='auth_to_server.html'):
 >>>     # Some code + obtaining the `signed_url` (code shown above)
