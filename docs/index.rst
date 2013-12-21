@@ -622,7 +622,7 @@ See the "Callbacks" section for the list of callbacks.
 Obviously, server would have to have the full list of providers defined. On the client side
 you would only have to store the general secret key and of course the provider UID(s).
 
-When making a signed URL on the client side, you should be providing the "provider" key in
+When making a signed URL on the sender side, you should be providing the "provider" key in
 the ``extra`` argument. See the example below for how you would do it for "client_1.power_users".
 
 >>> from ska import sign_url
@@ -632,12 +632,18 @@ the ``extra`` argument. See the example below for how you would do it for "clien
 >>>
 >>> signed_remote_ska_login_url = sign_url(
 >>>     auth_user = 'test_ska_user',
->>>     secret_key = 'client-1-power-users-secret-key', # Using provider-specific secret key
+>>>     # Using provider-specific secret key. This value shall be equal to
+>>>     # the value of SKA_PROVIDERS['client_1.power_users']['SECRET_KEY'],
+>>>     # defined in your projects' Django settings module.
+>>>     secret_key = 'client-1-power-users-secret-key',
 >>>     url = server_ska_login_url,
 >>>     extra = {
 >>>         'email': 'test_ska_user_{0}@mail.example.com'.format(uid),
 >>>         'first_name': 'John {0}'.format(uid),
 >>>         'last_name': 'Doe {0}'.format(uid),
+>>>         # Using provider specific string. This value shall be equal to
+>>>         # the value of SKA_PROVIDERS, key "client_1.power_users",
+>>>         # defined in your projcts' Django settings module.
 >>>         DEFAULT_PROVIDER_PARAM: 'client_1.power_users',
 >>>     }
 >>>     )
