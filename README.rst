@@ -642,7 +642,7 @@ the ``extra`` argument. See the example below for how you would do it for "clien
 >>>         'first_name': 'John {0}'.format(uid),
 >>>         'last_name': 'Doe {0}'.format(uid),
 >>>         # Using provider specific string. This value shall be equal to
->>>         # the value of SKA_PROVIDERS, key "client_1.power_users",
+>>>         # the key string "client_1.power_users" of SKA_PROVIDERS,
 >>>         # defined in your projcts' Django settings module.
 >>>         DEFAULT_PROVIDER_PARAM: 'client_1.power_users',
 >>>     }
