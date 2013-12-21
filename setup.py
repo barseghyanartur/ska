@@ -6,7 +6,7 @@ try:
 except:
     readme = ''
 
-version = '1.2'
+version = '1.3'
 
 setup(
     name = 'ska',

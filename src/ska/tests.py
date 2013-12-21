@@ -78,7 +78,7 @@ class SignatureTest(unittest.TestCase):
         """
         Signature test.
         """
-        workflow = []
+        flow = []
 
         # Generate signature
         sig = Signature.generate_signature(
@@ -86,10 +86,10 @@ class SignatureTest(unittest.TestCase):
             secret_key = self.secret_key
             )
 
-        workflow.append(('Valid until used', sig.valid_until))
-        workflow.append(('Valid until (human readable)', timestap_to_human_readable(sig.valid_until)))
-        workflow.append(('Signature generated', sig.signature))
-        workflow.append(('Signature is expired', sig.is_expired()))
+        flow.append(('Valid until used', sig.valid_until))
+        flow.append(('Valid until (human readable)', timestap_to_human_readable(sig.valid_until)))
+        flow.append(('Signature generated', sig.signature))
+        flow.append(('Signature is expired', sig.is_expired()))
 
         # Check if not expired
         self.assertTrue(not sig.is_expired())
@@ -103,12 +103,12 @@ class SignatureTest(unittest.TestCase):
                 return_object = True
                 )
 
-        workflow.append(('Signature is valid', validation_result.result))
-        workflow.append(('Reason not valid', validation_result.reason))
+        flow.append(('Signature is valid', validation_result.result))
+        flow.append(('Reason not valid', validation_result.reason))
 
         self.assertTrue(validation_result.result)
 
-        return workflow
+        return flow
 
     @print_info
     def test_02_signature_test_with_positive_timelap(self):
@@ -117,14 +117,14 @@ class SignatureTest(unittest.TestCase):
         that has a positive (greater) time difference with server. In this
         particular example, the host time is 5 minutes ahead the server time.
         """
-        workflow = []
+        flow = []
 
         datetime_timelap = Signature.datetime_to_unix_timestamp(
             datetime.datetime.now() + datetime.timedelta(seconds=300)
             )
 
-        workflow.append(('Valid until used', datetime_timelap))
-        workflow.append(('Valid until used (human readable)', timestap_to_human_readable(datetime_timelap)))
+        flow.append(('Valid until used', datetime_timelap))
+        flow.append(('Valid until used (human readable)', timestap_to_human_readable(datetime_timelap)))
 
         # Generate signature
         sig = Signature.generate_signature(
@@ -133,8 +133,8 @@ class SignatureTest(unittest.TestCase):
             valid_until = datetime_timelap
             )
 
-        workflow.append(('Signature generated', sig.signature))
-        workflow.append(('Signature is expired', sig.is_expired()))
+        flow.append(('Signature generated', sig.signature))
+        flow.append(('Signature is expired', sig.is_expired()))
 
         # Check if not expired
         self.assertTrue(not sig.is_expired())
@@ -148,12 +148,12 @@ class SignatureTest(unittest.TestCase):
                 return_object = True
                 )
 
-        workflow.append(('Signature is valid', validation_result.result))
-        workflow.append(('Reason not valid', validation_result.reason))
+        flow.append(('Signature is valid', validation_result.result))
+        flow.append(('Reason not valid', validation_result.reason))
 
         self.assertTrue(validation_result.result)
 
-        return workflow
+        return flow
 
     @print_info
     def test_03_signature_test_with_negative_timelap(self):
@@ -163,14 +163,14 @@ class SignatureTest(unittest.TestCase):
         particular example, the host time is 5 minutes behind the server time,
         which exceeds the signature lifetime.
         """
-        workflow = []
+        flow = []
 
         datetime_timelap = Signature.datetime_to_unix_timestamp(
             datetime.datetime.now() - datetime.timedelta(seconds=300)
             )
 
-        workflow.append(('Valid until used', datetime_timelap))
-        workflow.append(('Valid until used (human readable)', timestap_to_human_readable(datetime_timelap)))
+        flow.append(('Valid until used', datetime_timelap))
+        flow.append(('Valid until used (human readable)', timestap_to_human_readable(datetime_timelap)))
 
         # Generate signature
         sig = Signature.generate_signature(
@@ -179,8 +179,8 @@ class SignatureTest(unittest.TestCase):
             valid_until = datetime_timelap
             )
 
-        workflow.append(('Signature generated', sig.signature))
-        workflow.append(('Signature is expired', sig.is_expired()))
+        flow.append(('Signature generated', sig.signature))
+        flow.append(('Signature is expired', sig.is_expired()))
 
         # Check if not expired
         self.assertTrue(sig.is_expired())
@@ -194,19 +194,19 @@ class SignatureTest(unittest.TestCase):
                 return_object = True
                 )
 
-        workflow.append(('Signature is valid', validation_result.result))
-        workflow.append(('Reason not valid', validation_result.reason))
+        flow.append(('Signature is valid', validation_result.result))
+        flow.append(('Reason not valid', validation_result.reason))
 
         self.assertTrue(not validation_result.result)
 
-        return workflow
+        return flow
 
     @print_info
     def test_04_fail_signature_test(self):
         """
         Fail signature tests.
         """
-        workflow = []
+        flow = []
 
         validation_result = Signature.validate_signature(
             signature = 'EBS6ipiqRLa6TY5vxIvZU30FpnM=',
@@ -216,17 +216,17 @@ class SignatureTest(unittest.TestCase):
             return_object = True
             )
 
-        workflow.append(('Valid until used', 1377997396.0))
-        workflow.append(('Valid until used (human readable)', timestap_to_human_readable(1377997396.0)))
-        workflow.append(('Signature generated', 'EBS6ipiqRLa6TY5vxIvZU30FpnM='))
-        workflow.append(('Signature is expired', True))
+        flow.append(('Valid until used', 1377997396.0))
+        flow.append(('Valid until used (human readable)', timestap_to_human_readable(1377997396.0)))
+        flow.append(('Signature generated', 'EBS6ipiqRLa6TY5vxIvZU30FpnM='))
+        flow.append(('Signature is expired', True))
 
-        workflow.append(('Signature is valid', validation_result.result))
-        workflow.append(('Reason not valid', validation_result.reason))
+        flow.append(('Signature is valid', validation_result.result))
+        flow.append(('Reason not valid', validation_result.reason))
 
         self.assertTrue(not validation_result.result)
 
-        return workflow
+        return flow
 
 def parse_url_params(url):
     """
@@ -255,7 +255,7 @@ class URLHelperTest(unittest.TestCase):
         """
         Signature test.
         """
-        workflow = []
+        flow = []
 
         # Generate signature
         signature = Signature.generate_signature(
@@ -274,26 +274,26 @@ class URLHelperTest(unittest.TestCase):
             endpoint_url = 'http://dev.example.com/api/'
             )
 
-        workflow.append(('URL generated', signed_endpoint_url))
+        flow.append(('URL generated', signed_endpoint_url))
 
         # Now parsing back the URL params.
         request_data = parse_url_params(signed_endpoint_url)
 
         validation_result = request_helper.validate_request_data(data=request_data, secret_key=self.secret_key)
 
-        workflow.append(('Signature is valid', validation_result.result))
-        workflow.append(('Reason not valid', validation_result.reason))
+        flow.append(('Signature is valid', validation_result.result))
+        flow.append(('Reason not valid', validation_result.reason))
 
         self.assertTrue(validation_result.result)
 
-        return workflow
+        return flow
 
     @print_info
     def test_02_signature_to_url_fail(self):
         """
         Signature test. Fail test.
         """
-        workflow = []
+        flow = []
 
         datetime_timelap = Signature.datetime_to_unix_timestamp(
             datetime.datetime.now() - datetime.timedelta(seconds=300)
@@ -317,19 +317,19 @@ class URLHelperTest(unittest.TestCase):
             endpoint_url = 'http://dev.example.com/api/'
             )
 
-        workflow.append(('URL generated', signed_endpoint_url))
+        flow.append(('URL generated', signed_endpoint_url))
 
         # Now parsing back the URL params.
         request_data = parse_url_params(signed_endpoint_url)
 
         validation_result = request_helper.validate_request_data(data=request_data, secret_key=self.secret_key)
 
-        workflow.append(('Signature is valid', validation_result.result))
-        workflow.append(('Reason not valid', validation_result.reason))
+        flow.append(('Signature is valid', validation_result.result))
+        flow.append(('Reason not valid', validation_result.reason))
 
         self.assertTrue(not validation_result.result)
 
-        return workflow
+        return flow
 
 class ShortcutsTest(unittest.TestCase):
     """
@@ -345,7 +345,7 @@ class ShortcutsTest(unittest.TestCase):
         """
         Tests for ``sign_url`` and ``validate_signed_request_data`` shortcut functions.
         """
-        workflow = []
+        flow = []
 
         signed_url = sign_url(
             auth_user = self.auth_user,
@@ -353,7 +353,7 @@ class ShortcutsTest(unittest.TestCase):
             url = self.endpoint_url
         )
 
-        workflow.append(('URL generated', signed_url))
+        flow.append(('URL generated', signed_url))
 
         # Now parsing back the URL params and validate the signature data
         request_data = parse_url_params(signed_url)
@@ -363,26 +363,26 @@ class ShortcutsTest(unittest.TestCase):
             secret_key = self.secret_key
             )
 
-        workflow.append(('Signature is valid', validation_result.result))
-        workflow.append(('Reason not valid', validation_result.reason))
+        flow.append(('Signature is valid', validation_result.result))
+        flow.append(('Reason not valid', validation_result.reason))
 
         self.assertTrue(validation_result.result)
 
-        return workflow
+        return flow
 
     @print_info
     def test_02_sign_url_and_validate_signed_request_data_fail(self):
         """
         Fail tests for ``sign_url`` and ``validate_signed_request_data`` shortcut functions.
         """
-        workflow = []
+        flow = []
 
         datetime_timelap = Signature.datetime_to_unix_timestamp(
             datetime.datetime.now() - datetime.timedelta(seconds=300)
             )
 
-        workflow.append(('Valid until used', datetime_timelap))
-        workflow.append(('Valid until used (human readable)', timestap_to_human_readable(datetime_timelap)))
+        flow.append(('Valid until used', datetime_timelap))
+        flow.append(('Valid until used (human readable)', timestap_to_human_readable(datetime_timelap)))
 
         signed_url = sign_url(
             auth_user = self.auth_user,
@@ -391,7 +391,7 @@ class ShortcutsTest(unittest.TestCase):
             valid_until = datetime_timelap
         )
 
-        workflow.append(('URL generated', signed_url))
+        flow.append(('URL generated', signed_url))
 
         # Now parsing back the URL params and validate the signature data
         request_data = parse_url_params(signed_url)
@@ -401,26 +401,26 @@ class ShortcutsTest(unittest.TestCase):
             secret_key = self.secret_key
             )
 
-        workflow.append(('Signature is valid', validation_result.result))
-        workflow.append(('Reason not valid', validation_result.reason))
+        flow.append(('Signature is valid', validation_result.result))
+        flow.append(('Reason not valid', validation_result.reason))
 
         self.assertTrue(not validation_result.result)
 
-        return workflow
+        return flow
 
     @print_info
     def test_03_signature_to_dict_and_validate_signed_request_data(self):
         """
         Tests for ``signature_to_dict`` and ``validate_signed_request_data`` shortcut functions.
         """
-        workflow = []
+        flow = []
 
         signature_dict = signature_to_dict(
             auth_user = self.auth_user,
             secret_key = self.secret_key
         )
 
-        workflow.append(('Dictionary created', signature_dict))
+        flow.append(('Dictionary created', signature_dict))
 
         # Now validate the signature data
 
@@ -429,12 +429,61 @@ class ShortcutsTest(unittest.TestCase):
             secret_key = self.secret_key
             )
 
-        workflow.append(('Signature is valid', validation_result.result))
-        workflow.append(('Reason not valid', validation_result.reason))
+        flow.append(('Signature is valid', validation_result.result))
+        flow.append(('Reason not valid', validation_result.reason))
 
         self.assertTrue(validation_result.result)
 
-        return workflow
+        return flow
+
+
+class ExtraTest(unittest.TestCase):
+    """
+    Test for extra data.
+    """
+    def setUp(self):
+        self.auth_user = 'user'
+        self.secret_key = 'secret'
+        self.endpoint_url = 'http://e.com/api/'
+
+    @print_info
+    def test_01_sign_url_and_validate_signed_request_data(self):
+        """
+        Tests for ``sign_url`` and ``validate_signed_request_data`` shortcut functions.
+        """
+        flow = []
+
+        signed_url = sign_url(
+            auth_user = self.auth_user,
+            secret_key = self.secret_key,
+            url = self.endpoint_url,
+            extra = {
+                'provider': 'service1.example.com',
+                'first_name': 'John',
+                'last_name': 'Doe',
+                'email': 'john.doe@mail.example.com',
+            }
+        )
+
+        flow.append(('URL generated', signed_url))
+
+        # Now parsing back the URL params and validate the signature data
+        request_data = parse_url_params(signed_url)
+
+        #request_data['extra'] = 'provider,first_name'
+
+        validation_result = validate_signed_request_data(
+            data = request_data,
+            secret_key = self.secret_key
+            )
+
+        flow.append(('Signature is valid', validation_result.result))
+        flow.append(('Reason not valid', validation_result.reason))
+
+        self.assertTrue(validation_result.result)
+
+        return flow
+
 
 if __name__ == "__main__":
     # Tests

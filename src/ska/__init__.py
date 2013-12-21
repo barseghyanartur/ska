@@ -1,6 +1,6 @@
 __title__ = 'ska'
-__version__ = '1.1'
-__build__ = 0x00000B
+__version__ = '1.3'
+__build__ = 0x00000D
 __author__ = 'Artur Barseghyan'
 __copyright__ = 'Copyright (c) 2013 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
@@ -22,8 +22,12 @@ except ImportError as e:
     else:
         from urllib import urlencode
 
-from ska.defaults import SIGNATURE_LIFETIME, TIMESTAMP_FORMAT, DEFAULT_URL_SUFFIX
-from ska.defaults import DEFAULT_SIGNATURE_PARAM, DEFAULT_AUTH_USER_PARAM, DEFAULT_VALID_UNTIL_PARAM
+from ska.helpers import dict_keys, dict_to_ordered_list, sorted_urlencode, extract_extra_from_request_data
+from ska.defaults import (
+    SIGNATURE_LIFETIME, TIMESTAMP_FORMAT, DEFAULT_URL_SUFFIX,
+    DEFAULT_SIGNATURE_PARAM, DEFAULT_AUTH_USER_PARAM, DEFAULT_VALID_UNTIL_PARAM,
+    DEFAULT_EXTRA_PARAM
+    )
 
 _ = lambda x: x # For future integrations with gettext
 
@@ -63,12 +67,13 @@ class Signature(object):
     :param str auth_user:
     :param float|str valid_until:
     """
-    __slots__ = ('signature', 'auth_user', 'valid_until')
+    __slots__ = ('signature', 'auth_user', 'valid_until', 'extra')
 
-    def __init__(self, signature, auth_user, valid_until):
+    def __init__(self, signature, auth_user, valid_until, extra={}):
         self.signature = signature
         self.auth_user = auth_user
         self.valid_until = valid_until
+        self.extra = extra
 
     def __str__(self):
         return self.signature
@@ -80,7 +85,7 @@ class Signature(object):
     __nonzero__ = __bool__
 
     @classmethod
-    def validate_signature(cls, signature, auth_user, secret_key, valid_until, return_object=False):
+    def validate_signature(cls, signature, auth_user, secret_key, valid_until, extra={}, return_object=False):
         """
         Validates the signature.
 
@@ -88,6 +93,9 @@ class Signature(object):
         :param str auth_user:
         :param str secret_key:
         :param float|str valid_until: Unix timestamp.
+        :param dict extra: Extra arguments to be validated. If ``extra_keys`` is given, the ``extra`` is
+            stripped to the "white listed" keys only. Otherwise - the entire ``extra`` dictionary is
+            considered to be used.
         :param bool return_object: If set to True, an instance of ``SignatureValidationResult`` is returned.
         :return bool:
 
@@ -103,7 +111,12 @@ class Signature(object):
         if isinstance(signature, str):
             signature = signature.encode()
 
-        sig = cls.generate_signature(auth_user=auth_user, secret_key=secret_key, valid_until=valid_until)
+        sig = cls.generate_signature(
+            auth_user = auth_user,
+            secret_key = secret_key,
+            valid_until = valid_until,
+            extra = extra
+            )
 
         if not return_object:
             return sig.signature == signature and not sig.is_expired()
@@ -139,11 +152,21 @@ class Signature(object):
         return not res
 
     @classmethod
-    def get_base(cls, auth_user, timestamp):
+    def get_base(cls, auth_user, timestamp, extra={}):
         """
         Add something here so that timestamp to signature conversion is not that obvious.
+
+        :param string auth_user:
+        :param int timestamp:
+        :param dict extra:
+        :param list extra_keys:
         """
         l = [str(timestamp), auth_user]
+
+        if extra:
+            urlencoded_extra = sorted_urlencode(extra)
+            if urlencoded_extra:
+                l.append(urlencoded_extra)
 
         return ("_".join(l)).encode()
 
@@ -158,7 +181,7 @@ class Signature(object):
         return secret_key.encode() #return b64encode(secret_key)
 
     @classmethod
-    def generate_signature(cls, auth_user, secret_key, valid_until=None, lifetime=SIGNATURE_LIFETIME):
+    def generate_signature(cls, auth_user, secret_key, valid_until=None, lifetime=SIGNATURE_LIFETIME, extra={}):
         """
         Generates the signature. If timestamp is given, the signature is created using the given timestamp. Otherwise
         current time is used.
@@ -167,6 +190,7 @@ class Signature(object):
         :param str secret_key:
         :param float|str valid_until: Unix timestamp, valid until.
         :param int lifetime: Lifetime of the signature in seconds.
+        :param dict extra: Additional variables to be added.
         :return str:
 
         :example:
@@ -183,9 +207,15 @@ class Signature(object):
             except Exception as e:
                 return None # Something went wrong
 
-        raw_hmac = hmac.new(Signature.make_secret_key(secret_key), cls.get_base(auth_user, valid_until), sha1).digest()
+        raw_hmac = hmac.new(
+            Signature.make_secret_key(secret_key),
+            cls.get_base(auth_user, valid_until, extra=extra),
+            sha1
+            ).digest()
+
         signature = b64encode(raw_hmac)
-        return Signature(signature=signature, auth_user=auth_user, valid_until=valid_until)
+
+        return Signature(signature=signature, auth_user=auth_user, valid_until=valid_until, extra=extra)
 
     @staticmethod
     def datetime_to_timestamp(dt):
@@ -254,11 +284,18 @@ class Signature(object):
 class RequestHelper(object):
     """
     Request helper for easy put/extract of signature params from URLs.
+
+    :param str signature_param:
+    :param str auth_user_param:
+    :param str valid_until_param:
+    :param str extra_keys_param:
     """
-    def __init__(self, signature_param, auth_user_param, valid_until_param):
+    def __init__(self, signature_param=DEFAULT_SIGNATURE_PARAM, auth_user_param=DEFAULT_AUTH_USER_PARAM,
+                 valid_until_param=DEFAULT_VALID_UNTIL_PARAM, extra_param=DEFAULT_EXTRA_PARAM):
         self.signature_param = signature_param
         self.auth_user_param = auth_user_param
         self.valid_until_param = valid_until_param
+        self.extra_param = extra_param
 
     def signature_to_url(self, signature, endpoint_url='', suffix=DEFAULT_URL_SUFFIX):
         """
@@ -303,8 +340,13 @@ class RequestHelper(object):
             self.signature_param: signature.signature,
             self.auth_user_param: signature.auth_user,
             self.valid_until_param: signature.valid_until,
+            self.extra_param: dict_keys(signature.extra, return_string=True),
         }
-        return "%s%s%s" % (endpoint_url, suffix, urlencode(params))
+
+        # Make some check that params used do not overlap with names reserved (`auth_user`, `signature`, etc).
+        params.update(signature.extra)
+
+        return "{0}{1}{2}".format(endpoint_url, suffix, urlencode(params))
 
     def signature_to_dict(self, signature):
         """
@@ -346,11 +388,16 @@ class RequestHelper(object):
             'valid_until': '1378045287.0'
         }
         """
-        return {
+        d = {
             self.signature_param: signature.signature,
             self.auth_user_param: signature.auth_user,
             self.valid_until_param: signature.valid_until,
+            self.extra_param: dict_keys(signature.extra, return_string=True),
         }
+
+        d.update(signature.extra)
+
+        return d
 
     def validate_request_data(self, data, secret_key):
         """
@@ -389,19 +436,23 @@ class RequestHelper(object):
         auth_user = data.get(self.auth_user_param, '')
         valid_until = data.get(self.valid_until_param, '')
 
+        extra = extract_extra_from_request_data(data=data, extra=data.get(self.extra_param, '').split(','))
+
         validation_result = Signature.validate_signature(
             signature = signature,
             auth_user = auth_user,
             secret_key = secret_key,
             valid_until = valid_until,
-            return_object = True
+            return_object = True,
+            extra = extra
             )
 
         return validation_result
 
 def sign_url(auth_user, secret_key, valid_until=None, lifetime=SIGNATURE_LIFETIME, url='', \
              suffix=DEFAULT_URL_SUFFIX, signature_param=DEFAULT_SIGNATURE_PARAM, \
-             auth_user_param=DEFAULT_AUTH_USER_PARAM, valid_until_param=DEFAULT_VALID_UNTIL_PARAM):
+             auth_user_param=DEFAULT_AUTH_USER_PARAM, valid_until_param=DEFAULT_VALID_UNTIL_PARAM, \
+             extra={}, extra_param=DEFAULT_EXTRA_PARAM):
     """
     Signs the URL.
 
@@ -414,6 +465,8 @@ def sign_url(auth_user, secret_key, valid_until=None, lifetime=SIGNATURE_LIFETIM
     :param str signature_param: Name of the GET param name which would hold the generated signature value.
     :param str auth_user_param: Name of the GET param name which would hold the ``auth_user`` value.
     :param str valid_until_param: Name of the GET param name which would hold the ``valid_until`` value.
+    :param dict extra: Extra variables to add to the request.
+    :param str extra_param: Name of the GET param name which would hold the ``extra_keys`` value.
     :return str:
 
     :example:
@@ -426,7 +479,9 @@ def sign_url(auth_user, secret_key, valid_until=None, lifetime=SIGNATURE_LIFETIM
     >>> signed_url = sign_url(
     >>>     auth_user='user', secret_key='your-secret_key', lifetime=120, \
     >>>     url='http://e.com/api/', signature_param=DEFAULT_SIGNATURE_PARAM,
-    >>>     auth_user_param=DEFAULT_AUTH_USER_PARAM, valid_until_param=DEFAULT_VALID_UNTIL_PARAM
+    >>>     auth_user_param=DEFAULT_AUTH_USER_PARAM, valid_until_param=DEFAULT_VALID_UNTIL_PARAM,
+    >>>     extra = {'provider': 'service1.example.com', 'email': 'john.doe@mail.example.com'},
+    >>>     extra_param = DEFAULT_EXTRA_PARAM
     >>> )
     http://e.com/api/?valid_until=1378045287.0&auth_user=user&signature=YlZpLFsjUKBalL4x5trhkeEgqE8%3D
     """
@@ -439,27 +494,30 @@ def sign_url(auth_user, secret_key, valid_until=None, lifetime=SIGNATURE_LIFETIM
         auth_user = auth_user,
         secret_key = secret_key,
         valid_until = valid_until,
-        lifetime = lifetime
+        lifetime = lifetime,
+        extra = extra
         )
 
     request_helper = RequestHelper(
         signature_param = signature_param,
         auth_user_param = auth_user_param,
-        valid_until_param = valid_until_param
+        valid_until_param = valid_until_param,
+        extra_param = extra_param
     )
 
     signed_url = request_helper.signature_to_url(
         signature = signature,
         endpoint_url = url,
-        suffix = suffix
+        suffix = suffix,
     )
 
     return signed_url
 
 
 def signature_to_dict(auth_user, secret_key, valid_until=None, lifetime=SIGNATURE_LIFETIME, \
-                      signature_param='signature', auth_user_param='auth_user', \
-                      valid_until_param='valid_until'):
+                      signature_param=DEFAULT_SIGNATURE_PARAM, auth_user_param=DEFAULT_AUTH_USER_PARAM, \
+                      valid_until_param=DEFAULT_VALID_UNTIL_PARAM, extra={}, \
+                      extra_param=DEFAULT_EXTRA_PARAM):
     """
     Returns a dictionary containing the signature data params.
 
@@ -503,13 +561,15 @@ def signature_to_dict(auth_user, secret_key, valid_until=None, lifetime=SIGNATUR
         auth_user = auth_user,
         secret_key = secret_key,
         valid_until = valid_until,
-        lifetime = lifetime
+        lifetime = lifetime,
+        extra = extra
         )
 
     request_helper = RequestHelper(
         signature_param = signature_param,
         auth_user_param = auth_user_param,
-        valid_until_param = valid_until_param
+        valid_until_param = valid_until_param,
+        extra_param = extra_param
     )
 
     signature_dict = request_helper.signature_to_dict(
@@ -521,7 +581,8 @@ def signature_to_dict(auth_user, secret_key, valid_until=None, lifetime=SIGNATUR
 
 def validate_signed_request_data(data, secret_key, signature_param=DEFAULT_SIGNATURE_PARAM, \
                                  auth_user_param=DEFAULT_AUTH_USER_PARAM, \
-                                 valid_until_param=DEFAULT_VALID_UNTIL_PARAM):
+                                 valid_until_param=DEFAULT_VALID_UNTIL_PARAM, \
+                                 extra_param=DEFAULT_EXTRA_PARAM):
     """
     Validates the signed request data.
 
@@ -542,7 +603,8 @@ def validate_signed_request_data(data, secret_key, signature_param=DEFAULT_SIGNA
     request_helper = RequestHelper(
         signature_param = signature_param,
         auth_user_param = auth_user_param,
-        valid_until_param = valid_until_param
+        valid_until_param = valid_until_param,
+        extra_param = extra_param
     )
 
     validation_result = request_helper.validate_request_data(

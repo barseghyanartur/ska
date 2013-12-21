@@ -1,5 +1,5 @@
 ====================================
-TODOS
+TODOS/Roadmap
 ====================================
 Base on MoSCoW principle. Must haves and should haves are planned to be worked on.
 
@@ -42,3 +42,57 @@ Could haves
 
 Would haves
 ------------------------------------
+
+Mind bucket
+====================================
+Appending additional data
+------------------------------------
+We provide a dictionary with data, that should be embed into the URL to the sign_url function. Imagine,
+that some request requires more data to be sent (like username or email), which we would want to use
+in the end.
+
+Thus, we really provide an extra dictionary with data, that should be sent embed into the URL.
+
+In order to validate the request on the endpoint (because, the original URL could contain some more data),
+we need to generate a list of additional fields, added by the package. We know already about the `auth_user`,
+`signature` and `valid_until`, but additional data, that was embed into the signature, should be listed in
+the `extra` request param in the following way: names of params should be comma separated. In order to avoid
+faking the data, the hash should be made of entire data in the following way:
+
+- Additional data dict, would be sorted by keys.
+- We would iterate through the dictionary and make a string of it.
+- Then we would append the string to the ``get_base`` method and it would be hashed.
+
+>>> sign_url(
+>>>     auth_user = 'user',
+>>>     secret_key = 'your-secret_key',
+>>>     url = 'http://e.com/api/',
+>>>     extra = {
+>>>         'email': 'doe@example.com',
+>>>         'last_name': 'Doe',
+>>>         'first_name': 'Joe',
+>>>     }
+>>>     )
+
+And finally, instead of this:
+
+http://e.com/api/?valid_until=1378.0&auth_user=user&signature=YlZ
+
+We would get this:
+
+http://e.com/api/?valid_until=1378.0&auth_user=user&signature=YlZ&first_name=John&last_name=Doe&
+email=doe@example.com&age=64&gender=male&extra=email,first_name,last_name
+
+When validating a request, we would read the contents of the ``extra`` param, and assembled the original data,
+that was used to generate the signature.
+
+The rest of data (age, gender), which was not a part of the signed data, is not interesting. We would read the
+``extra`` param (if exists), assembled a dictionary, create base of it and go on matching the hash in the very
+same way we did before.
+
+When validating the request, we would do as follows.
+
+>>> validation_result = validate_signed_request_data(
+>>>     request.REQUEST,
+>>>     secret_key = 'your-secret_key'
+>>>     )
