@@ -9,6 +9,7 @@
 example/static
 example/db/example.db
 example/tmp
+example/logs
 builddocs/
 builddocs.zip
 build/

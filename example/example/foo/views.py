@@ -5,8 +5,9 @@ from django.views.generic.base import View
 from django.core.urlresolvers import reverse
 
 from ska import sign_url
+from ska.defaults import DEFAULT_PROVIDER_PARAM
 from ska.contrib.django.ska.decorators import validate_signed_request, m_validate_signed_request
-from ska.contrib.django.ska.settings import SECRET_KEY
+from ska.contrib.django.ska.settings import SECRET_KEY, PROVIDERS
 
 from foo.models import FooItem
 
@@ -34,13 +35,15 @@ def authenticate(request, template_name='foo/authenticate.html'):
     :param str template_name:
     :return django.http.HttpResponse:
     """
-    remote_ska_login_urls = []
+    # Server ska login URL
+    remote_ska_login_url = reverse('ska.login')
 
-    for i in range(10):
-        remote_ska_login_url = reverse('ska.login')
+    # General login URLs
+    remote_ska_login_urls = []
+    for i in range(3):
         signed_remote_ska_login_url = sign_url(
             auth_user = 'test_ska_user_{0}'.format(i),
-            secret_key = SECRET_KEY,
+            secret_key = SECRET_KEY, # Using general secret key
             url = remote_ska_login_url,
             extra = {
                 'email': 'test_ska_user_{0}@mail.example.com'.format(i),
@@ -48,10 +51,28 @@ def authenticate(request, template_name='foo/authenticate.html'):
                 'last_name': 'Doe {0}'.format(i),
             }
             )
-        remote_ska_login_urls.append((remote_ska_login_url, signed_remote_ska_login_url))
+        remote_ska_login_urls.append((i, remote_ska_login_url, signed_remote_ska_login_url))
 
+    # Login URLs by provider
+    remote_ska_login_urls_by_provider = []
+    for uid, data in PROVIDERS.items():
+        signed_remote_ska_login_url = sign_url(
+            auth_user = 'test_ska_user_{0}'.format(uid),
+            secret_key = data.get('SECRET_KEY'), # Using provider-specific secret key
+            url = remote_ska_login_url,
+            extra = {
+                'email': 'test_ska_user_{0}@mail.example.com'.format(uid),
+                'first_name': 'John {0}'.format(uid),
+                'last_name': 'Doe {0}'.format(uid),
+                DEFAULT_PROVIDER_PARAM: uid,
+            }
+            )
+        remote_ska_login_urls_by_provider.append((uid, remote_ska_login_url, signed_remote_ska_login_url))
+
+    # Template context
     context = {
         'remote_ska_login_urls': remote_ska_login_urls,
+        'remote_ska_login_urls_by_provider': remote_ska_login_urls_by_provider
     }
 
     return render_to_response(template_name, context, context_instance=RequestContext(request))

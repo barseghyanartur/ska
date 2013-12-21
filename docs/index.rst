@@ -98,16 +98,13 @@ With all customisations, it would look as follows.
 >>>     auth_user_param='auth_user', valid_until_param='valid_until'
 >>> )
 
-It's also possible to add additional data to the request by providing a ``extra`` argument (dict). In
-that case, data given in ``extra``, would be signed as well (affects the signature).
+It's also possible to add additional data to the signature by providing a ``extra`` argument (dict).
+Note, that additional data is signed as well. If request is somehow tampered (values vary from
+originally provided ones), signature becomes invalid.
 
 >>> sign_url(
 >>>     auth_user = 'user', secret_key = 'your-secret_key', url = 'http://e.com/api/',
->>>     extra = {
->>>         'email': 'doe@example.com',
->>>         'last_name': 'Doe',
->>>         'first_name': 'Joe',
->>>     }
+>>>     extra = {'email': 'doe@example.com', 'last_name': 'Doe', 'first_name': 'Joe'}
 >>>     )
 
 You may now proceed with the signed URL request. If you use the famous ``requests`` library, it would
@@ -129,11 +126,32 @@ apply to the ``signature_to_dict``.
 
 >>> signature_dict = signature_to_dict(
 >>>     auth_user='user', secret_key='your-secret_key'
->>> )
+>>>     )
 {
     'signature': 'YlZpLFsjUKBalL4x5trhkeEgqE8=',
     'auth_user': 'user',
     'valid_until': '1378045287.0'
+}
+
+Adding of additional data to the signature works in the same way.
+
+>>> signature_dict = signature_to_dict(
+>>>     auth_user = 'user',
+>>>     secret_key = 'your-secret_key',
+>>>     extra = {
+>>>         'email': 'john.doe@mail.example.com',
+>>>         'first_name': 'John',
+>>>         'last_name': 'Doe'
+>>>     }
+>>>     )
+{
+    'auth_user': 'user',
+    'email': 'john.doe@mail.example.com',
+    'extra': 'email,first_name,last_name',
+    'first_name': 'John',
+    'last_name': 'Doe',
+    'signature': 'cnSoU/LnJ/ZhfLtDLzab3a3gkug=',
+    'valid_until': 1387616469.0
 }
 
 If you for some reason prefer a lower level implementation, read the same section in the
@@ -175,7 +193,7 @@ Default name of the (GET) param holding the ``valid_until`` value is `valid_unti
 to be different, provide a ``valid_until_param`` argument to ``validate_signed_request_data``
 function.
 
-With all customisations, it would look as follows.
+With all customisations, it would look as follows. Note, that ``request.GET`` is given as example.
 
 >>> validation_result = validate_signed_request_data(
 >>>     data = request.GET,
@@ -478,13 +496,13 @@ urls.py
 
 Callbacks
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-There are 3 callbacks implemented in authentication backend.
+There are several callbacks implemented in authentication backend.
 
 - `USER_GET_CALLBACK` (string): Fired if user was successfully fetched from database (existing user).
 - `USER_CREATE_CALLBACK` (string): Fired right after user has been created (user didn't exist).
 - `USER_INFO_CALLBACK` (string): Fired upon successful authentication.
 
-Example of a callback function:
+Example of a callback function (let's say, it resides in module `my_app.ska_callbacks`):
 
 >>> def my_callback(user, request, signed_request_data)
 >>>     # Your code
@@ -498,6 +516,9 @@ Example of a callback function:
 For example, if you need to assign user to some local Django group, you could specify the group
 name on the client side (add it to the ``extra`` dictionary) and based on that, add the user to
 the group in the callback.
+
+The callback is a path qualifier of the callback function. Considering the example above, it would
+be "my_app.ska_callbacks.my_callback".
 
 Purging of old signature data
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -555,6 +576,61 @@ From point of security, you should be serving the following pages via HTTP secur
 - The server login page (/ska/login/).
 - The client page containing the authentication links.
 
+Multiple secret keys
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Imagine, you have a site to which you want to offer a password-less login for various clients and
+you don't want them all to have one shared secret key, but rather have their own one. Moreover,
+you specifically want to execute very custom callbacks not only for each separate client, but
+also for different sort of users authenticating.
+
+In order to make the stated above possible, the concept of providers is introduced. You can define
+a secret key, callbacks or redirect URL. See an example below.
+
+>>> SKA_PROVIDERS = {
+>>>     # Client 1, group users
+>>>     'client_1.users': {
+>>>         'SECRET_KEY': 'client-1-users-secret-key',
+>>>         },
+>>>
+>>>     # Client 1, group power_users
+>>>     'client_1.power_users': {
+>>>         'SECRET_KEY': 'client-1-power-users-secret-key',
+>>>         'USER_CREATE_CALLBACK': 'foo.ska_callbacks.client1_power_users_create',
+>>>         },
+>>>
+>>>     # Client 1, group admins
+>>>     'client_1.admins': {
+>>>         'SECRET_KEY': 'client-1-admins-secret-key',
+>>>         'USER_CREATE_CALLBACK': 'foo.ska_callbacks.client1_admins_create',
+>>>         'REDIRECT_AFTER_LOGIN': '/admin/'
+>>>     },
+>>> }
+
+See the "Callbacks" section for the list of callbacks.
+
+Obviously, server would have to have the full list of providers defined. On the client side
+you would only have to store the general secret key and of course the provider UID(s).
+
+When making a signed URL on the client side, you should be providing the "provider" key in
+the ``extra`` argument. See the example below for how you would do it for "client_1.power_users".
+
+>>> from ska import sign_url
+>>> from ska.defaults import DEFAULT_PROVIDER_PARAM
+>>>
+>>> server_ska_login_url = 'https://server-url.com/ska/login/'
+>>>
+>>> signed_remote_ska_login_url = sign_url(
+>>>     auth_user = 'test_ska_user',
+>>>     secret_key = 'client-1-power-users-secret-key', # Using provider-specific secret key
+>>>     url = server_ska_login_url,
+>>>     extra = {
+>>>         'email': 'test_ska_user_{0}@mail.example.com'.format(uid),
+>>>         'first_name': 'John {0}'.format(uid),
+>>>         'last_name': 'Doe {0}'.format(uid),
+>>>         DEFAULT_PROVIDER_PARAM: 'client_1.power_users',
+>>>     }
+>>>     )
+
 License
 ===================================================
 GPL 2.0/LGPL 2.1
@@ -567,8 +643,9 @@ Author
 ===================================================
 Artur Barseghyan <artur.barseghyan@gmail.com>
 
+
 Documentation
-==================================
+===================================================
 Contents:
 
 .. toctree::

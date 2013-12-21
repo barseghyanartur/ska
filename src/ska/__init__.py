@@ -103,9 +103,7 @@ class Signature(object):
         :param str auth_user:
         :param str secret_key:
         :param float|str valid_until: Unix timestamp.
-        :param dict extra: Extra arguments to be validated. If ``extra_keys`` is given, the ``extra`` is
-            stripped to the "white listed" keys only. Otherwise - the entire ``extra`` dictionary is
-            considered to be used.
+        :param dict extra: Extra arguments to be validated.
         :param bool return_object: If set to True, an instance of ``SignatureValidationResult`` is returned.
         :return bool:
 
@@ -169,7 +167,6 @@ class Signature(object):
         :param string auth_user:
         :param int timestamp:
         :param dict extra:
-        :param list extra_keys:
         """
         l = [str(timestamp), auth_user]
 
@@ -301,7 +298,7 @@ class RequestHelper(object):
     :param str signature_param:
     :param str auth_user_param:
     :param str valid_until_param:
-    :param str extra_keys_param:
+    :param str extra_param:
     """
     def __init__(self, signature_param=DEFAULT_SIGNATURE_PARAM, auth_user_param=DEFAULT_AUTH_USER_PARAM,
                  valid_until_param=DEFAULT_VALID_UNTIL_PARAM, extra_param=DEFAULT_EXTRA_PARAM):
@@ -565,6 +562,9 @@ def signature_to_dict(auth_user, secret_key, valid_until=None, lifetime=SIGNATUR
         the ``auth_user`` value.
     :param str valid_until_param: Name of the (for example POST) param name which would hold
         the ``valid_until`` value.
+    :param dict extra: Additional arguments for the signature.
+    :param str extra_param: Name of the (for example POST) param name which would hold
+        the ``extra`` keys value.
     :return str:
 
     :example:
@@ -626,6 +626,8 @@ def validate_signed_request_data(data, secret_key, signature_param=DEFAULT_SIGNA
         the ``auth_user`` value.
     :param str valid_until_param: Name of the (foe example GET or POST) param name which holds
         the ``valid_until`` value.
+    :param str extra_param: Name of the (foe example GET or POST) param name which holds
+        the ``extra`` keys value.
     :return ska.SignatureValidationResult: A ``ska.SignatureValidationResult`` object with the
         following properties:
             - `result` (bool): True if data is valid. False otherwise.

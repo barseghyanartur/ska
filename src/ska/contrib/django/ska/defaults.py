@@ -10,6 +10,10 @@
 - `DB_STORE_SIGNATURES` (bool): If set to True, signatures are stored in the database.
 - `DB_PERFORM_SIGNATURE_CHECK` (bool): If set to True, an extra check is fired on whether the token has
   already been used or not.
+- `PROVIDERS` (dict): A dictionary where key is the provider UID and the key is another dictionary holding
+  the following provider specific keys: 'SECRET_KEY', 'USER_GET_CALLBACK', 'USER_CREATE_CALLBACK',
+  'USER_INFO_CALLBACK', 'REDIRECT_AFTER_LOGIN'. Note, that the 'SECRET_KEY' is a required key. The rest
+  are optional, and if given, override respectively the values of ``ska.contrib.django.ska.settings``.
 """
 
 __title__ = 'ska.contrib.django.ska.defaults'
@@ -19,7 +23,7 @@ __license__ = 'GPL 2.0/LGPL 2.1'
 __all__ = (
     'AUTH_USER', 'UNAUTHORISED_REQUEST_ERROR_MESSAGE', 'UNAUTHORISED_REQUEST_ERROR_TEMPLATE',
     'USER_GET_CALLBACK', 'USER_CREATE_CALLBACK', 'USER_INFO_CALLBACK', 'REDIRECT_AFTER_LOGIN',
-    'DB_STORE_SIGNATURES', 'DB_PERFORM_SIGNATURE_CHECK'
+    'DB_STORE_SIGNATURES', 'DB_PERFORM_SIGNATURE_CHECK', 'PROVIDERS'
 )
 
 ugettext = lambda s: s
@@ -37,3 +41,5 @@ REDIRECT_AFTER_LOGIN = ''
 
 DB_STORE_SIGNATURES = False
 DB_PERFORM_SIGNATURE_CHECK = False
+
+PROVIDERS = {}

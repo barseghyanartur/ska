@@ -8,6 +8,7 @@
     
 {% block content %}
     <h1>{% trans "Authenticate" %}</h1>
+    <h2>{% trans "General" %}</h2>
     <p>
         {% blocktrans %}
         Below you can see the list of URLs, divided into 2 categories: (1) Fail, (2) success. Fail URLs obviously
@@ -23,10 +24,35 @@
             </tr>
         </thead>
         <tbody>
-    {% for remote_ska_login_url, signed_remote_ska_login_url in remote_ska_login_urls %}
+    {% for title, remote_ska_login_url, signed_remote_ska_login_url in remote_ska_login_urls %}
         <tr>
-            <td><a href="{{ remote_ska_login_url }}" class="login">{% trans "Log in" %} - {{ forloop.counter0 }}</a></td>
-            <td><a href="{{ signed_remote_ska_login_url }}" class="login">{% trans "Log in" %} - {{ forloop.counter0 }}</a></td>
+            <td><a href="{{ remote_ska_login_url }}" class="login">{% trans "Log in" %} - {{ title }}</a></td>
+            <td><a href="{{ signed_remote_ska_login_url }}" class="login">{% trans "Log in" %} - {{ title }}</a></td>
+        </tr>
+    {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>{% trans "By provider" %}</h2>
+    <p>
+        {% blocktrans %}
+        Below you can see the list of provider specific URLs, divided into 2 categories: (1) Fail, (2) success. 
+        Fail URLs obviously fail (401 Unauthorized). The other two should work (you should get a password-less login 
+        into the Django web site).
+        {% endblocktrans %}
+    </p>
+    <table>
+        <thead>
+            <tr>
+                <td><strong>{% trans "Fail" %}</strong></td>
+                <td><strong>{% trans "Success" %}</strong></td>
+            </tr>
+        </thead>
+        <tbody>
+    {% for title, remote_ska_login_url, signed_remote_ska_login_url in remote_ska_login_urls_by_provider %}
+        <tr>
+            <td><a href="{{ remote_ska_login_url }}" class="login">{% trans "Log in" %} - {{ title }}</a></td>
+            <td><a href="{{ signed_remote_ska_login_url }}" class="login">{% trans "Log in" %} - {{ title }}</a></td>
         </tr>
     {% endfor %}
         </tbody>

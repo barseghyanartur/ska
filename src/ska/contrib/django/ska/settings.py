@@ -13,6 +13,10 @@ from __future__ import absolute_import
 - `DB_STORE_SIGNATURES` (bool): If set to True, signatures are stored in the database.
 - `DB_PERFORM_SIGNATURE_CHECK` (bool): If set to True, an extra check is fired on whether the token has
   already been used or not.
+- `PROVIDERS` (dict): A dictionary where key is the provider UID and the key is another dictionary holding
+  the following provider specific keys: 'SECRET_KEY', 'USER_GET_CALLBACK', 'USER_CREATE_CALLBACK',
+  'USER_INFO_CALLBACK', 'REDIRECT_AFTER_LOGIN'. Note, that the 'SECRET_KEY' is a required key. The rest
+  are optional, and if given, override respectively the values of ``ska.contrib.django.ska.settings``.
 """
 
 __title__ = 'ska.contrib.django.ska.settings'
@@ -22,10 +26,11 @@ __license__ = 'GPL 2.0/LGPL 2.1'
 __all__ = (
     'UNAUTHORISED_REQUEST_ERROR_MESSAGE', 'UNAUTHORISED_REQUEST_ERROR_TEMPLATE', 'AUTH_USER', 'SECRET_KEY',
     'USER_GET_CALLBACK', 'USER_CREATE_CALLBACK', 'USER_INFO_CALLBACK', 'REDIRECT_AFTER_LOGIN',
-    'DB_STORE_SIGNATURES', 'DB_PERFORM_SIGNATURE_CHECK'
+    'DB_STORE_SIGNATURES', 'DB_PERFORM_SIGNATURE_CHECK', 'PROVIDERS'
 )
 
 from django.conf import settings
+from django.utils.translation import ugettext_lazy as _
 
 from ska.exceptions import ImproperlyConfigured
 from ska.contrib.django.ska.conf import get_setting
@@ -37,7 +42,7 @@ AUTH_USER = get_setting('AUTH_USER')
 try:
     SECRET_KEY = settings.SKA_SECRET_KEY
 except:
-    raise ImproperlyConfigured("You should defined a variable ``SKA_SECRET_KEY`` in your `settings` module!")
+    raise ImproperlyConfigured(_("You should defined a variable ``SKA_SECRET_KEY`` in your `settings` module!"))
 
 USER_GET_CALLBACK = get_setting('USER_GET_CALLBACK')
 USER_CREATE_CALLBACK = get_setting('USER_CREATE_CALLBACK')
@@ -46,3 +51,16 @@ REDIRECT_AFTER_LOGIN = get_setting('REDIRECT_AFTER_LOGIN')
 
 DB_STORE_SIGNATURES = get_setting('DB_STORE_SIGNATURES')
 DB_PERFORM_SIGNATURE_CHECK = get_setting('DB_PERFORM_SIGNATURE_CHECK')
+
+PROVIDERS = get_setting('PROVIDERS')
+
+def validate_providers():
+    """
+    Validates the providers set in projets' ``settings`` module.
+    """
+    for uid, data in PROVIDERS.items():
+        if not 'SECRET_KEY' in data:
+            raise ImproperlyConfigured(_("You should defined a key ``SECRET_KEY`` for each provider in "
+                                         "your `settings module`!"))
+
+validate_providers()

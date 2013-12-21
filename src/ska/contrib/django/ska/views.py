@@ -11,9 +11,8 @@ from django.contrib.auth import login as auth_login
 from django.contrib import messages
 
 from ska.contrib.django.ska.settings import REDIRECT_AFTER_LOGIN
-from ska.contrib.django.ska.decorators import validate_signed_request
+from ska.contrib.django.ska.utils import get_provider_data
 
-@validate_signed_request()
 def login(request):
     """
     Authenticate with `ska` token into Django.
@@ -22,7 +21,14 @@ def login(request):
     :return django.http.HttpResponse:
     """
     user = authenticate(request=request)
-    next_url = request.GET.get('next', REDIRECT_AFTER_LOGIN)
+    next_url = request.GET.get('next', None)
+
+    if not next_url:
+        provider_data = get_provider_data(request.REQUEST)
+        next_url = provider_data.get('REDIRECT_AFTER_LOGIN', REDIRECT_AFTER_LOGIN)
+
+    if not next_url:
+        next_url = '/'
 
     if user is not None:
         auth_login(request, user)

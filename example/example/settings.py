@@ -152,9 +152,31 @@ INSTALLED_APPS = (
     'foo', # Our example app
 )
 
+# Global secret key
 SKA_SECRET_KEY = 'secret-key'
 SKA_UNAUTHORISED_REQUEST_ERROR_TEMPLATE = 'ska/401.html'
+# Page to redirect to after successful login
 SKA_REDIRECT_AFTER_LOGIN = '/foo/logged-in/'
+# List of additional secret keys per provider
+SKA_PROVIDERS = {
+    # Client 1, group users
+    'client_1.users': {
+        'SECRET_KEY': 'client-1-users-secret-key',
+        },
+
+    # Client 1, group power_users
+    'client_1.power_users': {
+        'SECRET_KEY': 'client-1-power-users-secret-key',
+        'USER_CREATE_CALLBACK': 'foo.ska_callbacks.client1_power_users_create',
+        },
+
+    # Client 1, group admins
+    'client_1.admins': {
+        'SECRET_KEY': 'client-1-admins-secret-key',
+        'USER_CREATE_CALLBACK': 'foo.ska_callbacks.client1_admins_create',
+        'REDIRECT_AFTER_LOGIN': '/admin/'
+    },
+}
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -169,20 +191,54 @@ LOGGING = {
             '()': 'django.utils.log.RequireDebugFalse'
         }
     },
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s [%(pathname)s:%(lineno)s] %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
     'handlers': {
         'mail_admins': {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
-        }
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        },
+        'django_log': {
+            'level':'DEBUG',
+            'class':'logging.handlers.RotatingFileHandler',
+            'filename': PROJECT_DIR("../logs/django.log"),
+            'maxBytes': 1048576,
+            'backupCount': 99,
+            'formatter': 'verbose',
+        },
+        'ska_log': {
+            'level':'DEBUG',
+            'class':'logging.handlers.RotatingFileHandler',
+            'filename': PROJECT_DIR("../logs/ska.log"),
+            'maxBytes': 1048576,
+            'backupCount': 99,
+            'formatter': 'verbose',
+        },
     },
     'loggers': {
-        'django.request': {
-            'handlers': ['mail_admins'],
+        'django': {
+            'handlers': ['django_log'],
             'level': 'ERROR',
             'propagate': True,
         },
-    }
+        'ska': {
+            'handlers': ['console', 'ska_log'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
 }
 
 

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+
+{% block content %}
+    <h1>{% trans "`ska` - Signing (HTTP) requests using symmetric-key algorithm." %}</h1>
+    <h2>{% trans "Intro" %}</h2>
+    <h3>{% trans "`ska` core module" %}</h3>
+    <p>
+    {% blocktrans %}
+    `ska` lets you easily generate signatures for signing (HTTP) requests, using symmetric-key algorithm encryption.
+    Allows you to validate signed requests and identify possible validation errors. Uses sha1/hmac for
+    signature encryption.
+    {% endblocktrans %}
+    </p>
+
+    <h3>{% trans "`ska` package for Django" %}</h3>
+    <p>
+    {% blocktrans %}
+    `ska` comes Django app (implemented as a sub package), which contains password-less authentication to Django,
+    as well as useful shortcuts for using `ska` in Django.
+    {% endblocktrans %}
+    </p>
+
+    <h2>{% trans "Links" %}</h2>
+    <table>
+        <thead>
+            <tr>
+                <td><strong>{% trans "Description" %}</strong></td>
+                <td><strong>{% trans "URL" %}</strong></td>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td>
+                    {% trans "Example of authentication backend client page. Contains success and fail URLs." %}
+                </td>
+                <td>
+                    <a href="{% url 'foo.authenticate' %}">{% trans "Example of authentication backend client page" %}</a>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    {% trans "Example of Foo model items listing. Contains success and fail URLs." %}
+                </td>
+                <td>
+                    <a href="{% url 'foo.browse' %}">{% trans "Example of model items listing" %}</a>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+
+{% endblock content %}

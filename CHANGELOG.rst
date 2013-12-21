@@ -1,6 +1,15 @@
 =====================================
 Release history
 =====================================
+1.4
+-------------------------------------
+2013-12-21
+
+- Providers concept implemented. It's now possible to handle multiple secret keys and
+  define custom callbacks and redirect URLs per provider. See the docs for more.
+- Better example project.
+- Better documentation.
+
 1.3
 -------------------------------------
 2013-12-21

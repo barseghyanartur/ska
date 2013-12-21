@@ -12,6 +12,7 @@ from ska.defaults import (
     DEFAULT_SIGNATURE_PARAM, DEFAULT_AUTH_USER_PARAM, DEFAULT_VALID_UNTIL_PARAM, DEFAULT_EXTRA_PARAM
     )
 from ska.exceptions import ImproperlyConfigured, InvalidData
+from ska.contrib.django.ska.utils import get_provider_data
 
 from django.contrib.auth.models import User, UNUSABLE_PASSWORD
 from django.db import IntegrityError
@@ -33,6 +34,15 @@ class SkaAuthenticationBackend(object):
         :param django.http.HttpRequest request:
         :return django.contrib.auth.models.User: Instance or None on failure.
         """
+        #secret_key = get_secret_key(request.REQUEST, default=SECRET_KEY)
+        provider_data = get_provider_data(request.REQUEST)
+        if provider_data:
+            secret_key = provider_data['SECRET_KEY']
+        else:
+            secret_key = SECRET_KEY
+
+        logger.debug('secret_key: {0}'.format(secret_key))
+
         #validation_result = validate_signed_request_data(
         #    data = request.REQUEST,
         #    secret_key = SECRET_KEY,
@@ -44,11 +54,12 @@ class SkaAuthenticationBackend(object):
         # If authentication failed.
         #if not validation_result.result:
         #    return None
+
         try:
             # If authentication/data validation failed.
             signed_request_data = extract_signed_request_data(
                 data = request.REQUEST,
-                secret_key = SECRET_KEY,
+                secret_key = secret_key,
                 signature_param = DEFAULT_SIGNATURE_PARAM,
                 auth_user_param = DEFAULT_AUTH_USER_PARAM,
                 valid_until_param = DEFAULT_VALID_UNTIL_PARAM,
@@ -57,6 +68,7 @@ class SkaAuthenticationBackend(object):
                 fail_silently = False
                 )
         except (ImproperlyConfigured, InvalidData) as e:
+            logger.debug(str(e))
             return None
 
         # Get the username from request.
@@ -88,10 +100,14 @@ class SkaAuthenticationBackend(object):
             user = User._default_manager.get(username=auth_user)
 
             # User get callback
-            if USER_GET_CALLBACK is not None:
-                callback_func = get_callback_func(USER_GET_CALLBACK)
+            user_get_callback = provider_data.get('USER_GET_CALLBACK', USER_GET_CALLBACK)
+            if user_get_callback is not None:
+                callback_func = get_callback_func(user_get_callback)
                 if callback_func:
-                    callback_func(user, request=request, signed_request_data=signed_request_data)
+                    try:
+                        callback_func(user, request=request, signed_request_data=signed_request_data)
+                    except Exception as e:
+                        logger.debug(str(e))
 
         except User.DoesNotExist as e:
             user = User._default_manager.create_user(
@@ -104,16 +120,24 @@ class SkaAuthenticationBackend(object):
             user.save()
 
             # User create callback
-            if USER_CREATE_CALLBACK is not None:
-                callback_func = get_callback_func(USER_CREATE_CALLBACK)
+            user_create_callback = provider_data.get('USER_CREATE_CALLBACK', USER_CREATE_CALLBACK)
+            if user_create_callback is not None:
+                callback_func = get_callback_func(user_create_callback)
                 if callback_func:
-                    callback_func(user, request=request, signed_request_data=signed_request_data)
+                    try:
+                        callback_func(user, request=request, signed_request_data=signed_request_data)
+                    except Exception as e:
+                        logger.debug(str(e))
 
         # User info callback
-        if USER_INFO_CALLBACK is not None:
-            callback_func = get_callback_func(USER_INFO_CALLBACK)
+        user_info_callback = provider_data.get('USER_INFO_CALLBACK', USER_INFO_CALLBACK)
+        if user_info_callback is not None:
+            callback_func = get_callback_func(user_info_callback)
             if callback_func:
-                callback_func(user, request=request, signed_request_data=signed_request_data)
+                try:
+                    callback_func(user, request=request, signed_request_data=signed_request_data)
+                except Exception as e:
+                    logger.debug(str(e))
 
         return user
 
