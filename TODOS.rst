@@ -1,6 +1,9 @@
 ====================================
 TODOS/Roadmap
 ====================================
+
+TODOS
+====================================
 Base on MoSCoW principle. Must haves and should haves are planned to be worked on.
 
 * Features/issues marked with plus (+) are implemented/solved.
@@ -19,17 +22,17 @@ Must haves
   URL. Sign additional data (affect the signature hash) when providing extra params.
   In that case, provider (see later on) would be just one of those; NOTE, that it
   shall be a reserved "term").
-- Add browser info to the token (auth backend).
-- Better documentation for `ska.contrib.django.ska` module.
-- Add tests for Django auth backend.
-- In Django app, allow multiple secret keys (add param provider, which would
++ In Django app, allow multiple secret keys (add param provider, which would
   contain a UID of the provider and would be as well embed into the signature).
   Based on the UID, locally an appropriate provider would be picked. The
   default secret_key would stay intact.
-- Allow to define a custom callback per provider.
++ Allow to define a custom callback per provider.
++ Log errors of authentication backend.
+- Add browser info to the token (auth backend).
+- Better documentation for `ska.contrib.django.ska` module.
+- Add tests for Django auth backend.
 - Make sure (perform a check), that given request variables do not overlap with reserved
   words: auth_user, valid_until, signature, extra.
-- Log errors of authentication backend.
 
 Should haves
 ------------------------------------
