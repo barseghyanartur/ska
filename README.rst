@@ -3,7 +3,7 @@ ska
 ===================================================
 Lets you easily sign data, using symmetric-key algorithm encryption. Allows you to validate signed data
 and identify possible validation errors. Uses sha1/hmac for signature encryption. Comes with
-shortcut function for signing (and validating) dictionaries and URLs.
+shortcut functions for signing (and validating) dictionaries and URLs.
 
 Key concepts
 ===================================================

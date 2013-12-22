@@ -473,7 +473,7 @@ convey the exclusion of warranty; and each file should have at least the
     ska - Lets you easily sign data, using symmetric-key algorithm
           encryption. Allows you to validate signed data and identify
           possible validation errors. Uses sha1/hmac for signature
-          encryption. Comes with shortcut function for signing (and
+          encryption. Comes with shortcut functions for signing (and
           validating) dictionaries and URLs.
     Copyright (C) 2013 Artur Barseghyan
 
