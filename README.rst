@@ -537,6 +537,13 @@ the group in the callback.
 The callback is a path qualifier of the callback function. Considering the example above, it would
 be "my_app.ska_callbacks.my_callback".
 
+Prefix names of each callback variable with "SKA_" in your projects' settings module.
+
+Example:
+
+>>> SKA_USER_GET_CALLBACK = 'my_app.ska_callbacks.my_get_callback'
+>>> SKA_USER_CREATE_CALLBACK = 'my_app.ska_callbacks.my_create_callback'
+
 Purging of old signature data
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 If you have lots of visitors and the ``SKA_DB_STORE_SIGNATURES`` set to True, your database
