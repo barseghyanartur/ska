@@ -7,6 +7,7 @@ __license__ = 'GPL 2.0/LGPL 2.1'
 
 import unittest
 import datetime
+from copy import copy
 
 from six import PY3
 
@@ -446,14 +447,8 @@ class ExtraTest(unittest.TestCase):
         self.secret_key = 'secret'
         self.endpoint_url = 'http://e.com/api/'
 
-    @print_info
-    def test_01_sign_url_and_validate_signed_request_data(self):
-        """
-        Tests for ``sign_url`` and ``validate_signed_request_data`` shortcut functions.
-        """
-        flow = []
-
-        signed_url = sign_url(
+    def __get_signed_url(self):
+        return sign_url(
             auth_user = self.auth_user,
             secret_key = self.secret_key,
             url = self.endpoint_url,
@@ -465,6 +460,15 @@ class ExtraTest(unittest.TestCase):
             }
         )
 
+    @print_info
+    def test_01_sign_url_and_validate_signed_request_data(self):
+        """
+        Tests for ``sign_url`` and ``validate_signed_request_data`` shortcut functions.
+        """
+        flow = []
+
+        signed_url = self.__get_signed_url()
+
         flow.append(('URL generated', signed_url))
 
         # Now parsing back the URL params and validate the signature data
@@ -474,6 +478,124 @@ class ExtraTest(unittest.TestCase):
 
         validation_result = validate_signed_request_data(
             data = request_data,
+            secret_key = self.secret_key
+            )
+
+        flow.append(('Signature is valid', validation_result.result))
+        flow.append(('Reason not valid', validation_result.reason))
+
+        self.assertTrue(validation_result.result)
+
+        return flow
+
+    @print_info
+    def test_02_sign_url_and_validate_signed_request_data_tumper_extra_keys_remove(self):
+        """
+        Fail tests for ``sign_url`` and ``validate_signed_request_data`` shortcut functions,
+        as well as providing the additional data ``extra`` and data tumpering ``extra``
+        keys (remove).
+        """
+        flow = []
+
+        signed_url = self.__get_signed_url()
+
+        flow.append(('URL generated', signed_url))
+
+        # Now parsing back the URL params and validate the signature data
+        request_data = parse_url_params(signed_url)
+
+        # ***************************************************************************
+        # ****************************** Tumpering **********************************
+        # ***************************************************************************
+        tumpered_request_data = copy(request_data)
+
+        tumpered_request_data['extra'] = 'provider,first_name'
+
+        flow.append(('Request data', request_data))
+        flow.append(('Tumpered request data', tumpered_request_data))
+
+        validation_result = validate_signed_request_data(
+            data = tumpered_request_data,
+            secret_key = self.secret_key
+            )
+
+        flow.append(('Signature is valid', validation_result.result))
+        flow.append(('Reason not valid', validation_result.reason))
+
+        self.assertTrue(not validation_result.result)
+
+        return flow
+
+    @print_info
+    def test_03_sign_url_and_validate_signed_request_data_tumper_extra_keys_add(self):
+        """
+        Fail tests for ``sign_url`` and ``validate_signed_request_data`` shortcut functions,
+        as well as providing the additional data ``extra`` and data tumpering ``extra``
+        keys (add).
+        """
+        flow = []
+
+        signed_url = self.__get_signed_url()
+
+        flow.append(('URL generated', signed_url))
+
+        # Now parsing back the URL params and validate the signature data
+        request_data = parse_url_params(signed_url)
+
+        # ***************************************************************************
+        # ****************************** Tumpering **********************************
+        # ***************************************************************************
+        tumpered_request_data = copy(request_data)
+
+        tumpered_request_data['extra'] += ',age'
+        tumpered_request_data['age'] = 27
+
+        flow.append(('Request data', request_data))
+        flow.append(('Tumpered request data', tumpered_request_data))
+
+        validation_result = validate_signed_request_data(
+            data = tumpered_request_data,
+            secret_key = self.secret_key
+            )
+
+        flow.append(('Signature is valid', validation_result.result))
+        flow.append(('Reason not valid', validation_result.reason))
+
+        self.assertTrue(not validation_result.result)
+
+        return flow
+
+    @print_info
+    def test_04_sign_url_and_validate_signed_request_data_tumper_extra_keys_add(self):
+        """
+        Tests for ``sign_url`` and ``validate_signed_request_data`` shortcut functions,
+        as well as providing the additional data ``extra`` and data tumpering ``extra``
+        keys (add) repeated params.
+        """
+        flow = []
+
+        signed_url = "{0}&provider=cervice0.example.com".format(self.__get_signed_url())
+
+        # ***************************************************************************
+        # ****************************** Tumpering **********************************
+        # ***************************************************************************
+
+        flow.append(('URL generated', signed_url))
+
+        # Now parsing back the URL params and validate the signature data
+        tampered_request_data = parse_url_params(signed_url)
+
+        # ***************************************************************************
+        # ****************************** Tumpering **********************************
+        # ***************************************************************************
+        even_more_tumpered_request_data = copy(tampered_request_data)
+        even_more_tumpered_request_data['extra'] += ',provider'
+
+        flow.append(('Tampered request data', tampered_request_data))
+        flow.append(('Even more tampered request data', even_more_tumpered_request_data))
+
+        validation_result = validate_signed_request_data(
+            data = even_more_tumpered_request_data,
             secret_key = self.secret_key
             )
 
