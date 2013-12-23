@@ -1,6 +1,13 @@
 =====================================
 Release history
 =====================================
+1.4.1
+-------------------------------------
+2013-12-23
+
+- Armenian, Dutch and Russian translations added for Django app.
+- Documentation improved.
+
 1.4
 -------------------------------------
 2013-12-21

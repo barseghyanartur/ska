@@ -42,7 +42,7 @@ AUTH_USER = get_setting('AUTH_USER')
 try:
     SECRET_KEY = settings.SKA_SECRET_KEY
 except:
-    raise ImproperlyConfigured(_("You should defined a variable ``SKA_SECRET_KEY`` in your `settings` module!"))
+    raise ImproperlyConfigured(_("You should define a variable ``SKA_SECRET_KEY`` in your `settings` module!"))
 
 USER_GET_CALLBACK = get_setting('USER_GET_CALLBACK')
 USER_CREATE_CALLBACK = get_setting('USER_CREATE_CALLBACK')

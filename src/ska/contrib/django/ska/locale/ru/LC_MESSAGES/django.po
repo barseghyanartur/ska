@@ -1,0 +1,72 @@
+# Lets you easily sign data, using symmetric-key algorithm encryption. 
+# Allows you to validate signed data and identify possible validation
+# errors. Uses sha1/hmac for signature encryption. Comes with
+# shortcut functions for signing (and validating) dictionaries and URLs.
+# Copyright (C) 2013 Artur Barseghyan
+# This file is distributed under the same license as the `ska` package.
+# Artur Barseghyan <artur.barseghyan@gmail.com>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-12-23 17:44+0100\n"
+"PO-Revision-Date: 2013-12-23 17:45+0100\n"
+"Last-Translator: Artur Barseghyan <artur.barseghyan@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: admin.py:22
+msgid "Additional"
+msgstr "Дополнительно"
+
+#: admin.py:29
+#: models.py:23
+msgid "Signature"
+msgstr "Подпись"
+
+#: defaults.py:33
+msgid "Unauthorised request. {0}"
+msgstr "Несанкционированный запрос. {0}"
+
+#: models.py:24
+msgid "Auth user"
+msgstr "Авт. пользователь"
+
+#: models.py:25
+msgid "Valid until"
+msgstr "Действительно до"
+
+#: models.py:26
+msgid "Date created"
+msgstr "Дата создания"
+
+#: models.py:29
+msgid "Token"
+msgstr "Талон"
+
+#: models.py:30
+msgid "Tokens"
+msgstr "Талоны"
+
+#: settings.py:45
+msgid "You should define a variable ``SKA_SECRET_KEY`` in your `settings` module!"
+msgstr ""
+
+#: settings.py:63
+msgid "You should defined a key ``SECRET_KEY`` for each provider in your `settings module`!"
+msgstr ""
+
+#: views.py:36
+msgid "Login succeeded. Welcome, {0}."
+msgstr "Авторизация прошла успешно. Добро пожаловать, {0}."
+
+#: templates/ska/401.html:6
+#: templates/ska/401.html.py:9
+msgid "401 Unauthorised"
+msgstr "401 Не авторизован"
+
