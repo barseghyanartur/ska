@@ -25,7 +25,8 @@ setup(
         "Operating System :: OS Independent",
         "Development Status :: 5 - Production/Stable",
     ],
-    keywords = 'signing (HTTP) requests, symmetric-key algorithm, signing URLs, python',
+    keywords = 'sign data, sign (HTTP) request, symmetric-key algorithm encryption, sign URL, python, django, '
+               'password-less login django, password-less authentication backend django',
     author = 'Artur Barseghyan',
     author_email = 'artur.barseghyan@gmail.com',
     url = 'https://github.com/barseghyanartur/ska',
