@@ -21,6 +21,13 @@ which are used to sign the requests.
 On the recipient side, (HTTP request) data is validated using the shared Secret Key. It's being checked
 whether signature is valid and not expired.
 
+>>> ┌─────────────┐           Data              ┌─────────────┐
+>>> │   Host 1    ├────────────────────────────≻│   Host 2    │
+>>> │ ─────────── │                             │ ─────────── │
+>>> │ secret key  │                             │ secret key  │
+>>> │ 'my-secret' │≺────────────────────────────┤ 'my-secret' │
+>>> └─────────────┘           Data              └─────────────┘
+
 Features
 ===================================================
 Core `ska` module
@@ -466,9 +473,33 @@ of ``validate_signed_request``.
 
 Authentication backend
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Allows you to get a password-less login to Django web site. By default, number of logins using the
-same token is not limited. If you wish that single tokens become invalid after first use, set
-the following variables to True in your projects' Django settings module.
+Allows you to get a password-less login to Django web site.
+
+>>>                           ┌────────────────┐
+>>>                           │ Site providing │
+>>>                           │ authentication │
+>>>                           │ ────────────── │
+>>>                           │ custom secret  │
+>>>                           │    keys per    │
+>>>                           │     client     │
+>>>                           │ ────────────── │
+>>>                           │ Site 1: 'sk-1' │
+>>>              ┌───────────≻│ Site 2: 'sk-2' │≺───────────┐
+>>>              │            │ Site 3: 'sk-3' │            │
+>>>              │      ┌────≻│ Site 4: 'sk-4' │≺────┐      │
+>>>              │      │     └────────────────┘     │      │
+>>>              │      │                            │      │
+>>>              │      │                            │      │
+>>> ┌────────────┴─┐  ┌─┴────────────┐  ┌────────────┴─┐  ┌─┴────────────┐
+>>> │    Site 1    │  │    Site 2    │  │    Site 3    │  │    Site 4    │
+>>> │ ──────────── │  │ ──────────── │  │ ──────────── │  │ ──────────── │
+>>> │  secret key  │  │  secret key  │  │  secret key  │  │  secret key  │
+>>> │    'sk-1'    │  │    'sk-2'    │  │    'sk-3'    │  │    'sk-4'    │
+>>> └──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘
+
+By default, number of logins using the same token is not limited. If you wish that single
+tokens become invalid after first use, set the following variables to True in your
+projects' Django settings module.
 
 >>> SKA_DB_STORE_SIGNATURES = True
 >>> SKA_DB_PERFORM_SIGNATURE_CHECK = True
