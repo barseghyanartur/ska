@@ -475,28 +475,6 @@ Authentication backend
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Allows you to get a password-less login to Django web site.
 
->>>                           ┌────────────────┐
->>>                           │ Site providing │
->>>                           │ authentication │
->>>                           │ ────────────── │
->>>                           │ custom secret  │
->>>                           │    keys per    │
->>>                           │     client     │
->>>                           │ ────────────── │
->>>                           │ Site 1: 'sk-1' │
->>>              ┌───────────≻│ Site 2: 'sk-2' │≺───────────┐
->>>              │            │ Site 3: 'sk-3' │            │
->>>              │      ┌────≻│ Site 4: 'sk-4' │≺────┐      │
->>>              │      │     └────────────────┘     │      │
->>>              │      │                            │      │
->>>              │      │                            │      │
->>> ┌────────────┴─┐  ┌─┴────────────┐  ┌────────────┴─┐  ┌─┴────────────┐
->>> │    Site 1    │  │    Site 2    │  │    Site 3    │  │    Site 4    │
->>> │ ──────────── │  │ ──────────── │  │ ──────────── │  │ ──────────── │
->>> │  secret key  │  │  secret key  │  │  secret key  │  │  secret key  │
->>> │    'sk-1'    │  │    'sk-2'    │  │    'sk-3'    │  │    'sk-4'    │
->>> └──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘
-
 By default, number of logins using the same token is not limited. If you wish that single
 tokens become invalid after first use, set the following variables to True in your
 projects' Django settings module.
@@ -625,10 +603,58 @@ and you don't want them all to have one shared secret key, but rather have their
 you specifically want to execute very custom callbacks not only for each separate client/sender, but
 also for different sort of users authenticating.
 
+>>>                           ┌────────────────┐
+>>>                           │ Site providing │
+>>>                           │ authentication │
+>>>                           │ ────────────── │
+>>>                           │ custom secret  │
+>>>                           │    keys per    │
+>>>                           │     client     │
+>>>                           │ ────────────── │
+>>>                           │ Site 1: 'sk-1' │
+>>>              ┌───────────≻│ Site 2: 'sk-2' │≺───────────┐
+>>>              │            │ Site 3: 'sk-3' │            │
+>>>              │      ┌────≻│ Site 4: 'sk-4' │≺────┐      │
+>>>              │      │     └────────────────┘     │      │
+>>>              │      │                            │      │
+>>>              │      │                            │      │
+>>> ┌────────────┴─┐  ┌─┴────────────┐  ┌────────────┴─┐  ┌─┴────────────┐
+>>> │    Site 1    │  │    Site 2    │  │    Site 3    │  │    Site 4    │
+>>> │ ──────────── │  │ ──────────── │  │ ──────────── │  │ ──────────── │
+>>> │  secret key  │  │  secret key  │  │  secret key  │  │  secret key  │
+>>> │    'sk-1'    │  │    'sk-2'    │  │    'sk-3'    │  │    'sk-4'    │
+>>> └──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘
+
 In order to make the stated above possible, the concept of providers is introduced. You can define
 a secret key, callbacks or redirect URL. See an example below.
 
 >>> SKA_PROVIDERS = {
+>>>     # ********************************************************
+>>>     # ******************** Basic gradation *******************
+>>>     # ********************************************************
+>>>     # Site 1
+>>>     'client_1': {
+>>>         'SECRET_KEY': 'sk-1',
+>>>         },
+>>>
+>>>     # Site 2
+>>>     'client_2': {
+>>>         'SECRET_KEY': 'sk-2',
+>>>         },
+>>>
+>>>     # Site 3
+>>>     'client_3': {
+>>>         'SECRET_KEY': 'sk-3',
+>>>         },
+>>>
+>>>     # Site 4
+>>>     'client_4': {
+>>>         'SECRET_KEY': 'sk-4',
+>>>         },
+>>>
+>>>     # ********************************************************
+>>>     # ****** You make gradation as complex as you wish ******
+>>>     # ********************************************************
 >>>     # Client 1, group users
 >>>     'client_1.users': {
 >>>         'SECRET_KEY': 'client-1-users-secret-key',
