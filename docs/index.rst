@@ -653,7 +653,7 @@ a secret key, callbacks or redirect URL. See an example below.
 >>>         },
 >>>
 >>>     # ********************************************************
->>>     # ****** You make gradation as complex as you wish ******
+>>>     # ******* You make gradation as complex as you wish ******
 >>>     # ********************************************************
 >>>     # Client 1, group users
 >>>     'client_1.users': {
