@@ -458,7 +458,7 @@ class ExtraTest(unittest.TestCase):
                 'last_name': 'Doe',
                 'email': 'john.doe@mail.example.com',
             }
-        )
+            )
 
     @print_info
     def test_01_sign_url_and_validate_signed_request_data(self):
