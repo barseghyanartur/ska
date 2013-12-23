@@ -537,7 +537,7 @@ the group in the callback.
 The callback is a path qualifier of the callback function. Considering the example above, it would
 be "my_app.ska_callbacks.my_callback".
 
-Prefix names of each callback variable with "SKA_" in your projects' settings module.
+Prefix names of each callback variable with `SKA_` in your projects' settings module.
 
 Example:
 
