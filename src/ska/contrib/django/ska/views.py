@@ -36,4 +36,4 @@ def login(request):
         messages.info(request, _("Login succeeded. Welcome, {0}.").format(name))
         return HttpResponseRedirect(next_url)
     else:
-        return HttpResponseForbidden("Error authenticating with `ska`")
+        return HttpResponseForbidden(_("Authentication error!"))
