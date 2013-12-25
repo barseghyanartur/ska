@@ -25,7 +25,8 @@ def login(request):
 
     if not next_url:
         provider_data = get_provider_data(request.REQUEST)
-        next_url = provider_data.get('REDIRECT_AFTER_LOGIN', REDIRECT_AFTER_LOGIN)
+        if provider_data:
+            next_url = provider_data.get('REDIRECT_AFTER_LOGIN', REDIRECT_AFTER_LOGIN)
 
     if not next_url:
         next_url = '/'

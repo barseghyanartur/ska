@@ -36,9 +36,10 @@ def print_info(func):
         return result
     return inner
 
-# +++++++++++++++++++++++++++++++++++++++++++++++
-# +++++++++++++++++++++++++++++++++++++++++++++++
-# +++++++++++++++++++++++++++++++++++++++++++++++
+# *********************************************************************
+# *********************************************************************
+# *********************************************************************
+
 import random
 
 from six import PY3
@@ -87,51 +88,7 @@ FACTORY = """
     consectetur. Vivamus placerat, neque id sagittis porttitor, nunc quam varius dolor, sit amet egestas nulla
     risus eu odio. Mauris gravida eleifend laoreet. Aenean a nulla nisl. Integer pharetra magna adipiscing, imperdiet
     augue ac, blandit felis. Cras id aliquam neque, vel consequat sapien.Duis eget vulputate ligula. Aliquam ornare
-    dui non nunc laoreet, non viverra dolor semper. Aenean ullamcorper velit sit amet dignissim fermentum! Aenean urna
-    leo, rutrum volutpat mauris nec, facilisis molestie tortor. In convallis pellentesque lorem, a lobortis erat
-    molestie et! Ut sed sem a odio aliquam elementum. Morbi pretium velit libero, adipiscing consequat leo dignissim
-    eu. Mauris vestibulum feugiat risus; quis pharetra purus tincidunt quis. Morbi semper tincidunt lorem id iaculis.
-    Quisque non pulvinar magna. Morbi consequat eleifend neque et iaculis. Fusce non laoreet urna. Donec ut nunc
-    ultrices, fringilla nunc ut, tempor elit. Phasellus semper sapien augue, in gravida neque egestas at.
-    Integer dapibus lacus vitae luctus sagittis! Suspendisse imperdiet tortor eget mattis consectetur. Aliquam viverra
-    purus a quam lacinia euismod. Nunc non consequat mi; ac vehicula lacus. Pellentesque accumsan ac diam in fermentum!
-    Maecenas quis nibh sed dolor adipiscing facilisis. Aenean vel arcu eu est fermentum egestas vulputate eget purus.
-    Sed fermentum rhoncus dapibus. Quisque molestie magna eu accumsan lobortis. Vestibulum cursus euismod posuere.
-    Aliquam eu dapibus urna. Nulla id accumsan justo. Vivamus vitae ullamcorper tellus. Class aptent taciti sociosqu
-    ad litora torquent per conubia nostra, per inceptos himenaeos.Donec pulvinar tempus lectus vitae ultricies.
-    Vestibulum sagittis orci quis risus ultricies feugiat. Nunc feugiat velit est, at aliquam massa tristique eu.
-    Aenean quis enim vel leo vestibulum volutpat in non elit. Quisque molestie tincidunt purus; ac lacinia mauris
-    rhoncus in. Nullam id arcu at mauris varius viverra ut vitae massa. In ac nunc ipsum. Proin consectetur urna sit
-    amet mattis vulputate. Nullam lacinia pretium tempus. Aenean quis ornare metus, tempus volutpat neque. Mauris
-    volutpat scelerisque augue; at lobortis nulla rhoncus vitae. Mauris at lobortis turpis. Vivamus et ultrices lacus.
-    Donec fermentum neque in eros cursus, ac tincidunt sapien consequat. Curabitur varius commodo rutrum. Nulla
-    facilisi. Ut feugiat dui nec turpis sodales aliquam. Quisque auctor vestibulum condimentum. Quisque nec eros
-    lorem. Curabitur et felis nec diam dictum ultrices vestibulum ac eros! Quisque eu pretium lacus. Morbi bibendum
-    sagittis rutrum. Nam eget tellus quam. Nullam pharetra vestibulum justo. Donec molestie urna et scelerisque
-    laoreet? Sed consectetur pretium hendrerit. Quisque erat nulla, elementum sit amet nibh vel, posuere pulvinar
-    nulla. Donec elementum adipiscing dictum! Nam euismod semper nisi, eu lacinia felis placerat vel! Praesent eget
-    dapibus turpis, et fringilla elit. Maecenas quis nunc cursus felis fringilla consequat! Cum sociis natoque
-    penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed ullamcorper libero quis nisl sollicitudin,
-    ut pulvinar arcu consectetur. Donec nisi nibh, condimentum et lectus non, accumsan imperdiet ipsum. Maecenas vitae
-    massa eget lorem ornare dignissim. Nullam condimentum mauris id quam tincidunt venenatis. Aenean mattis viverra
-    sem, vitae luctus velit rhoncus non. Vestibulum leo justo, rhoncus at aliquam et, iaculis sed dolor. Integer
-    bibendum vitae urna in ornare! Cras accumsan nulla eu libero tempus, in dignissim augue imperdiet. Vivamus a
-    lacinia odio. Curabitur id egestas eros. Integer non rutrum est. In nibh sem, tempus ac dignissim vel, ornare ac
-    mi. Nulla congue scelerisque est nec commodo. Phasellus turpis lorem, sodales quis sem id, facilisis commodo
-    massa. Vestibulum ultrices dolor eget purus semper euismod? Fusce id congue leo. Quisque dui magna, ullamcorper
-    et leo eget, commodo facilisis ipsum. Curabitur congue vitae risus nec posuere. Phasellus tempor ligula in nisl
-    pellentesque mattis. Sed nunc turpis, pharetra vel leo ac, lacinia cursus risus. Quisque congue aliquet volutpat.
-    Integer dictum est quis semper tristique. Donec feugiat vestibulum tortor, id fringilla nisi lobortis eu. Nam
-    hendrerit egestas sem, non mollis tortor iaculis quis. Phasellus id aliquet erat. Nunc facilisis nisi dolor,
-    quis semper dui euismod vel. Cras convallis bibendum tortor malesuada tincidunt. Sed urna quam, pellentesque
-    eget eleifend ac, consequat bibendum urna. Sed fringilla elit hendrerit leo blandit laoreet eget quis quam!
-    Morbi eu leo a dolor aliquet dictum. Suspendisse condimentum mauris non ipsum rhoncus, sit amet hendrerit augue
-    gravida. Quisque facilisis pharetra felis faucibus gravida. In arcu neque, gravida ut fermentum ut, placerat eu
-    quam. Nullam aliquet lectus mauris, quis dignissim est mollis sed. Ut vestibulum laoreet eros quis cursus. Proin
-    commodo eros in mollis mollis. Mauris bibendum cursus nibh, sit amet eleifend mauris luctus vitae. Sed aliquet
-    pretium tristique. Morbi ultricies augue a lacinia porta. Nullam mollis erat non imperdiet imperdiet. Etiam
-    tincidunt fringilla ligula, in adipiscing libero viverra eu. Nunc gravida hendrerit massa, in pellentesque nunc
-    dictum id.
+    dui non nunc laoreet, non viverra dolor semper.
     """
 
 if not PY3:
@@ -144,13 +101,13 @@ change_date = lambda: bool(random.randint(0, 1))
 
 WORDS = split_words(FACTORY)
 SENTENCES = split_sentences(FACTORY)
-NUM_ITEMS = 10
+NUM_ITEMS = 5
 
 _ = lambda s: s
 
-# +++++++++++++++++++++++++++++++++++++++++++++++
-# +++++++++++++++++++++++++++++++++++++++++++++++
-# +++++++++++++++++++++++++++++++++++++++++++++++
+# *********************************************************************
+# *********************************************************************
+# *********************************************************************
 
 # Skipping from non-Django tests.
 if os.environ.get("DJANGO_SETTINGS_MODULE", None):
@@ -159,8 +116,15 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
     from django.utils.text import slugify
     from django.contrib.auth.models import User
 
+    from ska import sign_url
+    from ska.defaults import DEFAULT_PROVIDER_PARAM
+    from ska.contrib.django.ska.settings import (
+        SECRET_KEY, DB_STORE_SIGNATURES, DB_PERFORM_SIGNATURE_CHECK, PROVIDERS
+        )
+
     from foo.models import FooItem
 
+# *********************************************************************
 # *********************************************************************
 # *********************************************************************
 
@@ -213,10 +177,15 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
 
             except Exception as e:
                 print(e)
+
+    # *********************************************************************
     # *********************************************************************
     # *********************************************************************
 
-    class SkaDjangoTest(unittest.TestCase):
+    class SkaDecoratorsTest(unittest.TestCase):
+        """
+        Testing model- and view- decorators.
+        """
         def setUp(self):
             generate_data()
 
@@ -238,41 +207,141 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
             """
             Test the ``ska.contrib.django.ska.decorators.validate_signed_request`` view decorator with signed URL.
             """
-            workflow = []
+            flow = []
 
             # Testing signed URLs
             signed_absolute_url = self.item.get_signed_absolute_url()
             self.assertTrue(signed_absolute_url is not None)
-            workflow.append(('Signed absolute URL', signed_absolute_url))
+            flow.append(('Signed absolute URL', signed_absolute_url))
 
             # Testing view with signed URL
             c = Client()
             response = c.get(signed_absolute_url, {})
             self.assertTrue(response.status_code in (200, 201, 202))
-            workflow.append(('Response status code for signed URL', response.status_code))
+            flow.append(('Response status code for signed URL', response.status_code))
 
-            return workflow
+            return flow
 
         @print_info
         def test_03_view_decorator_with_unsigned_url(self):
             """
             Test the ``ska.contrib.django.ska.decorators.validate_signed_request`` view decorator with unsigned URL.
             """
-            workflow = []
+            flow = []
 
             # Testing unsigned URLs
             absolute_url = self.item.get_absolute_url()
             self.assertTrue(absolute_url is not None)
-            workflow.append(('Unsigned absolute URL', absolute_url))
+            flow.append(('Unsigned absolute URL', absolute_url))
 
             # Testing view with signed URL
             c = Client()
             response = c.get(absolute_url, {})
             self.assertTrue(response.status_code in (401,))
-            workflow.append(('Response status code for unsigned URL', response.status_code))
-            workflow.append(('Response content for unsigned URL', response.content))
+            flow.append(('Response status code for unsigned URL', response.status_code))
+            flow.append(('Response content for unsigned URL', response.content))
 
-            return workflow
+            return flow
+
+        @print_info
+        def test_04_extra(self):
+            """
+            Testing extra dict.
+            """
+            #TODO
+
+
+    class SkaAuthenticationBackendTest(unittest.TestCase):
+        """
+        Tests for authentication backends.
+        """
+        def setUp(self):
+            self.AUTH_USER = 'test_auth_backend_user'
+            self.AUTH_USER_EMAIL = 'test_ska_auth_user@mail.example.com'
+            self.AUTH_USER_FIRST_NAME = 'John'
+            self.AUTH_USER_LAST_NAME = 'Doe'
+            self.PROVIDER_NAME = 'client_1.admins'
+            self.LOGIN_URL = '/ska/login/'
+
+        def __test_login(self, secret_key, response_codes, provider_name=None):
+            flow = []
+
+            first_response_code, second_response_code = response_codes
+
+            # Testing signed URLs
+            extra = {
+                'email': self.AUTH_USER_EMAIL,
+                'first_name': self.AUTH_USER_FIRST_NAME,
+                'last_name': self.AUTH_USER_LAST_NAME,
+            }
+            if provider_name:
+                extra.update({DEFAULT_PROVIDER_PARAM: provider_name})
+
+            signed_login_url = sign_url(
+                auth_user = self.AUTH_USER,
+                secret_key = secret_key,
+                url = self.LOGIN_URL,
+                extra = extra
+                )
+
+            self.assertTrue(signed_login_url is not None)
+            flow.append(('Signed login URL', signed_login_url))
+
+            # Testing view with signed URL
+            c = Client()
+            response = c.get(signed_login_url, {})
+            self.assertTrue(response.status_code in (first_response_code,))
+            flow.append(('Response status code for signed URL', response.status_code))
+
+            if DB_STORE_SIGNATURES and DB_PERFORM_SIGNATURE_CHECK:
+                # Testing again with signed URL and this time, it should fail
+                c = Client()
+                response = c.get(signed_login_url, {})
+                self.assertTrue(response.status_code in (second_response_code,))
+                flow.append(('Response status code for signed URL', response.status_code))
+
+            return flow
+
+        @print_info
+        def test_01_login(self):
+            """
+            Test authentication using general ``SECRET_KEY``.
+            """
+            return self.__test_login(SECRET_KEY, [302, 403])
+
+        @print_info
+        def test_02_provider_login(self):
+            """
+            Test authentication using ``SECRET_KEY`` defined in ``PROVIDERS``.
+            """
+            secret_key = PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
+            return self.__test_login(secret_key, [302, 403], self.PROVIDER_NAME)
+
+        @print_info
+        def test_03_login_fail_wrong_secret_key(self):
+            """
+            Fail test authentication using general ``SECRET_KEY``, providing
+            wrong secret key.
+            """
+            return self.__test_login(SECRET_KEY + 'wrong', [403, 403])
+
+        @print_info
+        def test_04_provider_login_fail_wrong_secret_key(self):
+            """
+            Fail test authentication using ``SECRET_KEY`` defined in ``PROVIDERS``, providing
+            wrong secret key.
+            """
+            secret_key = PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
+            return self.__test_login(secret_key + 'wrong', [403, 403], self.PROVIDER_NAME)
+
+        @print_info
+        def test_05_provider_login_fail_wrong_provider(self):
+            """
+            Fail test authentication using ``SECRET_KEY`` defined in ``PROVIDERS``, providing
+            wrong provider name.
+            """
+            secret_key = PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
+            return self.__test_login(secret_key + 'wrong', [403, 403], self.PROVIDER_NAME + 'wrong')
 
 
 if __name__ == "__main__":

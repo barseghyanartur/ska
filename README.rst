@@ -101,8 +101,8 @@ Default name of the (GET) param holding the ``valid_until`` value is `valid_unti
 to be different, provide a ``valid_until_param`` argument to ``sign_url`` function.
 
 Note, that by default a suffix '?' is added after the given ``url`` and generated signature params.
-If you want that suffix to be custom or gone, provide a ``suffix`` argument to the ``sign_url``
-function.
+If you want that suffix to be custom, provide a ``suffix`` argument to the ``sign_url``
+function. If you want it to be gone, set its' value to empty string.
 
 With all customisations, it would look as follows.
 

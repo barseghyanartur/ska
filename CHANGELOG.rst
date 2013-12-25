@@ -3,9 +3,12 @@ Release history
 =====================================
 1.4.2
 -------------------------------------
-/* yet to be released */
+2013-12-25
 
+- Minor fixes.
+- Added authentication backend tests.
 - Added tumpering tests.
+- Minor documentation improvements.
 
 1.4.1
 -------------------------------------

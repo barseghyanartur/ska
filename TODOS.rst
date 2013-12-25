@@ -36,6 +36,7 @@ Must haves
 - Find and implement the best way of making `ska` timezone aware. Likely, reserve another
   keyword for it and pass in ``extra`` argument on the sender side. On the recipient side,
   if present - use when validating.
+- Add `provider`, `first_name`, `last_name`, `email` to the Django `constants` module.
 
 Should haves
 ------------------------------------

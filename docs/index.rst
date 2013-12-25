@@ -101,8 +101,8 @@ Default name of the (GET) param holding the ``valid_until`` value is `valid_unti
 to be different, provide a ``valid_until_param`` argument to ``sign_url`` function.
 
 Note, that by default a suffix '?' is added after the given ``url`` and generated signature params.
-If you want that suffix to be custom or gone, provide a ``suffix`` argument to the ``sign_url``
-function.
+If you want that suffix to be custom, provide a ``suffix`` argument to the ``sign_url``
+function. If you want it to be gone, set its' value to empty string.
 
 With all customisations, it would look as follows.
 
@@ -536,6 +536,13 @@ the group in the callback.
 
 The callback is a path qualifier of the callback function. Considering the example above, it would
 be "my_app.ska_callbacks.my_callback".
+
+Prefix names of each callback variable with `SKA_` in your projects' settings module.
+
+Example:
+
+>>> SKA_USER_GET_CALLBACK = 'my_app.ska_callbacks.my_get_callback'
+>>> SKA_USER_CREATE_CALLBACK = 'my_app.ska_callbacks.my_create_callback'
 
 Purging of old signature data
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
