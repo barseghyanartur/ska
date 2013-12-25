@@ -348,7 +348,7 @@ the ``ska.Signature``.
 
 Django integration
 ---------------------------------------------------
-'ska` comes with Django model- and view-decorators for producing signed URLs and and validating the
+`ska` comes with Django model- and view-decorators for producing signed URLs and and validating the
 endpoints, as well as with authentication backend, which allows password-less login into Django
 web site using `ska` generated signature tokens.
 
