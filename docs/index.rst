@@ -22,10 +22,10 @@ On the recipient side, (HTTP request) data is validated using the shared Secret 
 whether signature is valid and not expired.
 
 >>> ┌─────────────┐           Data              ┌─────────────┐
->>> │   Host 1    ├────────────────────────────≻│   Host 2    │
+>>> │   Host 1    ├────────────────────────────>│   Host 2    │
 >>> │ ─────────── │                             │ ─────────── │
 >>> │ secret key  │                             │ secret key  │
->>> │ 'my-secret' │≺────────────────────────────┤ 'my-secret' │
+>>> │ 'my-secret' │<────────────────────────────┤ 'my-secret' │
 >>> └─────────────┘           Data              └─────────────┘
 
 Features
@@ -619,9 +619,9 @@ also for different sort of users authenticating.
 >>>                           │     client     │
 >>>                           │ ────────────── │
 >>>                           │ Site 1: 'sk-1' │
->>>              ┌───────────≻│ Site 2: 'sk-2' │≺───────────┐
+>>>              ┌───────────>│ Site 2: 'sk-2' │<───────────┐
 >>>              │            │ Site 3: 'sk-3' │            │
->>>              │      ┌────≻│ Site 4: 'sk-4' │≺────┐      │
+>>>              │      ┌────>│ Site 4: 'sk-4' │<────┐      │
 >>>              │      │     └────────────────┘     │      │
 >>>              │      │                            │      │
 >>>              │      │                            │      │
