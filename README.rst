@@ -117,8 +117,8 @@ Note, that additional data is signed as well. If request is somehow tampered (va
 originally provided ones), signature becomes invalid.
 
 >>> sign_url(
->>>     auth_user = 'user', secret_key = 'your-secret_key', url = 'http://e.com/api/',
->>>     extra = {'email': 'doe@example.com', 'last_name': 'Doe', 'first_name': 'Joe'}
+>>>     auth_user='user', secret_key='your-secret_key', url='http://e.com/api/',
+>>>     extra={'email': 'doe@example.com', 'last_name': 'Doe', 'first_name': 'Joe'}
 >>>     )
 
 You may now proceed with the signed URL request. If you use the famous ``requests`` library, it would
