@@ -281,6 +281,14 @@ Default lifetime of a signature is 10 minutes (600 seconds). If you want it to b
 >>>     lifetime = 120 # Signatre lifetime set to 120 seconds.
 >>>     )
 
+Adding of additional data to the signature works in the same way as in `sign_url`.
+
+>>> signature = Signature.generate_signature(
+>>>     auth_user = 'user',
+>>>     secret_key = 'your-secret-key',
+>>>     extra = {'email': 'doe@example.com', 'last_name': 'Doe', 'first_name': 'Joe'}
+>>>     )
+
 Your endpoint operates with certain param names and you need to wrap generated signature params into
 the URL. In order to have the job done in an easy way, create a request helper. Feed names of the
 (GET) params to the request helper and let it make a signed endpoint URL for you.
