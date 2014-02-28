@@ -37,6 +37,10 @@ Must haves
   keyword for it and pass in ``extra`` argument on the sender side. On the recipient side,
   if present - use when validating.
 - Add `provider`, `first_name`, `last_name`, `email` to the Django `constants` module.
+- In the validation result, in addition to `reason` and `result` properties, 
+  add `error_codes` property, which is basically a list of codes. Define the codes 
+  in some separate module or in `constants`, so that it's possible to determine (if
+  desired) which case are we dealing with.
 
 Should haves
 ------------------------------------
