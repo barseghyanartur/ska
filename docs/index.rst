@@ -281,6 +281,14 @@ Default lifetime of a signature is 10 minutes (600 seconds). If you want it to b
 >>>     lifetime = 120 # Signatre lifetime set to 120 seconds.
 >>>     )
 
+Adding of additional data to the signature works in the same way as in `sign_url`.
+
+>>> signature = Signature.generate_signature(
+>>>     auth_user = 'user',
+>>>     secret_key = 'your-secret-key',
+>>>     extra = {'email': 'doe@example.com', 'last_name': 'Doe', 'first_name': 'Joe'}
+>>>     )
+
 Your endpoint operates with certain param names and you need to wrap generated signature params into
 the URL. In order to have the job done in an easy way, create a request helper. Feed names of the
 (GET) params to the request helper and let it make a signed endpoint URL for you.
@@ -459,7 +467,7 @@ example.
 
 Note, that ``validate_signed_request`` decorator accepts the following optional arguments.
 
-- `secret_key` (str) : The shared secret key. If set, overrides the ``SKA_SECRET_KEY`` variable
+- `secret_key` (str) : The shared secret key. If set, overrides the ``SKA_SECRET_KEY`` variable 
   set in the `settings` module of your project.
 - `signature_param` (str): Name of the (for example GET or POST) param name which holds
   the ``signature`` value.
@@ -581,7 +589,7 @@ would be used as a Django username. See the example below.
 Note, that you ``extra`` dictionary is optional! If `email`, `first_name` and `last_name` keys are present,
 upon successul validation, the data would be saved into users' profile.
 
-Put this code, for instance, in your view and then make the generated URL available in template context
+Put this code, for instance, in your view and then make the generated URL available in template context 
 and render it as a URL so that user can click on it for authenticating to the server.
 
 >>> def auth_to_server(request, template_name='auth_to_server.html'):

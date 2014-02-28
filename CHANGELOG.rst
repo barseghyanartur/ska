@@ -1,6 +1,18 @@
 =====================================
 Release history
 =====================================
+1.4.3
+-------------------------------------
+2014-02-28
+
+- The `ValidationResult` class is slightly changed. The `reason` property is 
+  replaced with `errors` (while `reason` is left mainly for backwards compatibility).
+  For getting human readable message you're encouraged to use the `message`
+  property (string) instead of joining strings manually. Additionally, each
+  error got a separate object (see `error_codes` module): `INVALID_SIGNATURE`
+  and `SIGNATURE_TIMESTAMP_EXPIRED`.
+- Minor documentation improvements.
+
 1.4.2
 -------------------------------------
 2013-12-25

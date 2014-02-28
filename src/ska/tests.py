@@ -9,7 +9,7 @@ import unittest
 import datetime
 from copy import copy
 
-from six import PY3
+from six import PY3, text_type
 
 try:
     from six.moves.urllib.parse import urlparse, parse_qs
@@ -21,6 +21,7 @@ except ImportError as e:
 
 from ska import Signature, RequestHelper, TIMESTAMP_FORMAT
 from ska import sign_url, validate_signed_request_data, signature_to_dict
+from ska import error_codes
 
 PRINT_INFO = True
 TRACK_TIME = False
@@ -228,6 +229,38 @@ class SignatureTest(unittest.TestCase):
         self.assertTrue(not validation_result.result)
 
         return flow
+
+    @print_info
+    def test_05_fail_signature_test_related_to_changes_in_validation_result_class(self):
+        """
+        Fail signature tests related to tiny changes in the `ValidationResult` class.
+        """
+        flow = []
+
+        validation_result = Signature.validate_signature(
+            signature = 'EBS6ipiqRLa6TY5vxIvZU30FpnM=',
+            auth_user = 'fakeuser',
+            secret_key = 'fakesecret',
+            valid_until = 1377997396.0,
+            return_object = True
+            )
+
+        if PY3:
+            self.assertTrue(isinstance(validation_result.reason, map))
+        else:
+            self.assertTrue(isinstance(validation_result.reason, list))
+        self.assertTrue(isinstance(validation_result.errors, list))
+        self.assertTrue(isinstance(validation_result.message, text_type))
+        self.assertTrue(isinstance(' '.join(validation_result.reason), text_type))
+        self.assertTrue(isinstance(' '.join(map(text_type, validation_result.errors)), text_type))
+
+        flow.append(validation_result.message)
+
+        self.assertTrue(error_codes.INVALID_SIGNATURE in validation_result.errors)
+        self.assertTrue(error_codes.SIGNATURE_TIMESTAMP_EXPIRED in validation_result.errors)
+
+        return flow
+
 
 def parse_url_params(url):
     """

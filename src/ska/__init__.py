@@ -15,7 +15,7 @@ import hmac
 from base64 import b64decode, b64encode
 from hashlib import sha1
 
-from six import PY3
+from six import PY3, text_type
 
 try:
     from six.moves.urllib.parse import urlencode
@@ -29,6 +29,7 @@ from ska.helpers import (
     dict_keys, dict_to_ordered_list, sorted_urlencode, extract_signed_data as extract_signed_data
     )
 from ska.exceptions import InvalidData, ImproperlyConfigured
+from ska import error_codes
 from ska.defaults import (
     SIGNATURE_LIFETIME, TIMESTAMP_FORMAT, DEFAULT_URL_SUFFIX,
     DEFAULT_SIGNATURE_PARAM, DEFAULT_AUTH_USER_PARAM, DEFAULT_VALID_UNTIL_PARAM,
@@ -45,19 +46,20 @@ class SignatureValidationResult(object):
     """
     Signature validation result container.
 
-    If signature validation result is True, things like this would work
+    If signature validation result is True, things like this would work:
+
     >>> res = SignatureValidationResult(result=True)
     >>> print bool(res)
     True
-    >>> res = SignatureValidationResult(result=False, reason=_("Invalid signature"))
+    >>> res = SignatureValidationResult(result=False, reason=[error_codes.INVALID_SIGNATURE,])
     >>> print bool(res)
     False
     """
-    #__slots__ = ('result', 'reason')
+    #__slots__ = ('result', 'reason', 'errors')
 
-    def __init__(self, result, reason=[]):
+    def __init__(self, result, errors=[]):
         self.result = result
-        self.reason = reason
+        self.errors = errors
 
     def __str__(self):
         return str(self.result)
@@ -67,6 +69,24 @@ class SignatureValidationResult(object):
     def __bool__(self):
         return self.result
     __nonzero__ = __bool__
+
+    @property
+    def message(self):
+        """
+        Human readable message of all errors.
+
+        :return string:
+        """
+        return ' '.join(map(text_type, self.errors))
+
+    @property
+    def reason(self):
+        """
+        For backwards compatibility. Returns list of text messages.
+
+        :return list:
+        """
+        return map(text_type, self.errors)
 
 
 class Signature(object):
@@ -131,13 +151,13 @@ class Signature(object):
 
         else:
             result = (sig.signature == signature and not sig.is_expired())
-            reason = []
+            errors = []
             if sig.signature != signature:
-                reason.append(_("Invalid signature!"))
+                errors.append(error_codes.INVALID_SIGNATURE)
             if sig.is_expired():
-                reason.append(_("Signature timestamp expired!"))
+                errors.append(error_codes.SIGNATURE_TIMESTAMP_EXPIRED)
 
-            return SignatureValidationResult(result, reason)
+            return SignatureValidationResult(result, errors)
 
     def is_expired(self):
         """
@@ -472,7 +492,7 @@ class RequestHelper(object):
             if not validation_result.result:
                 if fail_silently:
                     return {}
-                raise InvalidData(validation_result.reason)
+                raise InvalidData(validation_result.message)
 
         return extract_signed_data(data=data, extra=data.get(self.extra_param, '').split(','))
 
