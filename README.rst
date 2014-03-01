@@ -710,9 +710,9 @@ the ``extra`` argument. See the example below for how you would do it for "clien
 >>>     secret_key = 'client-1-power-users-secret-key',
 >>>     url = server_ska_login_url,
 >>>     extra = {
->>>         'email': 'test_ska_user_{0}@mail.example.com'.format(uid),
->>>         'first_name': 'John {0}'.format(uid),
->>>         'last_name': 'Doe {0}'.format(uid),
+>>>         'email': 'test_ska_user@mail.example.com',
+>>>         'first_name': 'John',
+>>>         'last_name': 'Doe',
 >>>         # Using provider specific string. This value shall be equal to
 >>>         # the key string "client_1.power_users" of SKA_PROVIDERS,
 >>>         # defined in your projcts' Django settings module.
