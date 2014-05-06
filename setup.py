@@ -6,7 +6,16 @@ try:
 except:
     readme = ''
 
-version = '1.4.3'
+version = '1.4.4'
+
+exec_dirs = [
+    'src/ska/',
+    'src/ska/bin/',
+]
+
+execs = []
+for exec_dir in exec_dirs:
+    execs += [os.path.join(exec_dir, f) for f in os.listdir(exec_dir)]
 
 setup(
     name = 'ska',
@@ -33,6 +42,10 @@ setup(
     package_dir = {'':'src'},
     packages = find_packages(where='./src'),
     include_package_data = True,
+    package_data = {
+        'xinput': execs,
+    },
+    scripts = ['src/ska/bin/ska-sign-url',],
     install_requires = [
         'six>=1.1.0',
     ]

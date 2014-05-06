@@ -6,3 +6,4 @@ include src/ska/contrib/django/ska/templates/ska/401.html
 recursive-include src/ska/contrib/django/ska/locale/hy *
 recursive-include src/ska/contrib/django/ska/locale/nl *
 recursive-include src/ska/contrib/django/ska/locale/ru *
+include src/ska/bin/ska-sign-url

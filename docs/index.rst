@@ -254,7 +254,7 @@ module.
 
 :Example:
 
-    $ python src/ska/generate_signed_url.py -au user -sk your-secret-key
+    $ ska-sign-url -au user -sk your-secret-key
 
 Advanced usage (low-level)
 ---------------------------------------------------
@@ -731,6 +731,12 @@ For any issues contact me at the e-mail given in the `Author` section.
 Author
 ===================================================
 Artur Barseghyan <artur.barseghyan@gmail.com>
+
+
+.. image:: https://d2weczhvl823v0.cloudfront.net/barseghyanartur/ska/trend.png
+   :alt: Bitdeli badge
+   :target: https://bitdeli.com/free
+
 
 Documentation
 ===================================================
