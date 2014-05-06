@@ -1,5 +1,5 @@
 __title__ = 'ska'
-__version__ = '1.4.3'
+__version__ = '1.4.4'
 __build__ = 0x00000F
 __author__ = 'Artur Barseghyan'
 __copyright__ = 'Copyright (c) 2013 Artur Barseghyan'
