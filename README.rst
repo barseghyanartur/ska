@@ -97,7 +97,7 @@ Producing a signed URL.
 
     signed_url = sign_url(
         auth_user='user', secret_key='your-secret_key', url='http://e.com/api/'
-    )
+        )
 
 Output.
 
@@ -129,7 +129,7 @@ With all customisations, it would look as follows:
         auth_user='user', secret_key='your-secret_key', lifetime=120,
         url='http://e.com/api/', signature_param='signature',
         auth_user_param='auth_user', valid_until_param='valid_until'
-    )
+        )
 
 It's also possible to add additional data to the signature by providing a ``extra`` argument (dict).
 Note, that additional data is signed as well. If request is somehow tampered (values vary from
@@ -140,7 +140,7 @@ originally provided ones), signature becomes invalid.
     sign_url(
         auth_user='user', secret_key='your-secret_key', url='http://e.com/api/',
         extra={'email': 'doe@example.com', 'last_name': 'Doe', 'first_name': 'Joe'}
-    )
+        )
 
 You may now proceed with the signed URL request. If you use the famous ``requests`` library, it would
 be as follows.
@@ -167,7 +167,7 @@ apply to the ``signature_to_dict``:
 
     signature_dict = signature_to_dict(
         auth_user='user', secret_key='your-secret_key'
-    )
+        )
 
 Output.
 
@@ -191,7 +191,7 @@ Adding of additional data to the signature works in the same way:
             'first_name': 'John',
             'last_name': 'Doe'
         }
-    )
+        )
 
 Output.
 
@@ -229,7 +229,7 @@ framework (unless you use Django).
     validation_result = validate_signed_request_data(
         data = request.GET, # Note, that ``request.GET`` is given as example.
         secret_key = 'your-secret_key'
-    )
+        )
 
 The ``validate_signed_request_data`` produces a ``ska.SignatureValidationResult`` object,
 which holds the following data.
@@ -260,7 +260,7 @@ With all customisations, it would look as follows. Note, that ``request.GET`` is
         signature_param = 'signature',
         auth_user_param = 'auth_user',
         valid_until_param = 'valid_until'
-    )
+        )
 
 If you for some reason prefer a lower level implementation, read the same section in the
 `Advanced usage` chapter.
