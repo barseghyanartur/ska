@@ -163,6 +163,8 @@ Producing a dictionary containing the signature data, ready to be put into the r
 example POST) data. All customisations mentioned above for the ``sign_url`` function, also
 apply to the ``signature_to_dict``:
 
+.. code-block:: python
+
     signature_dict = signature_to_dict(
         auth_user='user', secret_key='your-secret_key'
     )
@@ -255,9 +257,9 @@ With all customisations, it would look as follows. Note, that ``request.GET`` is
     validation_result = validate_signed_request_data(
         data = request.GET,
         secret_key = 'your-secret_key',
-        signature_param='signature',
-        auth_user_param='auth_user',
-        valid_until_param='valid_until'
+        signature_param = 'signature',
+        auth_user_param = 'auth_user',
+        valid_until_param = 'valid_until'
     )
 
 If you for some reason prefer a lower level implementation, read the same section in the
@@ -490,7 +492,7 @@ The following variables can be overridden in `settings` module of your project.
 - `SKA_AUTH_USER` (str): The ``auth_user`` argument for ``ska.sign_url`` function. Defaults to
   "ska-auth-user".
 
-See the `working example project <https://github.com/barseghyanartur/ska/tree/stable/example>`_.
+See the working `example project <https://github.com/barseghyanartur/ska/tree/stable/example>`_.
 
 Django model method decorator ``sign_url``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -609,7 +611,7 @@ urls.py
     urlpatterns = patterns('',
         url(r'^ska/', include('ska.contrib.django.ska.urls')),
         url(r'^admin/', include(admin.site.urls)),
-    )
+        )
 
 Callbacks
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -757,22 +759,22 @@ the ``SKA_PROVIDERS`` ("client_1", "client_2", etc.) are the provider keys.
         # Site 1
         'client_1': {
             'SECRET_KEY': 'sk-1',
-            },
+        },
 
         # Site 2
         'client_2': {
             'SECRET_KEY': 'sk-2',
-            },
+        },
 
         # Site 3
         'client_3': {
             'SECRET_KEY': 'sk-3',
-            },
+        },
 
         # Site 4
         'client_4': {
             'SECRET_KEY': 'sk-4',
-            },
+        },
 
         # ********************************************************
         # ******* You make gradation as complex as you wish ******
@@ -780,13 +782,13 @@ the ``SKA_PROVIDERS`` ("client_1", "client_2", etc.) are the provider keys.
         # Client 1, group users
         'client_1.users': {
             'SECRET_KEY': 'client-1-users-secret-key',
-            },
+        },
 
         # Client 1, group power_users
         'client_1.power_users': {
             'SECRET_KEY': 'client-1-power-users-secret-key',
             'USER_CREATE_CALLBACK': 'foo.ska_callbacks.client1_power_users_create',
-            },
+        },
 
         # Client 1, group admins
         'client_1.admins': {
