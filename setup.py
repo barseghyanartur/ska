@@ -9,7 +9,6 @@ except:
 version = '1.4.4'
 
 exec_dirs = [
-    'src/ska/',
     'src/ska/bin/',
 ]
 
@@ -43,7 +42,7 @@ setup(
     packages = find_packages(where='./src'),
     include_package_data = True,
     package_data = {
-        'xinput': execs,
+        'ska': execs,
     },
     scripts = ['src/ska/bin/ska-sign-url',],
     install_requires = [
