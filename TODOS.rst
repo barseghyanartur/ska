@@ -41,6 +41,14 @@ Must haves
   add `error_codes` property, which is basically a list of codes. Define the codes 
   in some separate module or in `constants`, so that it's possible to determine (if
   desired) which case are we dealing with.
++ Make it possible to use other algorythms, than HMAC. Implement an abstract Signature class.
+  Leave the HMAC SHA-1 as a default, but make it possible to provide a custom one or even a
+  self defined hash algorythm.
+- Update the documentation and add code comments reflecting the hash algorythm changes.
+- Add tests for various hash algorythms.
+- Update the PyPI and README.rst description of the app, as well as PyPI classifiers.
+- Make it possible to encypt the URL values (so that they are not exposed plain-text, but
+  rather use some encryption method, which is possible to decrypt.
 
 Should haves
 ------------------------------------

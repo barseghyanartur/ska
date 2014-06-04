@@ -38,6 +38,8 @@ Core `ska` module
 - Validate signed dictionaries.
 - Sign URLs. Append and sign additional URL data.
 - Validate URLs.
+- Use one of the built-in algorythms (HMAC SHA-1, HMAC SHA-224, HMAC SHA-256, HMAC SHA-384 or
+  HMAC SHA-512) or define a custom one.
 
 Django `ska` module (`ska.contrib.django.ska`)
 ---------------------------------------------------
@@ -99,8 +101,6 @@ Producing a signed URL.
         auth_user='user', secret_key='your-secret_key', url='http://e.com/api/'
         )
 
-Output.
-
 .. code-block:: none
 
     http://e.com/api/?valid_until=1378045287.0&auth_user=user&signature=YlZpLFsjUKBalL4x5trhkeEgqE8%3D
@@ -125,10 +125,13 @@ With all customisations, it would look as follows:
 
 .. code-block:: python
 
+    from ska import HMACSHA512Signature # Use HMAC SHA-512 algorithm
+
     signed_url = sign_url(
         auth_user='user', secret_key='your-secret_key', lifetime=120,
         url='http://e.com/api/', signature_param='signature',
-        auth_user_param='auth_user', valid_until_param='valid_until'
+        auth_user_param='auth_user', valid_until_param='valid_until',
+        signature_cls = HMACSHA512Signature
         )
 
 It's also possible to add additional data to the signature by providing a ``extra`` argument (dict).
@@ -169,8 +172,6 @@ apply to the ``signature_to_dict``:
         auth_user='user', secret_key='your-secret_key'
         )
 
-Output.
-
 .. code-block:: none
 
     {
@@ -192,8 +193,6 @@ Adding of additional data to the signature works in the same way:
             'last_name': 'Doe'
         }
         )
-
-Output.
 
 .. code-block:: none
 
@@ -254,12 +253,15 @@ With all customisations, it would look as follows. Note, that ``request.GET`` is
 
 .. code-block:: python
 
+    from ska import HMACSHA256Signature # Use HMAC SHA-256 algorithm
+
     validation_result = validate_signed_request_data(
         data = request.GET,
         secret_key = 'your-secret_key',
         signature_param = 'signature',
         auth_user_param = 'auth_user',
-        valid_until_param = 'valid_until'
+        valid_until_param = 'valid_until',
+        signature_cls = HMACSHA256Signature
         )
 
 If you for some reason prefer a lower level implementation, read the same section in the
@@ -346,6 +348,17 @@ Adding of additional data to the signature works in the same way as in `sign_url
         extra = {'email': 'doe@example.com', 'last_name': 'Doe', 'first_name': 'Joe'}
         )
 
+For HMAC SHA-384 algorityhm it would look as follows.
+
+.. code-block:: python
+
+    from ska import HMACSHA384Signature
+
+    signature = HMACSHA384Signature.generate_signature(
+        auth_user = 'user',
+        secret_key = 'your-secret-key'
+        )
+
 Your endpoint operates with certain param names and you need to wrap generated signature params into
 the URL. In order to have the job done in an easy way, create a request helper. Feed names of the
 (GET) params to the request helper and let it make a signed endpoint URL for you.
@@ -367,8 +380,6 @@ Append signature params to the endpoint URL.
         endpoint_url = 'http://e.com/api/'
         )
 
-Output.
-
 .. code-block:: none
 
     http://e.com/api/?valid_until=1378045287.0&auth_user=user&signature=YlZpLFsjUKBalL4x5trhkeEgqE8%3D
@@ -379,6 +390,25 @@ Make a request.
 
     import requests
     r = requests.get(signed_url)
+
+
+For HMAC SHA-384 algorityhm it would look as follows.
+
+.. code-block:: python
+
+    from ska import HMACSHA384Signature
+
+    request_helper = RequestHelper(
+        signature_param = 'signature',
+        auth_user_param = 'auth_user',
+        valid_until_param = 'valid_until',
+        signature_cls = HMACSHA384Signature
+        )
+
+    signed_url = request_helper.signature_to_url(
+        signature = signature,
+        endpoint_url = 'http://e.com/api/'
+        )
 
 Recipient side
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

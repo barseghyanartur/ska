@@ -1,5 +1,5 @@
-contrib Package
-===============
+ska.contrib package
+===================
 
 Subpackages
 -----------
@@ -8,3 +8,10 @@ Subpackages
 
     ska.contrib.django
 
+Module contents
+---------------
+
+.. automodule:: ska.contrib
+    :members:
+    :undoc-members:
+    :show-inheritance:

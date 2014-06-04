@@ -1,6 +1,6 @@
 __title__ = 'ska.helpers'
 __author__ = 'Artur Barseghyan'
-__copyright__ = 'Copyright (c) 2013 Artur Barseghyan'
+__copyright__ = 'Copyright (c) 2013-2014 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
 __all__ = (
     'get_callback_func', 'dict_keys', 'dict_to_ordered_list', 'sorted_urlencode', 'extract_signed_data'

@@ -1,6 +1,15 @@
 =====================================
 Release history
 =====================================
+1.5
+-------------------------------------
+2014-06-04
+
+- Introducing abstract signature class in order to make it possible to define more
+  hash algorithms.
+- Added HMAC MD5, HMAC SHA-224, HMAC SHA-256, HMAC SHA-384 and HMAC SHA-512 hash
+  algorythms. HMAC SHA-1 remains a default.
+
 1.4.4
 -------------------------------------
 2014-05-06
