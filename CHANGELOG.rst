@@ -114,4 +114,29 @@ Release history
 -------------------------------------
 2013-09-05
 
-- Initial production release.
+- Stable release.
+
+0.4
+-------------------------------------
+2013-09-04
+
+- Adding shortcuts for handling dictionaries.
+- Improved documentation.
+
+0.3
+-------------------------------------
+2013-09-04
+
+- Adding commands to generate the URLs.
+
+0.2
+-------------------------------------
+2013-09-02
+
+- Fixed docs.
+
+0.1
+-------------------------------------
+2013-09-01
+
+- Initial beta release.
