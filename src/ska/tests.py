@@ -1,15 +1,18 @@
 from __future__ import print_function
 
-__title__ = 'ska.tests'
-__author__ = 'Artur Barseghyan'
-__copyright__ = 'Copyright (c) 2013 Artur Barseghyan'
-__license__ = 'GPL 2.0/LGPL 2.1'
-
 import unittest
 import datetime
 from copy import copy
 
 from six import PY3, text_type
+
+from . import (
+    Signature, RequestHelper, TIMESTAMP_FORMAT,
+    HMACMD5Signature, HMACSHA1Signature, HMACSHA224Signature,
+    HMACSHA256Signature, HMACSHA384Signature, HMACSHA512Signature,
+)
+from . import sign_url, validate_signed_request_data, signature_to_dict
+from . import error_codes
 
 try:
     from six.moves.urllib.parse import urlparse, parse_qs
@@ -19,33 +22,21 @@ except ImportError as e:
     else:
         from urlparse import urlparse, parse_qs
 
-from ska import (
-    Signature, RequestHelper, TIMESTAMP_FORMAT,
-    HMACMD5Signature, HMACSHA1Signature, HMACSHA224Signature,
-    HMACSHA256Signature, HMACSHA384Signature, HMACSHA512Signature,
-)
-from ska import sign_url, validate_signed_request_data, signature_to_dict
-from ska import error_codes
+
+__title__ = 'ska.tests'
+__author__ = 'Artur Barseghyan'
+__copyright__ = '2013-2016 Artur Barseghyan'
+__license__ = 'GPL 2.0/LGPL 2.1'
 
 PRINT_INFO = True
-TRACK_TIME = False
 
 def print_info(func):
-    """
-    Prints some useful info.
-    """
+    """Prints some useful info."""
     if not PRINT_INFO:
         return func
 
     def inner(self, *args, **kwargs):
-        if TRACK_TIME:
-            import simple_timer
-            timer = simple_timer.Timer() # Start timer
-
         result = func(self, *args, **kwargs)
-
-        if TRACK_TIME:
-            timer.stop() # Stop timer
 
         print('\n\n%s' % func.__name__)
         print('============================')
@@ -54,16 +45,14 @@ def print_info(func):
         print('----------------------------')
         if result is not None:
             print(result)
-        if TRACK_TIME:
-            print('done in %s seconds' % timer.duration)
         print('\n++++++++++++++++++++++++++++')
 
         return result
     return inner
 
+
 def timestap_to_human_readable(timestamp):
-    """
-    Converts Unix timestamp to human readable string.
+    """Convert Unix timestamp to human readable string.
 
     :param float:
     :return str:
@@ -71,11 +60,12 @@ def timestap_to_human_readable(timestamp):
     dt = datetime.datetime.fromtimestamp(float(timestamp))
     return dt.strftime(TIMESTAMP_FORMAT)
 
+
 class SignatureTest(unittest.TestCase):
-    """
-    Tests of ``ska.Signature`` class.
-    """
+    """Tests of ``ska.Signature`` class."""
+
     def setUp(self):
+        """Set up."""
         self.auth_user = 'user'
         self.secret_key = 'secret'
         self.signature_classes = (
@@ -89,21 +79,20 @@ class SignatureTest(unittest.TestCase):
 
     @print_info
     def __test_01_signature_test(self, signature_cls=Signature):
-        """
-        Signature test.
-        """
+        """Signature test."""
         flow = []
 
         flow.append(('Signature class', signature_cls))
 
         # Generate signature
         sig = signature_cls.generate_signature(
-            auth_user = self.auth_user,
-            secret_key = self.secret_key
-            )
+            auth_user=self.auth_user,
+            secret_key=self.secret_key
+        )
 
         flow.append(('Valid until used', sig.valid_until))
-        flow.append(('Valid until (human readable)', timestap_to_human_readable(sig.valid_until)))
+        flow.append(('Valid until (human readable)',
+                     timestap_to_human_readable(sig.valid_until)))
         flow.append(('Signature generated', sig.signature))
         flow.append(('Signature is expired', sig.is_expired()))
 
@@ -112,12 +101,12 @@ class SignatureTest(unittest.TestCase):
 
         # Check if valid
         validation_result = signature_cls.validate_signature(
-                signature = sig.signature,
-                auth_user = self.auth_user,
-                secret_key = self.secret_key,
-                valid_until = sig.valid_until,
-                return_object = True
-                )
+            signature=sig.signature,
+            auth_user=self.auth_user,
+            secret_key=self.secret_key,
+            valid_until=sig.valid_until,
+            return_object=True
+        )
 
         flow.append(('Signature is valid', validation_result.result))
         flow.append(('Reason not valid', validation_result.reason))
@@ -127,9 +116,7 @@ class SignatureTest(unittest.TestCase):
         return flow
 
     def test_01_signature_test(self):
-        """
-        Signature test.
-        """
+        """Signature test."""
         flow = []
         for signature_cls in self.signature_classes:
             flow += self.__test_01_signature_test(signature_cls=signature_cls)
@@ -137,10 +124,11 @@ class SignatureTest(unittest.TestCase):
 
     @print_info
     def __test_02_signature_test_with_positive_timelap(self, signature_cls=Signature):
-        """
-        Signature test with positive timelap, when signature is made on a host
-        that has a positive (greater) time difference with server. In this
-        particular example, the host time is 5 minutes ahead the server time.
+        """Signature test with positive timelap.
+
+        When signature is made on a host that has a positive (greater) time
+        difference with server. In this particular example, the host time is
+        5 minutes ahead the server time.
         """
         flow = []
 
@@ -148,17 +136,18 @@ class SignatureTest(unittest.TestCase):
 
         datetime_timelap = signature_cls.datetime_to_unix_timestamp(
             datetime.datetime.now() + datetime.timedelta(seconds=300)
-            )
+        )
 
         flow.append(('Valid until used', datetime_timelap))
-        flow.append(('Valid until used (human readable)', timestap_to_human_readable(datetime_timelap)))
+        flow.append(('Valid until used (human readable)',
+                     timestap_to_human_readable(datetime_timelap)))
 
         # Generate signature
         sig = signature_cls.generate_signature(
-            auth_user = self.auth_user,
-            secret_key = self.secret_key,
-            valid_until = datetime_timelap
-            )
+            auth_user=self.auth_user,
+            secret_key=self.secret_key,
+            valid_until=datetime_timelap
+        )
 
         flow.append(('Signature generated', sig.signature))
         flow.append(('Signature is expired', sig.is_expired()))
@@ -168,12 +157,12 @@ class SignatureTest(unittest.TestCase):
 
         # Check if valid
         validation_result = signature_cls.validate_signature(
-                signature = sig.signature,
-                auth_user = self.auth_user,
-                secret_key = self.secret_key,
-                valid_until = sig.valid_until,
-                return_object = True
-                )
+            signature=sig.signature,
+            auth_user=self.auth_user,
+            secret_key=self.secret_key,
+            valid_until=sig.valid_until,
+            return_object=True
+        )
 
         flow.append(('Signature is valid', validation_result.result))
         flow.append(('Reason not valid', validation_result.reason))
@@ -181,6 +170,7 @@ class SignatureTest(unittest.TestCase):
         self.assertTrue(validation_result.result)
 
         return flow
+
 
     def test_02_signature_test_with_positive_timelap(self):
         """
