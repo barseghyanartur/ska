@@ -1,30 +1,28 @@
-__title__ = 'ska.base'
-__author__ = 'Artur Barseghyan'
-__copyright__ = 'Copyright (c) 2013-2014 Artur Barseghyan'
-__license__ = 'GPL 2.0/LGPL 2.1'
-__all__ = (
-    'SignatureValidationResult', 'AbstractSignature',
-    )
-
 import datetime
 import time
+
 from base64 import b64encode
 
 from six import text_type
 
-from ska import error_codes
-from ska.helpers import sorted_urlencode
-from ska.defaults import (
-    SIGNATURE_LIFETIME, TIMESTAMP_FORMAT,
-    )
+from . import error_codes
+from .defaults import SIGNATURE_LIFETIME, TIMESTAMP_FORMAT
+from .helpers import sorted_urlencode
 
-_ = lambda x: x # For future integrations with gettext
+__title__ = 'ska.base'
+__author__ = 'Artur Barseghyan'
+__copyright__ = '2013-2016 Artur Barseghyan'
+__license__ = 'GPL 2.0/LGPL 2.1'
+__all__ = (
+    'SignatureValidationResult', 'AbstractSignature',
+)
 
-# *******************************************************************************************************
-# *******************************************************************************************************
-# ******************************************* Signature *************************************************
-# *******************************************************************************************************
-# *******************************************************************************************************
+# ****************************************************************************
+# ****************************************************************************
+# ******************************* Signature **********************************
+# ****************************************************************************
+# ****************************************************************************
+
 
 class SignatureValidationResult(object):
     """
@@ -35,13 +33,18 @@ class SignatureValidationResult(object):
     >>> res = SignatureValidationResult(result=True)
     >>> print bool(res)
     True
-    >>> res = SignatureValidationResult(result=False, reason=[error_codes.INVALID_SIGNATURE,])
+    >>> res = SignatureValidationResult(
+    >>>     result=False,
+    >>>     reason=[error_codes.INVALID_SIGNATURE,]
+    >>> )
     >>> print bool(res)
     False
     """
-    #__slots__ = ('result', 'reason', 'errors')
+
+    # __slots__ = ('result', 'reason', 'errors')
 
     def __init__(self, result, errors=[]):
+        """Constructor."""
         self.result = result
         self.errors = errors
 
@@ -56,8 +59,7 @@ class SignatureValidationResult(object):
 
     @property
     def message(self):
-        """
-        Human readable message of all errors.
+        """Human readable message of all errors.
 
         :return string:
         """
@@ -65,7 +67,8 @@ class SignatureValidationResult(object):
 
     @property
     def reason(self):
-        """
+        """Reason.
+
         For backwards compatibility. Returns list of text messages.
 
         :return list:
@@ -74,16 +77,19 @@ class SignatureValidationResult(object):
 
 
 class AbstractSignature(object):
-    """
-    Abstract class for signature generation and validation based on symmetric keys.
+    """Abstract class for signature generation and validation.
+
+    Based on symmetric keys.
 
     :param str signature:
     :param str auth_user:
     :param float|str valid_until:
     """
+
     __slots__ = ('signature', 'auth_user', 'valid_until', 'extra')
 
     def __init__(self, signature, auth_user, valid_until, extra={}):
+        """Constructor."""
         self.signature = signature
         self.auth_user = auth_user
         self.valid_until = valid_until
@@ -99,36 +105,38 @@ class AbstractSignature(object):
     __nonzero__ = __bool__
 
     @classmethod
-    def validate_signature(cls, signature, auth_user, secret_key, valid_until, extra={}, return_object=False):
-        """
-        Validates the signature.
+    def validate_signature(cls, signature, auth_user, secret_key, valid_until,
+                           extra={}, return_object=False):
+        """Validates the signature.
 
         :param str signature:
         :param str auth_user:
         :param str secret_key:
         :param float|str valid_until: Unix timestamp.
         :param dict extra: Extra arguments to be validated.
-        :param bool return_object: If set to True, an instance of ``SignatureValidationResult`` is returned.
+        :param bool return_object: If set to True, an instance of
+            ``SignatureValidationResult`` is returned.
         :return bool:
 
         :example:
         >>> Signature.validate_signature(
-            'EBS6ipiqRLa6TY5vxIvZU30FpnM=',
-            'user',
-            'your-secret-key',
-            '1377997396.0'
-            )
+        >>>     'EBS6ipiqRLa6TY5vxIvZU30FpnM=',
+        >>>     'user',
+        >>>     'your-secret-key',
+        >>>     '1377997396.0'
+        >>> )
         False
         """
+
         if isinstance(signature, str):
             signature = signature.encode()
 
         sig = cls.generate_signature(
-            auth_user = auth_user,
-            secret_key = secret_key,
-            valid_until = valid_until,
-            extra = extra
-            )
+            auth_user=auth_user,
+            secret_key=secret_key,
+            valid_until=valid_until,
+            extra=extra
+        )
 
         if not return_object:
             return sig.signature == signature and not sig.is_expired()
@@ -144,13 +152,15 @@ class AbstractSignature(object):
             return SignatureValidationResult(result, errors)
 
     def is_expired(self):
-        """
-        Checks if current signature is expired. Returns True if signature is expired and False otherwise.
+        """Checks if current signature is expired.
+
+        Returns True if signature is expired and False otherwise.
 
         :return bool:
 
         :example:
-        >>> sig = Signature.generate_signature('user', 'your-secret-key') # Generating the signature
+        >>> # Generating the signature
+        >>> sig = Signature.generate_signature('user', 'your-secret-key')
         >>> sig.is_expired()
         False
         """
@@ -165,8 +175,10 @@ class AbstractSignature(object):
 
     @classmethod
     def get_base(cls, auth_user, timestamp, extra={}):
-        """
-        Add something here so that timestamp to signature conversion is not that obvious.
+        """Get base string.
+
+        Add something here so that timestamp to signature conversion is not
+        that obvious.
 
         :param string auth_user:
         :param int timestamp:
@@ -183,17 +195,17 @@ class AbstractSignature(object):
 
     @staticmethod
     def make_secret_key(secret_key):
-        """
-        The secret key how its' supposed to be used in generate signature.
+        """The secret key how its' supposed to be used in generate signature.
 
         :param str secret_key:
         :return str:
         """
-        return secret_key.encode() #return b64encode(secret_key)
+        return secret_key.encode()  # return b64encode(secret_key)
 
     @classmethod
     def make_hash(cls, auth_user, secret_key, valid_until=None, extra={}):
-        """
+        """Make hash.
+
         You should implement this method in your signature class.
 
         :param str auth_user:
@@ -205,10 +217,12 @@ class AbstractSignature(object):
         raise NotImplemented("You should implement this method!")
 
     @classmethod
-    def generate_signature(cls, auth_user, secret_key, valid_until=None, lifetime=SIGNATURE_LIFETIME, extra={}):
-        """
-        Generates the signature. If timestamp is given, the signature is created using the given timestamp. Otherwise
-        current time is used.
+    def generate_signature(cls, auth_user, secret_key, valid_until=None,
+                           lifetime=SIGNATURE_LIFETIME, extra={}):
+        """Generates the signature.
+
+        If timestamp is given, the signature is created using the given
+        timestamp. Otherwise current time is used.
 
         :param str auth_user:
         :param str secret_key:
@@ -223,50 +237,57 @@ class AbstractSignature(object):
         """
         if not valid_until:
             valid_until = time.mktime(
-                (datetime.datetime.now() + datetime.timedelta(seconds=lifetime)).timetuple()
-                )
+                (
+                    datetime.datetime.now() +
+                    datetime.timedelta(seconds=lifetime)
+                ).timetuple()
+            )
         else:
             try:
                 cls.unix_timestamp_to_date(valid_until)
-            except Exception as e:
-                return None # Something went wrong
+            except Exception as err:
+                return None  # Something went wrong
 
-        signature = b64encode(cls.make_hash(auth_user, secret_key, valid_until, extra))
+        signature = b64encode(
+            cls.make_hash(auth_user, secret_key, valid_until, extra)
+        )
 
-        return cls(signature=signature, auth_user=auth_user, valid_until=valid_until, extra=extra)
+        return cls(signature=signature, auth_user=auth_user,
+                   valid_until=valid_until, extra=extra)
 
     @staticmethod
     def datetime_to_timestamp(dt):
-        """
-        Human readable datetime according to the format specified in ``TIMESTAMP_FORMAT``.
+        """Human readable datetime according to the format specified.
+
+         Format is specified in ``TIMESTAMP_FORMAT``.
 
         :param datetime.datetime dt:
         :return str:
         """
         try:
             return dt.strftime(TIMESTAMP_FORMAT)
-        except Exception as e:
+        except Exception as err:
             pass
 
     @staticmethod
     def datetime_to_unix_timestamp(dt):
-        """
-        Converts ``datetime.datetime`` to Unix timestamp.
+        """Convert ``datetime.datetime`` to Unix timestamp.
 
         :param datetime.datetime dt:
         :return float: Unix timestamp.
         """
         try:
             return time.mktime(dt.timetuple())
-        except Exception as e:
+        except Exception as err:
             pass
 
     @classmethod
     def timestamp_to_date(cls, timestamp, fail_silently=True):
-        """
-        Converts the given timestamp to date. If ``fail_silently`` is set to False, raises
-        exceptions if timestamp is not valid timestamp (according to the format we have
-        specified in the ``TIMESTAMP_FORMAT``). Mainly used internally.
+        """Converts the given timestamp to date.
+
+        If ``fail_silently`` is set to False, raises exceptions if timestamp
+        is not valid timestamp (according to the format we have specified in
+        the ``TIMESTAMP_FORMAT``). Mainly used internally.
 
         :param str timestamp:
         :param bool fail_silently:
@@ -274,26 +295,26 @@ class AbstractSignature(object):
         """
         try:
             return datetime.datetime.strptime(timestamp, TIMESTAMP_FORMAT)
-        except Exception as e:
+        except Exception as err:
             if fail_silently is not True:
-                raise e
+                raise err
             else:
                 return None
 
     @classmethod
     def unix_timestamp_to_date(cls, timestamp, fail_silently=True):
-        """
-        Converts the given Unix timestamp to date. If ``fail_silently`` is set to False, raises
-        exceptions if timestamp is not valid timestamp.
+        """Converts the given Unix timestamp to date.
+        If ``fail_silently`` is set to False, raises exceptions if timestamp
+        is not valid timestamp.
 
-        :param float|str timestamp: UNIX timestamp. Parsable to float.
+        :param float|str timestamp: UNIX timestamp. Possible to parse to float.
         :param bool fail_silently:
         :return str:
         """
         try:
             return datetime.datetime.fromtimestamp(float(timestamp))
-        except Exception as e:
+        except Exception as err:
             if fail_silently is not True:
-                raise e
+                raise err
             else:
                 return None
