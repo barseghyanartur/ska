@@ -174,7 +174,6 @@ class SignatureTest(unittest.TestCase):
 
         return flow
 
-
     def test_02_signature_test_with_positive_timelapse(self):
         """Signature test with positive time-lapse.
 
@@ -349,7 +348,6 @@ def parse_url_params(url):
     data = parse_qs(urlparse(url).query)
     for k, v in data.items():
         data[k] = v[0]
-
 
     return data
 
@@ -679,13 +677,13 @@ class ExtraTest(unittest.TestCase):
         # Now parsing back the URL params and validate the signature data
         request_data = parse_url_params(signed_url)
 
-        #request_data['extra'] = 'provider,first_name'
+        # request_data['extra'] = 'provider,first_name'
 
         validation_result = validate_signed_request_data(
-            data = request_data,
-            secret_key = self.secret_key,
-            signature_cls = signature_cls
-            )
+            data=request_data,
+            secret_key=self.secret_key,
+            signature_cls=signature_cls
+        )
 
         flow.append(('Signature is valid', validation_result.result))
         flow.append(('Reason not valid', validation_result.reason))
@@ -695,9 +693,7 @@ class ExtraTest(unittest.TestCase):
         return flow
 
     def test_01_sign_url_and_validate_signed_request_data(self):
-        """
-        Tests for ``sign_url`` and ``validate_signed_request_data``.
-        """
+        """Tests for ``sign_url`` and ``validate_signed_request_data``."""
         flow = []
         for signature_cls in self.signature_classes:
             flow += self.__test_sign_url_validate_signed_request_data(
@@ -706,13 +702,12 @@ class ExtraTest(unittest.TestCase):
         return flow
 
     @print_info
-    def __t_sign_url_validate_sgnd_req_data_tumper_extra_keys_rm(
+    def __t_sign_url_validate_sgnd_req_data_tamper_extra_keys_rm(
             self, signature_cls=Signature):
-        """
-        Fail tests for `sign_url` and `validate_signed_request_data`.
+        """Fail tests for `sign_url` and `validate_signed_request_data`.
 
-        As well as providing the additional data ``extra`` and data tumpering ``extra``
-        keys (remove).
+        As well as providing the additional data ``extra`` and data tampering
+        ``extra`` keys (remove).
         """
         flow = []
 
@@ -725,21 +720,21 @@ class ExtraTest(unittest.TestCase):
         # Now parsing back the URL params and validate the signature data
         request_data = parse_url_params(signed_url)
 
-        # ***************************************************************************
-        # ****************************** Tumpering **********************************
-        # ***************************************************************************
-        tumpered_request_data = copy(request_data)
+        # *******************************************************************
+        # ************************ Tampering ********************************
+        # *******************************************************************
+        tampered_request_data = copy(request_data)
 
-        tumpered_request_data['extra'] = 'provider,first_name'
+        tampered_request_data['extra'] = 'provider,first_name'
 
         flow.append(('Request data', request_data))
-        flow.append(('Tumpered request data', tumpered_request_data))
+        flow.append(('Tampered request data', tampered_request_data))
 
         validation_result = validate_signed_request_data(
-            data = tumpered_request_data,
-            secret_key = self.secret_key,
-            signature_cls = signature_cls
-            )
+            data=tampered_request_data,
+            secret_key=self.secret_key,
+            signature_cls=signature_cls
+        )
 
         flow.append(('Signature is valid', validation_result.result))
         flow.append(('Reason not valid', validation_result.reason))
@@ -748,26 +743,27 @@ class ExtraTest(unittest.TestCase):
 
         return flow
 
-    def test_02_sign_url_validate_signed_request_data_tumper_extra_keys_remove(self):
-        """
-        Fail tests for ``sign_url`` and ``validate_signed_request_data`` shortcut functions,
-        as well as providing the additional data ``extra`` and data tumpering ``extra``
-        keys (remove).
+    def test_02_sign_url_validate_signed_req_data_tamper_extra_keys_rm(self):
+        """Fail tests for `sign_url` and `validate_signed_request_data`.
+
+        As well as providing the additional data `extra` and data tampering
+        `extra` keys (remove).
         """
         flow = []
         for signature_cls in self.signature_classes:
             flow += \
-                self.__t_sign_url_validate_sgnd_req_data_tumper_extra_keys_rm(
-                    signature_cls = signature_cls
+                self.__t_sign_url_validate_sgnd_req_data_tamper_extra_keys_rm(
+                    signature_cls=signature_cls
                 )
         return flow
 
     @print_info
-    def __test_03_sign_url_and_validate_signed_request_data_tumper_extra_keys_add(self, signature_cls=Signature):
-        """
-        Fail tests for ``sign_url`` and ``validate_signed_request_data`` shortcut functions,
-        as well as providing the additional data ``extra`` and data tumpering ``extra``
-        keys (add).
+    def __t_sgn_url_and_vldt_sgnd_req_data_tamper_extra_keys_add(
+            self, signature_cls=Signature):
+        """Fail tests for `sign_url` and `validate_signed_request_data`.
+
+        As well as providing the additional data ``extra`` and data tampering
+        `extra` keys (add).
         """
         flow = []
 
@@ -780,22 +776,22 @@ class ExtraTest(unittest.TestCase):
         # Now parsing back the URL params and validate the signature data
         request_data = parse_url_params(signed_url)
 
-        # ***************************************************************************
-        # ****************************** Tumpering **********************************
-        # ***************************************************************************
-        tumpered_request_data = copy(request_data)
+        # *******************************************************************
+        # ************************* Tampering *******************************
+        # *******************************************************************
+        tampered_request_data = copy(request_data)
 
-        tumpered_request_data['extra'] += ',age'
-        tumpered_request_data['age'] = 27
+        tampered_request_data['extra'] += ',age'
+        tampered_request_data['age'] = 27
 
         flow.append(('Request data', request_data))
-        flow.append(('Tumpered request data', tumpered_request_data))
+        flow.append(('Tampered request data', tampered_request_data))
 
         validation_result = validate_signed_request_data(
-            data = tumpered_request_data,
-            secret_key = self.secret_key,
-            signature_cls = signature_cls
-            )
+            data=tampered_request_data,
+            secret_key=self.secret_key,
+            signature_cls=signature_cls
+        )
 
         flow.append(('Signature is valid', validation_result.result))
         flow.append(('Reason not valid', validation_result.reason))
@@ -804,55 +800,61 @@ class ExtraTest(unittest.TestCase):
 
         return flow
 
-    def test_03_sign_url_and_validate_signed_request_data_tumper_extra_keys_add(self):
-        """
-        Fail tests for ``sign_url`` and ``validate_signed_request_data`` shortcut functions,
-        as well as providing the additional data ``extra`` and data tumpering ``extra``
-        keys (add).
+    def test_03_sign_url_and_validate_signed_req_data_tamper_extra_keys_add(
+            self):
+        """Fail tests for `sign_url` and `validate_signed_request_data`.
+
+        As well as providing the additional data ``extra`` and data tampering
+        `extra` keys (add).
         """
         flow = []
         for signature_cls in self.signature_classes:
-            flow += self.__test_03_sign_url_and_validate_signed_request_data_tumper_extra_keys_add(
-                signature_cls = signature_cls
+            flow += \
+                self.__t_sgn_url_and_vldt_sgnd_req_data_tamper_extra_keys_add(
+                    signature_cls=signature_cls
                 )
         return flow
 
     @print_info
-    def __test_04_sign_url_and_validate_signed_request_data_tumper_extra_keys_add(self, signature_cls=Signature):
-        """
-        Tests for ``sign_url`` and ``validate_signed_request_data`` shortcut functions,
-        as well as providing the additional data ``extra`` and data tumpering ``extra``
-        keys (add) repeated params.
+    def __t_sgn_url_and_vldt_sgnd_req_data_tamper_extra_keys_add(
+            self, signature_cls=Signature):
+        """Tests for `sign_url` and `validate_signed_request_data`.
+
+        As well as providing the additional data `extra` and data
+        tampering `extra` keys (add) repeated params.
         """
         flow = []
 
         flow.append(('Signature class', signature_cls))
 
-        signed_url = "{0}&provider=cervice0.example.com".format(self.__get_signed_url(signature_cls=signature_cls))
+        signed_url = "{0}&provider=cervice0.example.com".format(
+            self.__get_signed_url(signature_cls=signature_cls)
+        )
 
-        # ***************************************************************************
-        # ****************************** Tumpering **********************************
-        # ***************************************************************************
+        # *******************************************************************
+        # ************************* Tampering *******************************
+        # *******************************************************************
 
         flow.append(('URL generated', signed_url))
 
         # Now parsing back the URL params and validate the signature data
         tampered_request_data = parse_url_params(signed_url)
 
-        # ***************************************************************************
-        # ****************************** Tumpering **********************************
-        # ***************************************************************************
-        even_more_tumpered_request_data = copy(tampered_request_data)
-        even_more_tumpered_request_data['extra'] += ',provider'
+        # *******************************************************************
+        # ************************** Tampering ******************************
+        # *******************************************************************
+        even_more_tampered_request_data = copy(tampered_request_data)
+        even_more_tampered_request_data['extra'] += ',provider'
 
         flow.append(('Tampered request data', tampered_request_data))
-        flow.append(('Even more tampered request data', even_more_tumpered_request_data))
+        flow.append(('Even more tampered request data',
+                     even_more_tampered_request_data))
 
         validation_result = validate_signed_request_data(
-            data = even_more_tumpered_request_data,
-            secret_key = self.secret_key,
-            signature_cls = signature_cls
-            )
+            data=even_more_tampered_request_data,
+            secret_key=self.secret_key,
+            signature_cls=signature_cls
+        )
 
         flow.append(('Signature is valid', validation_result.result))
         flow.append(('Reason not valid', validation_result.reason))
@@ -861,16 +863,17 @@ class ExtraTest(unittest.TestCase):
 
         return flow
 
-    def test_04_sign_url_and_validate_signed_request_data_tumper_extra_keys_add(self):
-        """
-        Tests for ``sign_url`` and ``validate_signed_request_data`` shortcut functions,
-        as well as providing the additional data ``extra`` and data tumpering ``extra``
-        keys (add) repeated params.
+    def test_04_sgn_url_vldt_signed_request_data_tamper_extra_keys_add(self):
+        """Tests for `sign_url` and `validate_signed_request_data`.
+
+        As well as providing the additional data `extra` and data tampering
+        `extra` keys (add) repeated params.
         """
         flow = []
         for signature_cls in self.signature_classes:
-            flow += self.__test_04_sign_url_and_validate_signed_request_data_tumper_extra_keys_add(
-                signature_cls = signature_cls
+            flow += \
+                self.__t_sgn_url_and_vldt_sgnd_req_data_tamper_extra_keys_add(
+                    signature_cls=signature_cls
                 )
         return flow
 

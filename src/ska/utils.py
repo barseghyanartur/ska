@@ -1,9 +1,3 @@
-__title__ = 'ska.utils'
-__author__ = 'Artur Barseghyan'
-__copyright__ = 'Copyright (c) 2013-2014 Artur Barseghyan'
-__license__ = 'GPL 2.0/LGPL 2.1'
-__all__ = ('RequestHelper',)
-
 from six import PY3
 
 try:
@@ -14,34 +8,39 @@ except ImportError as e:
     else:
         from urllib import urlencode
 
-from ska.helpers import (
-    dict_keys, extract_signed_data as extract_signed_data
-    )
-from ska.exceptions import InvalidData, ImproperlyConfigured
-from ska.defaults import (
+from .defaults import (
     DEFAULT_URL_SUFFIX, DEFAULT_EXTRA_PARAM, DEFAULT_SIGNATURE_PARAM,
     DEFAULT_AUTH_USER_PARAM, DEFAULT_VALID_UNTIL_PARAM,
-    )
-from ska.signatures import Signature
+)
+from .exceptions import InvalidData, ImproperlyConfigured
+from .helpers import (
+    dict_keys, extract_signed_data as extract_signed_data
+)
+from .signatures import Signature
 
-_ = lambda x: x # For future integrations with gettext
+__title__ = 'ska.utils'
+__author__ = 'Artur Barseghyan'
+__copyright__ = 'Copyright (c) 2013-2014 Artur Barseghyan'
+__license__ = 'GPL 2.0/LGPL 2.1'
+__all__ = ('',)
 
-# *******************************************************************************************************
-# *******************************************************************************************************
-# **************************************** Request helper ***********************************************
-# *******************************************************************************************************
-# *******************************************************************************************************
+# ***************************************************************************
+# ***************************************************************************
+# **************************** Request helper *******************************
+# ***************************************************************************
+# ***************************************************************************
+
 
 class RequestHelper(object):
-    """
-    Request helper for easy put/extract of signature params from URLs.
+    """Request helper for easy put/extract of signature params from URLs.
 
     :param str signature_param:
     :param str auth_user_param:
     :param str valid_until_param:
     :param str extra_param:
     """
-    def __init__(self, signature_param=DEFAULT_SIGNATURE_PARAM, auth_user_param=DEFAULT_AUTH_USER_PARAM,
+    def __init__(self, signature_param=DEFAULT_SIGNATURE_PARAM,
+                 auth_user_param=DEFAULT_AUTH_USER_PARAM,
                  valid_until_param=DEFAULT_VALID_UNTIL_PARAM, extra_param=DEFAULT_EXTRA_PARAM,
                  signature_cls=Signature):
         self.signature_param = signature_param

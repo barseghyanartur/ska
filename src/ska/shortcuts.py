@@ -48,6 +48,7 @@ def sign_url(auth_user, secret_key, valid_until=None,
     :param dict extra: Extra variables to add to the request.
     :param str extra_param: Name of the GET param name which would hold the
         ``extra_keys`` value.
+    :param signature_cls:
     :return str:
 
     :example:
@@ -124,6 +125,7 @@ def signature_to_dict(auth_user, secret_key, valid_until=None,
     :param dict extra: Additional arguments for the signature.
     :param str extra_param: Name of the (for example POST) param name which
         would hold the ``extra`` keys value.
+    :param signature_cls:
     :return str:
 
     :example:
@@ -192,6 +194,7 @@ def validate_signed_request_data(data, secret_key,
         param name which holds the ``valid_until`` value.
     :param str extra_param: Name of the (foe example GET or POST) param
         name which holds the ``extra`` keys value.
+    :param signature_cls:
     :return ska.SignatureValidationResult: A ``ska.SignatureValidationResult``
         object with the following properties:
             - `result` (bool): True if data is valid. False otherwise.
@@ -237,6 +240,7 @@ def extract_signed_request_data(data, secret_key=None,
     :param bool validate: If set to True, request data is validated before
         returning the result.
     :param bool fail_silently: If set to True, exceptions are omitted.
+    :param signature_cls:
     :return dict: Dictionary with signed request data.
     """
     request_helper = RequestHelper(
