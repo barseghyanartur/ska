@@ -85,7 +85,7 @@ class SkaAuthenticationBackend(object):
             )
             try:
                 token.save()
-            except IntegrityError as e:
+            except IntegrityError as err:
                 if DB_PERFORM_SIGNATURE_CHECK:
                     # Token has already been used. Do not authenticate.
                     return None
@@ -104,10 +104,10 @@ class SkaAuthenticationBackend(object):
                         callback_func(user,
                                       request=request,
                                       signed_request_data=signed_request_data)
-                    except Exception as e:
-                        logger.debug(str(e))
+                    except Exception as err:
+                        logger.debug(str(err))
 
-        except User.DoesNotExist as e:
+        except User.DoesNotExist as err:
             user = User._default_manager.create_user(
                 username=auth_user,
                 email=email,
@@ -127,8 +127,8 @@ class SkaAuthenticationBackend(object):
                         callback_func(user,
                                       request=request,
                                       signed_request_data=signed_request_data)
-                    except Exception as e:
-                        logger.debug(str(e))
+                    except Exception as err:
+                        logger.debug(str(err))
 
         # User info callback
         user_info_callback = provider_data.get('USER_INFO_CALLBACK',
@@ -153,5 +153,5 @@ class SkaAuthenticationBackend(object):
         """
         try:
             return User._default_manager.get(pk=user_id)
-        except User.DoesNotExist as e:
+        except User.DoesNotExist as err:
             return None

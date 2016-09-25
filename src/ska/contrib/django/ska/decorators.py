@@ -35,23 +35,23 @@ from __future__ import absolute_import
       the ``valid_until`` value.
 """
 
-from six import PY3, text_type
-
-from ska import validate_signed_request_data, sign_url as ska_sign_url
-from ska.defaults import (
-    SIGNATURE_LIFETIME, DEFAULT_URL_SUFFIX, DEFAULT_SIGNATURE_PARAM, DEFAULT_AUTH_USER_PARAM,
-    DEFAULT_VALID_UNTIL_PARAM, DEFAULT_EXTRA_PARAM
-    )
-from ska.contrib.django.ska.settings import (
-    SECRET_KEY, AUTH_USER, UNAUTHORISED_REQUEST_ERROR_MESSAGE,
-    UNAUTHORISED_REQUEST_ERROR_TEMPLATE
-    )
-from ska.contrib.django.ska.http import HttpResponseUnauthorized
-
 from django.utils.translation import ugettext_lazy as _
 from django.shortcuts import render
 
 from nine import versions
+
+from six import PY3, text_type
+
+from ska import validate_signed_request_data, sign_url as ska_sign_url
+from ska.defaults import (
+    SIGNATURE_LIFETIME, DEFAULT_URL_SUFFIX, DEFAULT_SIGNATURE_PARAM,
+    DEFAULT_AUTH_USER_PARAM, DEFAULT_VALID_UNTIL_PARAM, DEFAULT_EXTRA_PARAM
+)
+from .settings import (
+    SECRET_KEY, AUTH_USER, UNAUTHORISED_REQUEST_ERROR_MESSAGE,
+    UNAUTHORISED_REQUEST_ERROR_TEMPLATE
+)
+from .http import HttpResponseUnauthorized
 
 __title__ = 'ska.contrib.django.ska.decorators'
 __author__ = 'Artur Barseghyan'
@@ -294,18 +294,18 @@ class SignAbsoluteURL(object):
                 url = func(this, *args, **kwargs)
 
             return ska_sign_url(
-                auth_user = self.auth_user,
-                secret_key = self.secret_key,
-                valid_until = self.valid_until,
-                lifetime = self.lifetime,
-                url = url,
-                suffix = self.suffix,
-                signature_param = self.signature_param,
-                auth_user_param = self.auth_user_param,
-                valid_until_param = self.valid_until_param,
-                extra = self.extra,
-                extra_param = self.extra_param
-                )
+                auth_user=self.auth_user,
+                secret_key=self.secret_key,
+                valid_until=self.valid_until,
+                lifetime=self.lifetime,
+                url=url,
+                suffix=self.suffix,
+                signature_param=self.signature_param,
+                auth_user_param=self.auth_user_param,
+                valid_until_param=self.valid_until_param,
+                extra=self.extra,
+                extra_param=self.extra_param
+            )
         return inner
 
 sign_url = SignAbsoluteURL

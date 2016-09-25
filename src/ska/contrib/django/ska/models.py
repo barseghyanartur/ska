@@ -1,9 +1,3 @@
-__title__ = 'ska.contrib.django.ska.models'
-__author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
-__copyright__ = 'Copyright (c) 2013 Artur Barseghyan'
-__license__ = 'GPL 2.0/LGPL 2.1'
-__all__ = ('Signature',)
-
 import logging
 
 from django.db import models
@@ -11,9 +5,15 @@ from django.utils.translation import ugettext_lazy as _
 
 logger = logging.getLogger(__name__)
 
+__title__ = 'ska.contrib.django.ska.models'
+__author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
+__copyright__ = '2013-2016 Artur Barseghyan'
+__license__ = 'GPL 2.0/LGPL 2.1'
+__all__ = ('Signature',)
+
+
 class Signature(models.Model):
-    """
-    Token
+    """Signature.
 
     :Properties:
         - `signature` (str): Signature generated.
@@ -27,9 +27,12 @@ class Signature(models.Model):
     created = models.DateTimeField(_("Date created"), auto_now_add=True)
 
     class Meta:
+        """Meta class."""
+
         verbose_name = _("Token")
         verbose_name_plural = _("Tokens")
         unique_together = (('signature', 'auth_user', 'valid_until'),)
 
     def __unicode__(self):
-        return "{0}{1}{2}".format(self.signature, self.auth_user, self.valid_until)
+        return "{0}{1}{2}".format(self.signature, self.auth_user,
+                                  self.valid_until)
