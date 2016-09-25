@@ -41,22 +41,24 @@ class RequestHelper(object):
     """
     def __init__(self, signature_param=DEFAULT_SIGNATURE_PARAM,
                  auth_user_param=DEFAULT_AUTH_USER_PARAM,
-                 valid_until_param=DEFAULT_VALID_UNTIL_PARAM, extra_param=DEFAULT_EXTRA_PARAM,
+                 valid_until_param=DEFAULT_VALID_UNTIL_PARAM,
+                 extra_param=DEFAULT_EXTRA_PARAM,
                  signature_cls=Signature):
+        """Constructor."""
         self.signature_param = signature_param
         self.auth_user_param = auth_user_param
         self.valid_until_param = valid_until_param
         self.extra_param = extra_param
         self.signature_cls = signature_cls
 
-    def signature_to_url(self, signature, endpoint_url='', suffix=DEFAULT_URL_SUFFIX):
-        """
-        URL encodes the signature params.
+    def signature_to_url(self, signature, endpoint_url='',
+                         suffix=DEFAULT_URL_SUFFIX):
+        """URL encodes the signature params.
 
         :param ska.Signature signature:
         :param str endpoint_url:
-        :param str suffix: Suffix to add after the ``endpoint_url`` and before the appended
-            signature params.
+        :param str suffix: Suffix to add after the ``endpoint_url`` and before
+            the appended signature params.
         :return str:
 
         :example:
@@ -68,23 +70,23 @@ class RequestHelper(object):
         Generate signature.
 
         >>> signature = Signature.generate_signature(
-        >>>     auth_user = 'user',
-        >>>     secret_key = 'your-secret-key'
-        >>>     )
+        >>>     auth_user='user',
+        >>>     secret_key='your-secret-key'
+        >>> )
 
         Create a request helper.
 
         >>> request_helper = RequestHelper(
-        >>>     signature_param = 'signature',
-        >>>     auth_user_param = 'auth_user',
-        >>>     valid_until_param = 'valid_until'
+        >>>     signature_param='signature',
+        >>>     auth_user_param='auth_user',
+        >>>     valid_until_param='valid_until'
         >>> )
 
         Appending signature params to the endpoint URL.
 
         >>> url = request_helper.signature_to_url(
-        >>>     signature = signature,
-        >>>     endpoint_url = 'http://e.com/api/'
+        >>>     signature=signature,
+        >>>     endpoint_url='http://e.com/api/'
         >>> )
         http://e.com/api/?valid_until=1378045287.0&auth_user=user&signature=YlZpLFsjUKBalL4x5trhkeEgqE8%3D
         """
@@ -95,15 +97,17 @@ class RequestHelper(object):
             self.extra_param: dict_keys(signature.extra, return_string=True),
         }
 
-        # Make some check that params used do not overlap with names reserved (`auth_user`, `signature`, etc).
+        # Make some check that params used do not overlap with names
+        # reserved (`auth_user`, `signature`, etc).
         params.update(signature.extra)
 
         return "{0}{1}{2}".format(endpoint_url, suffix, urlencode(params))
 
     def signature_to_dict(self, signature):
-        """
-        Puts signature into a dictionary, which can later on be used to send when sending
-        (POST) requests to the server.
+        """Put signature into a dictionary.
+
+         Dictionary can be used later on to send requests (for example, a POST
+         request) to the server.
 
         :param ska.Signature signature:
         :return dict:
@@ -117,22 +121,22 @@ class RequestHelper(object):
         Generate signature.
 
         >>> signature = Signature.generate_signature(
-        >>>     auth_user = 'user',
-        >>>     secret_key = 'your-secret-key'
-        >>>     )
+        >>>     auth_user='user',
+        >>>     secret_key='your-secret-key'
+        >>> )
 
         Create a request helper.
 
         >>> request_helper = RequestHelper(
-        >>>     signature_param = 'signature',
-        >>>     auth_user_param = 'auth_user',
-        >>>     valid_until_param = 'valid_until'
+        >>>     signature_param='signature',
+        >>>     auth_user_param='auth_user',
+        >>>     valid_until_param='valid_until'
         >>> )
 
         Appending signature params to the endpoint URL.
 
         >>> signed_dict = request_helper.signature_to_dict(
-        >>>     signature = signature
+        >>>     signature=signature
         >>> )
         {
             'signature': 'YlZpLFsjUKBalL4x5trhkeEgqE8=',
@@ -152,18 +156,17 @@ class RequestHelper(object):
         return d
 
     def validate_request_data(self, data, secret_key):
-        """
-        Validates the request data.
+        """Validate the request data.
 
         :param dict data:
         :param str secret_key:
         :return ska.SignatureValidationResult:
 
         :example:
-        If your imaginary ``HttpRequest`` object has ``GET`` property (dict), then you
-        would validate the request data as follows.
+        If your imaginary `HttpRequest` object has `GET` property (dict),
+        then you would validate the request data as follows.
 
-        Create a ``RequestHelper`` object with param names expected.
+        Create a `RequestHelper` object with param names expected.
 
         Required imports.
 
@@ -172,48 +175,55 @@ class RequestHelper(object):
         Create a request helper.
 
         >>> request_helper = RequestHelper(
-        >>>     signature_param = 'signature',
-        >>>     auth_user_param = 'auth_user',
-        >>>     valid_until_param = 'valid_until'
+        >>>     signature_param='signature',
+        >>>     auth_user_param='auth_user',
+        >>>     valid_until_param='valid_until'
         >>> )
 
         Validate the request data.
 
         >>> validation_result = request_helper.validate_request_data(
-        >>>     data = request.GET,
-        >>>     secret_key = 'your-secret-key'
+        >>>     data=request.GET,
+        >>>     secret_key='your-secret-key'
         >>> )
         """
         signature = data.get(self.signature_param, '')
         auth_user = data.get(self.auth_user_param, '')
         valid_until = data.get(self.valid_until_param, '')
 
-        extra = extract_signed_data(data=data, extra=data.get(self.extra_param, '').split(','))
+        extra = extract_signed_data(
+            data=data,
+            extra=data.get(self.extra_param, '').split(',')
+        )
 
         validation_result = self.signature_cls.validate_signature(
-            signature = signature,
-            auth_user = auth_user,
-            secret_key = secret_key,
-            valid_until = valid_until,
-            return_object = True,
-            extra = extra
-            )
+            signature=signature,
+            auth_user=auth_user,
+            secret_key=secret_key,
+            valid_until=valid_until,
+            return_object=True,
+            extra=extra
+        )
 
         return validation_result
 
-    def extract_signed_data(self, data, secret_key=None, validate=False, fail_silently=False):
-        """
-        Extracts signed data from the request.
+    def extract_signed_data(self, data, secret_key=None, validate=False,
+                            fail_silently=False):
+        """Extract signed data from the request.
         """
         if validate:
             if not secret_key:
                 if fail_silently:
                     return {}
-                raise ImproperlyConfigured("You should provide `secret_key` if `validate` is set to True.")
+                raise ImproperlyConfigured("You should provide `secret_key` "
+                                           "if `validate` is set to True.")
             validation_result = self.validate_request_data(data, secret_key)
             if not validation_result.result:
                 if fail_silently:
                     return {}
                 raise InvalidData(validation_result.message)
 
-        return extract_signed_data(data=data, extra=data.get(self.extra_param, '').split(','))
+        return extract_signed_data(
+            data=data,
+            extra=data.get(self.extra_param, '').split(',')
+        )
