@@ -209,8 +209,7 @@ class RequestHelper(object):
 
     def extract_signed_data(self, data, secret_key=None, validate=False,
                             fail_silently=False):
-        """Extract signed data from the request.
-        """
+        """Extract signed data from the request."""
         if validate:
             if not secret_key:
                 if fail_silently:
