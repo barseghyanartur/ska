@@ -1,12 +1,13 @@
-===================================================
+===
 ska
-===================================================
+===
 Lets you easily sign data, using symmetric-key algorithm encryption. Allows you to validate signed data
-and identify possible validation errors. Uses sha1/hmac for signature encryption. Comes with
-shortcut functions for signing (and validating) dictionaries and URLs.
+and identify possible validation errors. Uses sha-(1, 224, 256, 385 and 512)/hmac for signature encryption.
+Allows to use custom hash algorithms. Comes with shortcut functions for signing (and validating) dictionaries
+and URLs.
 
 Key concepts
-===================================================
+============
 Hosts, that communicate with each other, share the Secret Key, which is used to sign data (requests).
 Secret key is never sent around.
 
@@ -31,9 +32,9 @@ whether signature is valid and not expired.
     └─────────────┘           Data              └─────────────┘
 
 Features
-===================================================
+========
 Core `ska` module
----------------------------------------------------
+-----------------
 - Sign dictionaries.
 - Validate signed dictionaries.
 - Sign URLs. Append and sign additional URL data.
@@ -42,7 +43,7 @@ Core `ska` module
   HMAC SHA-512) or define a custom one.
 
 Django `ska` module (`ska.contrib.django.ska`)
----------------------------------------------------
+----------------------------------------------
 - Model decorators for signing absolute URLs. View (including class-based views) decorators for protecting
   views to authorised parties only (no authentication required).
 - Authentication backend for Django based on the signatures (tokens) generated using `ska`, which
@@ -51,40 +52,40 @@ Django `ska` module (`ska.contrib.django.ska`)
   authentication.
 
 Prerequisites
-===================================================
+=============
 - Core `ska` module requires Python 2.6.8+, 2.7.+, 3.3.+
 - Django `ska` module (`ska.contrib.django.ska`) requires the mentioned above plus Django 1.5.+
 
 Installation
-===================================================
+============
 Latest stable version from PyPI.
 
-.. code-block:: none
+.. code-block:: sh
 
-    $ pip install ska
+    pip install ska
 
 Latest stable version from bitbucket.
 
-.. code-block:: none
+.. code-block:: sh
 
-    $ pip install -e hg+https://bitbucket.org/barseghyanartur/ska@stable#egg=ska
+    pip install -e hg+https://bitbucket.org/barseghyanartur/ska@stable#egg=ska
 
 Latest stable version from github.
 
-.. code-block:: none
+.. code-block:: sh
 
-    $ pip install -e git+https://github.com/barseghyanartur/ska@stable#egg=ska
+    pip install -e git+https://github.com/barseghyanartur/ska@stable#egg=ska
 
 Usage examples
-===================================================
+==============
 For integration with Django, see the `Django integration` section.
 
 Basic usage
----------------------------------------------------
+-----------
 Pure Python usage.
 
 Sender side
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~
 Signing URLs is as simple as follows.
 
 Required imports.
@@ -210,7 +211,7 @@ If you for some reason prefer a lower level implementation, read the same sectio
 `Advanced usage` chapter.
 
 Recipient side
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
 Validating the signed request data is as simple as follows.
 
 Required imports.
@@ -268,7 +269,7 @@ If you for some reason prefer a lower level implementation, read the same sectio
 `Advanced usage` chapter.
 
 Command line usage
----------------------------------------------------
+------------------
 It's possible to generate a signed URL from command line using the `ska.generate_signed_url`
 module.
 
@@ -308,9 +309,9 @@ module.
     $ ska-sign-url -au user -sk your-secret-key
 
 Advanced usage (low-level)
----------------------------------------------------
+--------------------------
 Sender side
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~
 
 Required imports.
 
@@ -411,7 +412,7 @@ For HMAC SHA-384 algorityhm it would look as follows.
         )
 
 Recipient side
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
 Required imports.
 
 .. code-block:: python
@@ -463,13 +464,13 @@ the ``ska.Signature``.
         )
 
 Django integration
----------------------------------------------------
+------------------
 `ska` comes with Django model- and view-decorators for producing signed URLs and and validating the
 endpoints, as well as with authentication backend, which allows password-less login into Django
 web site using `ska` generated signature tokens.
 
 Demo
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~
 In order to be able to quickly evaluate the `ska`, a demo app (with a quick installer) has been created
 (works on Ubuntu/Debian, may work on other Linux systems as well, although not guaranteed). Follow the
 instructions below for having the demo running within a minute.
@@ -505,7 +506,7 @@ Django admin interface:
 - Admin password: test
 
 Configuration
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
 Secret key (str) must be defined in `settings` module of your project.
 
 .. code-block:: python
@@ -525,7 +526,7 @@ The following variables can be overridden in `settings` module of your project.
 See the working `example project <https://github.com/barseghyanartur/ska/tree/stable/example>`_.
 
 Django model method decorator ``sign_url``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This is most likely be used in module `models` (models.py).
 
 Imagine, you have a some objects listing and you want to protect the URLs to be viewed by authorised
@@ -566,7 +567,7 @@ Note, that ``sign_url`` decorator accepts the following optional arguments.
 - `valid_until_param` (str): Name of the GET param name which would hold the ``valid_until`` value.
 
 Django view decorator ``validate_signed_request``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 To be used to protect views (file views.py). Should be applied to views (endpoints) that require
 signed requests. If checks are not successful, a ``ska.contrib.django.ska.http.HttpResponseUnauthorized``
 is returned, which is a subclass of Django's ``django.http.HttpResponse``. You can provide your own
@@ -598,7 +599,7 @@ If you're using class based views, use the ``m_validate_signed_request`` decorat
 of ``validate_signed_request``.
 
 Authentication backend
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
 Allows you to get a password-less login to Django web site.
 
 By default, number of logins using the same token is not limited. If you wish that single
@@ -611,12 +612,12 @@ projects' Django settings module.
     SKA_DB_PERFORM_SIGNATURE_CHECK = True
 
 Recipient side
-+++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++
 Recipient is the host (Django site), to which the sender tries to get authenticated (log in). On the
 recipient side the following shall be present.
 
 settings.py
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^
 .. code-block:: python
 
     AUTHENTICATION_BACKENDS = (
@@ -635,16 +636,16 @@ settings.py
     SKA_REDIRECT_AFTER_LOGIN = '/foo/logged-in/'
 
 urls.py
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^
 .. code-block:: python
 
-    urlpatterns = patterns('',
+    urlpatterns = [
         url(r'^ska/', include('ska.contrib.django.ska.urls')),
         url(r'^admin/', include(admin.site.urls)),
-        )
+    ]
 
 Callbacks
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^
 There are several callbacks implemented in authentication backend.
 
 - `USER_GET_CALLBACK` (string): Fired if user was successfully fetched from database (existing user).
@@ -681,17 +682,17 @@ Example:
     SKA_USER_CREATE_CALLBACK = 'my_app.ska_callbacks.my_create_callback'
 
 Purging of old signature data
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 If you have lots of visitors and the ``SKA_DB_STORE_SIGNATURES`` set to True, your database
 grows. If you wish to get rid of old signature token data, you may want to execute the following
 command using a cron job.
 
-.. code-block:: none
+.. code-block:: sh
 
-    $ ./manage.py ska_purge_stored_signature_data
+    ./manage.py ska_purge_stored_signature_data
 
 Sender side
-+++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++
 Sender is the host (another Django web site) from which users authenticate to the Recipient using signed
 URLs.
 
@@ -736,17 +737,17 @@ and render it as a URL so that user can click on it for authenticating to the se
             template_name,
             context,
             context_instance = RequestContext(request)
-            )
+        )
 
 Security notes
-+++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++
 From point of security, you should be serving the following pages via HTTP secure connection:
 
 - The server login page (/ska/login/).
 - The client page containing the authentication links.
 
 Multiple secret keys
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~
 Imagine, you have a site to which you want to offer a password-less login for various clients/senders
 and you don't want them all to have one shared secret key, but rather have their own one. Moreover,
 you specifically want to execute very custom callbacks not only for each separate client/sender, but
@@ -844,13 +845,13 @@ the ``extra`` argument. See the example below for how you would do it for "clien
     server_ska_login_url = 'https://server-url.com/ska/login/'
 
     signed_remote_ska_login_url = sign_url(
-        auth_user = 'test_ska_user',
+        auth_user='test_ska_user',
         # Using provider-specific secret key. This value shall be equal to
         # the value of SKA_PROVIDERS['client_1.power_users']['SECRET_KEY'],
         # defined in your projects' Django settings module.
-        secret_key = 'client-1-power-users-secret-key',
-        url = server_ska_login_url,
-        extra = {
+        secret_key='client-1-power-users-secret-key',
+        url=server_ska_login_url,
+        extra={
             'email': 'test_ska_user@mail.example.com',
             'first_name': 'John',
             'last_name': 'Doe',
@@ -859,18 +860,18 @@ the ``extra`` argument. See the example below for how you would do it for "clien
             # defined in your projcts' Django settings module.
             DEFAULT_PROVIDER_PARAM: 'client_1.power_users',
         }
-        )
+    )
 
 License
-===================================================
+=======
 GPL 2.0/LGPL 2.1
 
 Support
-===================================================
+=======
 For any issues contact me at the e-mail given in the `Author` section.
 
 Author
-===================================================
+======
 Artur Barseghyan <artur.barseghyan@gmail.com>
 
 .. image:: https://d2weczhvl823v0.cloudfront.net/barseghyanartur/ska/trend.png
