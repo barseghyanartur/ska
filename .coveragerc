@@ -1,0 +1,7 @@
+[run]
+omit =
+    src/ska/contrib/django/ska/migrations/*
+    src/ska/contrib/django/ska/south_migrations/*
+    src/ska/tests/*
+    example/example/settings/*
+    example/example/wsgi.py
