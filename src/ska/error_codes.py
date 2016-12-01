@@ -1,18 +1,23 @@
+from six import python_2_unicode_compatible
+
 from .gettext import _
 
 __title__ = 'ska.error_codes'
-__author__ = 'Artur Barseghyan'
-__copyright__ = 'Copyright (c) 2013-2014 Artur Barseghyan'
+__author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
+__copyright__ = '2013-2016 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
 __all__ = (
-    'ErrorCode', 'INVALID_SIGNATURE', 'SIGNATURE_TIMESTAMP_EXPIRED',
+    'ErrorCode',
+    'INVALID_SIGNATURE',
+    'SIGNATURE_TIMESTAMP_EXPIRED',
 )
 
 
-
+@python_2_unicode_compatible
 class ErrorCode(object):
-    """
-    Base error code. If you have ever used the following code with `validation_result`:
+    """Base error code.
+
+    If you have ever used the following code with `validation_result`:
 
     >>> human_readable_error = ' '.join(validation_result.reason)
 
@@ -21,7 +26,8 @@ class ErrorCode(object):
     >>> human_readable_error = validation_result.message
 
     :property int code: Just an integer code.
-    :property string message: Human readable represantation of the error message.
+    :property string message: Human readable represantation of the error
+        message.
     """
     __slots__ = ('code', 'message')
 
@@ -31,7 +37,6 @@ class ErrorCode(object):
 
     def __str__(self):
         return self.message
-    __unicode__ = __str__
     __repr__ = __str__
 
     def __int__(self):

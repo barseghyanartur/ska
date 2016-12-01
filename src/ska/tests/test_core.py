@@ -1,66 +1,33 @@
-from __future__ import print_function
-
 import unittest
 import datetime
 from copy import copy
 
 from six import PY3, text_type
 
-from . import (
-    Signature, RequestHelper, TIMESTAMP_FORMAT,
-    HMACMD5Signature, HMACSHA1Signature, HMACSHA224Signature,
-    HMACSHA256Signature, HMACSHA384Signature, HMACSHA512Signature,
+from .. import (
+    Signature,
+    RequestHelper,
+    HMACMD5Signature,
+    HMACSHA1Signature,
+    HMACSHA224Signature,
+    HMACSHA256Signature,
+    HMACSHA384Signature,
+    HMACSHA512Signature,
 )
-from . import sign_url, validate_signed_request_data, signature_to_dict
-from . import error_codes
+from .. import sign_url, validate_signed_request_data, signature_to_dict
+from .. import error_codes
+from .base import log_info, timestap_to_human_readable, parse_url_params
 
-try:
-    from six.moves.urllib.parse import urlparse, parse_qs
-except ImportError as e:
-    if PY3:
-        from urllib.parse import urlparse, parse_qs
-    else:
-        from urlparse import urlparse, parse_qs
-
-
-__title__ = 'ska.tests'
-__author__ = 'Artur Barseghyan'
+__title__ = 'ska.tests.test_core'
+__author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2016 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
-
-PRINT_INFO = True
-
-
-def print_info(func):
-    """Prints some useful info."""
-    if not PRINT_INFO:
-        return func
-
-    def inner(self, *args, **kwargs):
-        """Inner"""
-        result = func(self, *args, **kwargs)
-
-        print('\n\n%s' % func.__name__)
-        print('============================')
-        if func.__doc__:
-            print('""" %s """' % func.__doc__.strip())
-        print('----------------------------')
-        if result is not None:
-            print(result)
-        print('\n++++++++++++++++++++++++++++')
-
-        return result
-    return inner
-
-
-def timestap_to_human_readable(timestamp):
-    """Convert Unix timestamp to human readable string.
-
-    :param float:
-    :return str:
-    """
-    dt = datetime.datetime.fromtimestamp(float(timestamp))
-    return dt.strftime(TIMESTAMP_FORMAT)
+__all__ = (
+    'SignatureTest',
+    'URLHelperTest',
+    'ShortcutsTest',
+    'ExtraTest',
+)
 
 
 class SignatureTest(unittest.TestCase):
@@ -79,7 +46,7 @@ class SignatureTest(unittest.TestCase):
             HMACSHA512Signature,
         )
 
-    @print_info
+    @log_info
     def __test_01_signature_test(self, signature_cls=Signature):
         """Signature test."""
         flow = []
@@ -124,8 +91,8 @@ class SignatureTest(unittest.TestCase):
             flow += self.__test_01_signature_test(signature_cls=signature_cls)
         return flow
 
-    @print_info
-    def __test_02_signature_test_with_positive_timelapse(
+    @log_info
+    def __test_02_signature_test_with_positive_time_lapse(
             self, signature_cls=Signature):
         """Signature test with positive time-lapse.
 
@@ -137,19 +104,19 @@ class SignatureTest(unittest.TestCase):
 
         flow.append(('Signature class', signature_cls))
 
-        datetime_timelap = signature_cls.datetime_to_unix_timestamp(
+        datetime_time_lapse = signature_cls.datetime_to_unix_timestamp(
             datetime.datetime.now() + datetime.timedelta(seconds=300)
         )
 
-        flow.append(('Valid until used', datetime_timelap))
+        flow.append(('Valid until used', datetime_time_lapse))
         flow.append(('Valid until used (human readable)',
-                     timestap_to_human_readable(datetime_timelap)))
+                     timestap_to_human_readable(datetime_time_lapse)))
 
         # Generate signature
         sig = signature_cls.generate_signature(
             auth_user=self.auth_user,
             secret_key=self.secret_key,
-            valid_until=datetime_timelap
+            valid_until=datetime_time_lapse
         )
 
         flow.append(('Signature generated', sig.signature))
@@ -174,7 +141,7 @@ class SignatureTest(unittest.TestCase):
 
         return flow
 
-    def test_02_signature_test_with_positive_timelapse(self):
+    def test_02_signature_test_with_positive_time_lapse(self):
         """Signature test with positive time-lapse.
 
         When signature is made on a host that has a positive (greater) time
@@ -183,13 +150,13 @@ class SignatureTest(unittest.TestCase):
         """
         flow = []
         for signature_cls in self.signature_classes:
-            flow += self.__test_02_signature_test_with_positive_timelapse(
+            flow += self.__test_02_signature_test_with_positive_time_lapse(
                 signature_cls=signature_cls
             )
         return flow
 
-    @print_info
-    def __test_03_signature_test_with_negative_timelapse(
+    @log_info
+    def __test_03_signature_test_with_negative_time_lapse(
             self, signature_cls=Signature):
         """Fail test for signature test with negative time-lapse.
 
@@ -202,19 +169,19 @@ class SignatureTest(unittest.TestCase):
 
         flow.append(('Signature class', signature_cls))
 
-        datetime_timelap = signature_cls.datetime_to_unix_timestamp(
+        datetime_time_lapse = signature_cls.datetime_to_unix_timestamp(
             datetime.datetime.now() - datetime.timedelta(seconds=300)
         )
 
-        flow.append(('Valid until used', datetime_timelap))
+        flow.append(('Valid until used', datetime_time_lapse))
         flow.append(('Valid until used (human readable)',
-                     timestap_to_human_readable(datetime_timelap)))
+                     timestap_to_human_readable(datetime_time_lapse)))
 
         # Generate signature
         sig = signature_cls.generate_signature(
             auth_user=self.auth_user,
             secret_key=self.secret_key,
-            valid_until=datetime_timelap
+            valid_until=datetime_time_lapse
         )
 
         flow.append(('Signature generated', sig.signature))
@@ -239,7 +206,7 @@ class SignatureTest(unittest.TestCase):
 
         return flow
 
-    def test_03_signature_test_with_negative_timelapse(self):
+    def test_03_signature_test_with_negative_time_lapse(self):
         """Fail test. Signature test with negative time-lapse.
 
         When signature is made on
@@ -249,12 +216,12 @@ class SignatureTest(unittest.TestCase):
         """
         flow = []
         for signature_cls in self.signature_classes:
-            flow += self.__test_03_signature_test_with_negative_timelapse(
+            flow += self.__test_03_signature_test_with_negative_time_lapse(
                 signature_cls=signature_cls
             )
         return flow
 
-    @print_info
+    @log_info
     def __test_04_fail_signature_test(self, signature_cls=Signature):
         """Fail signature tests."""
         flow = []
@@ -291,7 +258,7 @@ class SignatureTest(unittest.TestCase):
             )
         return flow
 
-    @print_info
+    @log_info
     def __test_05_fail_signature_test_validation_result_class(
             self, signature_cls=Signature):
         """Fail signature tests for `ValidationResult` class."""
@@ -324,7 +291,8 @@ class SignatureTest(unittest.TestCase):
             error_codes.INVALID_SIGNATURE in validation_result.errors
         )
         self.assertTrue(
-            error_codes.SIGNATURE_TIMESTAMP_EXPIRED in validation_result.errors
+            error_codes.SIGNATURE_TIMESTAMP_EXPIRED
+            in validation_result.errors
         )
 
         return flow
@@ -333,23 +301,11 @@ class SignatureTest(unittest.TestCase):
         """Fail signature tests of the `ValidationResult` class."""
         flow = []
         for signature_cls in self.signature_classes:
-            flow += self.__test_05_fail_signature_test_validation_result_class(
-                signature_cls=signature_cls
-            )
+            flow += \
+                self.__test_05_fail_signature_test_validation_result_class(
+                    signature_cls=signature_cls
+                )
         return flow
-
-
-def parse_url_params(url):
-    """Parses URL params.
-
-    :param str url:
-    :return dict:
-    """
-    data = parse_qs(urlparse(url).query)
-    for k, v in data.items():
-        data[k] = v[0]
-
-    return data
 
 
 class URLHelperTest(unittest.TestCase):
@@ -368,7 +324,7 @@ class URLHelperTest(unittest.TestCase):
             HMACSHA512Signature,
         )
 
-    @print_info
+    @log_info
     def __test_01_signature_to_url(self, signature_cls=Signature):
         """Signature test."""
         flow = []
@@ -419,14 +375,14 @@ class URLHelperTest(unittest.TestCase):
             )
         return flow
 
-    @print_info
+    @log_info
     def __test_02_signature_to_url_fail(self, signature_cls=Signature):
         """Signature test. Fail test."""
         flow = []
 
         flow.append(('Signature class', signature_cls))
 
-        datetime_timelap = signature_cls.datetime_to_unix_timestamp(
+        datetime_time_lapse = signature_cls.datetime_to_unix_timestamp(
             datetime.datetime.now() - datetime.timedelta(seconds=300)
         )
 
@@ -434,7 +390,7 @@ class URLHelperTest(unittest.TestCase):
         signature = signature_cls.generate_signature(
             auth_user=self.auth_user,
             secret_key=self.secret_key,
-            valid_until=datetime_timelap
+            valid_until=datetime_time_lapse
         )
 
         request_helper = RequestHelper(
@@ -497,7 +453,7 @@ class ShortcutsTest(unittest.TestCase):
             HMACSHA512Signature,
         )
 
-    @print_info
+    @log_info
     def __test_sign_url_validate_signed_request_data(
             self, signature_cls=Signature):
         """Tests for `sign_url` & `validate_signed_request_data`."""
@@ -537,7 +493,7 @@ class ShortcutsTest(unittest.TestCase):
             )
         return flow
 
-    @print_info
+    @log_info
     def __test_sign_url_validate_signed_request_data_fail(
             self, signature_cls=Signature):
         """Fail tests for `sign_url` & `validate_signed_request_data`."""
@@ -545,19 +501,19 @@ class ShortcutsTest(unittest.TestCase):
 
         flow.append(('Signature class', signature_cls))
 
-        datetime_timelap = signature_cls.datetime_to_unix_timestamp(
+        datetime_time_lapse = signature_cls.datetime_to_unix_timestamp(
             datetime.datetime.now() - datetime.timedelta(seconds=300)
         )
 
-        flow.append(('Valid until used', datetime_timelap))
+        flow.append(('Valid until used', datetime_time_lapse))
         flow.append(('Valid until used (human readable)',
-                     timestap_to_human_readable(datetime_timelap)))
+                     timestap_to_human_readable(datetime_time_lapse)))
 
         signed_url = sign_url(
             auth_user=self.auth_user,
             secret_key=self.secret_key,
             url=self.endpoint_url,
-            valid_until=datetime_timelap
+            valid_until=datetime_time_lapse
         )
 
         flow.append(('URL generated', signed_url))
@@ -587,7 +543,7 @@ class ShortcutsTest(unittest.TestCase):
                 )
         return flow
 
-    @print_info
+    @log_info
     def __test_signature_to_dict_validate_signed_request_data(
             self, signature_cls=Signature):
         """
@@ -662,7 +618,7 @@ class ExtraTest(unittest.TestCase):
             signature_cls=signature_cls
         )
 
-    @print_info
+    @log_info
     def __test_sign_url_validate_signed_request_data(
             self, signature_cls=Signature):
         """Tests for `sign_url` & `validate_signed_request_data`."""
@@ -701,7 +657,7 @@ class ExtraTest(unittest.TestCase):
             )
         return flow
 
-    @print_info
+    @log_info
     def __t_sign_url_validate_sgnd_req_data_tamper_extra_keys_rm(
             self, signature_cls=Signature):
         """Fail tests for `sign_url` and `validate_signed_request_data`.
@@ -757,7 +713,7 @@ class ExtraTest(unittest.TestCase):
                 )
         return flow
 
-    @print_info
+    @log_info
     def __t_sgn_url_and_vldt_sgnd_req_data_tamper_extra_keys_add(
             self, signature_cls=Signature):
         """Fail tests for `sign_url` and `validate_signed_request_data`.
@@ -815,7 +771,7 @@ class ExtraTest(unittest.TestCase):
                 )
         return flow
 
-    @print_info
+    @log_info
     def __t_sgn_url_and_vldt_sgnd_req_data_tamper_extra_keys_add(
             self, signature_cls=Signature):
         """Tests for `sign_url` and `validate_signed_request_data`.

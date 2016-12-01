@@ -1,17 +1,23 @@
 from .defaults import (
-    SIGNATURE_LIFETIME, DEFAULT_URL_SUFFIX, DEFAULT_SIGNATURE_PARAM,
-    DEFAULT_AUTH_USER_PARAM, DEFAULT_VALID_UNTIL_PARAM, DEFAULT_EXTRA_PARAM
+    SIGNATURE_LIFETIME,
+    DEFAULT_URL_SUFFIX,
+    DEFAULT_SIGNATURE_PARAM,
+    DEFAULT_AUTH_USER_PARAM,
+    DEFAULT_VALID_UNTIL_PARAM,
+    DEFAULT_EXTRA_PARAM
 )
 from .signatures import Signature
 from .utils import RequestHelper
 
 
 __title__ = 'ska.shortcuts'
-__author__ = 'Artur Barseghyan'
+__author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2016 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
 __all__ = (
-    'extract_signed_request_data', 'sign_url', 'signature_to_dict',
+    'extract_signed_request_data',
+    'sign_url',
+    'signature_to_dict',
     'validate_signed_request_data',
 )
 
@@ -23,12 +29,18 @@ __all__ = (
 # **************************************************************************
 
 
-def sign_url(auth_user, secret_key, valid_until=None,
-             lifetime=SIGNATURE_LIFETIME, url='', suffix=DEFAULT_URL_SUFFIX,
+def sign_url(auth_user,
+             secret_key,
+             valid_until=None,
+             lifetime=SIGNATURE_LIFETIME,
+             url='',
+             suffix=DEFAULT_URL_SUFFIX,
              signature_param=DEFAULT_SIGNATURE_PARAM,
              auth_user_param=DEFAULT_AUTH_USER_PARAM,
-             valid_until_param=DEFAULT_VALID_UNTIL_PARAM, extra={},
-             extra_param=DEFAULT_EXTRA_PARAM, signature_cls=Signature):
+             valid_until_param=DEFAULT_VALID_UNTIL_PARAM,
+             extra=None,
+             extra_param=DEFAULT_EXTRA_PARAM,
+             signature_cls=Signature):
     """Sign the URL.
 
     :param str auth_user: Username of the user making the request.
@@ -63,7 +75,7 @@ def sign_url(auth_user, secret_key, valid_until=None,
     >>>     url='http://e.com/api/', signature_param=DEFAULT_SIGNATURE_PARAM,
     >>>     auth_user_param=DEFAULT_AUTH_USER_PARAM,
     >>>     valid_until_param=DEFAULT_VALID_UNTIL_PARAM,
-    >>>     extra = {
+    >>>     extra={
     >>>         'provider': 'service1.example.com',
     >>>         'email': 'john.doe@mail.example.com'
     >>>     },
@@ -74,6 +86,9 @@ def sign_url(auth_user, secret_key, valid_until=None,
     """
     if lifetime is None:
         lifetime = SIGNATURE_LIFETIME
+
+    if not extra:
+        extra = {}
 
     assert isinstance(lifetime, int)
 
@@ -102,11 +117,14 @@ def sign_url(auth_user, secret_key, valid_until=None,
     return signed_url
 
 
-def signature_to_dict(auth_user, secret_key, valid_until=None,
+def signature_to_dict(auth_user,
+                      secret_key,
+                      valid_until=None,
                       lifetime=SIGNATURE_LIFETIME,
                       signature_param=DEFAULT_SIGNATURE_PARAM,
                       auth_user_param=DEFAULT_AUTH_USER_PARAM,
-                      valid_until_param=DEFAULT_VALID_UNTIL_PARAM, extra={},
+                      valid_until_param=DEFAULT_VALID_UNTIL_PARAM,
+                      extra=None,
                       extra_param=DEFAULT_EXTRA_PARAM,
                       signature_cls=Signature):
     """Return a dictionary containing the signature data params.
@@ -149,6 +167,9 @@ def signature_to_dict(auth_user, secret_key, valid_until=None,
     """
     if lifetime is None:
         lifetime = SIGNATURE_LIFETIME
+
+    if not extra:
+        extra = {}
 
     assert isinstance(lifetime, int)
 

@@ -1,5 +1,11 @@
 from __future__ import absolute_import
 
+from django.conf import settings
+from django.utils.translation import ugettext_lazy as _
+
+from ....exceptions import ImproperlyConfigured
+from .conf import get_setting
+
 """
 - `UNAUTHORISED_REQUEST_ERROR_MESSAGE` (str): Plain text error message.
   Defaults to "Unauthorised request. {0}".
@@ -28,22 +34,22 @@ from __future__ import absolute_import
   respectively the values of ``ska.contrib.django.ska.settings``.
 """
 
-from django.conf import settings
-from django.utils.translation import ugettext_lazy as _
-
-from .exceptions import ImproperlyConfigured
-from .conf import get_setting
-
 __title__ = 'ska.contrib.django.ska.settings'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
-__copyright__ = 'Copyright (c) 2013 Artur Barseghyan'
+__copyright__ = '2013-2016 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
 __all__ = (
     'UNAUTHORISED_REQUEST_ERROR_MESSAGE',
-    'UNAUTHORISED_REQUEST_ERROR_TEMPLATE', 'AUTH_USER', 'SECRET_KEY',
-    'USER_GET_CALLBACK', 'USER_CREATE_CALLBACK', 'USER_INFO_CALLBACK',
-    'REDIRECT_AFTER_LOGIN', 'DB_STORE_SIGNATURES',
-    'DB_PERFORM_SIGNATURE_CHECK', 'PROVIDERS'
+    'UNAUTHORISED_REQUEST_ERROR_TEMPLATE',
+    'AUTH_USER',
+    'SECRET_KEY',
+    'USER_GET_CALLBACK',
+    'USER_CREATE_CALLBACK',
+    'USER_INFO_CALLBACK',
+    'REDIRECT_AFTER_LOGIN',
+    'DB_STORE_SIGNATURES',
+    'DB_PERFORM_SIGNATURE_CHECK',
+    'PROVIDERS'
 )
 
 UNAUTHORISED_REQUEST_ERROR_MESSAGE = get_setting(
@@ -81,5 +87,6 @@ def validate_providers():
                 _("You should defined a key ``SECRET_KEY`` for each provider "
                   "in your `settings module`!")
             )
+
 
 validate_providers()

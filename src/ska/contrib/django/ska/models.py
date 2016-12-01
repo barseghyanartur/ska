@@ -1,7 +1,11 @@
+from __future__ import absolute_import
+
 import logging
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+
+from six import python_2_unicode_compatible
 
 logger = logging.getLogger(__name__)
 
@@ -12,6 +16,7 @@ __license__ = 'GPL 2.0/LGPL 2.1'
 __all__ = ('Signature',)
 
 
+@python_2_unicode_compatible
 class Signature(models.Model):
     """Signature.
 
@@ -33,6 +38,6 @@ class Signature(models.Model):
         verbose_name_plural = _("Tokens")
         unique_together = (('signature', 'auth_user', 'valid_until'),)
 
-    def __unicode__(self):
+    def __str__(self):
         return "{0}{1}{2}".format(self.signature, self.auth_user,
                                   self.valid_until)

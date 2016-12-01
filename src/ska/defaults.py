@@ -22,14 +22,20 @@ Application defaults.
 """
 
 __title__ = 'ska.defaults'
-__author__ = 'Artur Barseghyan'
+__author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2016 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
 __all__ = (
-    'TIMESTAMP_FORMAT', 'SIGNATURE_LIFETIME', 'DEFAULT_SIGNATURE_PARAM',
-    'DEFAULT_AUTH_USER_PARAM', 'DEFAULT_VALID_UNTIL_PARAM',
-    'DEFAULT_TIME_ZONE_PARAM', 'DEFAULT_EXTRA_PARAM',
-    'DEFAULT_PROVIDER_PARAM', 'DEFAULT_URL_SUFFIX', 'DEFAULT_RESERVED_PARAMS',
+    'TIMESTAMP_FORMAT',
+    'SIGNATURE_LIFETIME',
+    'DEFAULT_SIGNATURE_PARAM',
+    'DEFAULT_AUTH_USER_PARAM',
+    'DEFAULT_VALID_UNTIL_PARAM',
+    'DEFAULT_TIME_ZONE_PARAM',
+    'DEFAULT_EXTRA_PARAM',
+    'DEFAULT_PROVIDER_PARAM',
+    'DEFAULT_URL_SUFFIX',
+    'DEFAULT_RESERVED_PARAMS',
     'DEBUG'
 )
 

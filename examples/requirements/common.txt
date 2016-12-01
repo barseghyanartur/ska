@@ -1,0 +1,16 @@
+#beautifulsoup4
+Jinja2
+MarkupSafe
+Sphinx
+docutils
+ipdb
+ipython
+selenium
+#simple-timer>=0.2
+
+# Style checkers
+pydocstyle
+pylint
+flake8
+isort
+pre-commit

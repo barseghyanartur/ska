@@ -1,30 +1,38 @@
+from __future__ import absolute_import
+
 import logging
 
-from ska import Signature, extract_signed_request_data
-from ska.helpers import get_callback_func
-from ska.defaults import (
-    DEFAULT_SIGNATURE_PARAM, DEFAULT_AUTH_USER_PARAM, DEFAULT_VALID_UNTIL_PARAM,
-    DEFAULT_EXTRA_PARAM
-    )
-from ska.exceptions import ImproperlyConfigured, InvalidData
-from ska.contrib.django.ska.utils import get_provider_data
-
-from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import User
 from django.db import IntegrityError
 
 from nine import versions
 
-from ska.contrib.django.ska.settings import (
-    SECRET_KEY, USER_GET_CALLBACK, USER_CREATE_CALLBACK, USER_INFO_CALLBACK,
-    DB_STORE_SIGNATURES, DB_PERFORM_SIGNATURE_CHECK
-    )
-from ska.contrib.django.ska.models import Signature as SignatureModel
+from .... import Signature, extract_signed_request_data
+from ....helpers import get_callback_func
+from ....defaults import (
+    DEFAULT_SIGNATURE_PARAM,
+    DEFAULT_AUTH_USER_PARAM,
+    DEFAULT_VALID_UNTIL_PARAM,
+    DEFAULT_EXTRA_PARAM
+)
+from ....exceptions import ImproperlyConfigured, InvalidData
+
+from .models import Signature as SignatureModel
+from .settings import (
+    SECRET_KEY,
+    USER_GET_CALLBACK,
+    USER_CREATE_CALLBACK,
+    USER_INFO_CALLBACK,
+    DB_STORE_SIGNATURES,
+    DB_PERFORM_SIGNATURE_CHECK
+)
+from .utils import get_provider_data
 
 logger = logging.getLogger(__file__)
 
 __title__ = 'ska.contrib.django.ska.backends'
-__author__ = 'Artur Barseghyan'
+__author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2016 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
 __all__ = ('SkaAuthenticationBackend',)
@@ -61,7 +69,7 @@ class SkaAuthenticationBackend(object):
                 extra_param=DEFAULT_EXTRA_PARAM,
                 validate=True,
                 fail_silently=False
-                )
+            )
         except (ImproperlyConfigured, InvalidData) as e:
             logger.debug(str(e))
             return None
@@ -107,14 +115,14 @@ class SkaAuthenticationBackend(object):
                     except Exception as err:
                         logger.debug(str(err))
 
-        except User.DoesNotExist as err:
+        except User.DoesNotExist:
             user = User._default_manager.create_user(
                 username=auth_user,
                 email=email,
                 password=make_password(password=None),
                 first_name=first_name,
                 last_name=last_name
-                )
+            )
             user.save()
 
             # User create callback
@@ -140,8 +148,8 @@ class SkaAuthenticationBackend(object):
                     callback_func(user,
                                   request=request,
                                   signed_request_data=signed_request_data)
-                except Exception as e:
-                    logger.debug(str(e))
+                except Exception as err:
+                    logger.debug(str(err))
 
         return user
 
@@ -153,5 +161,5 @@ class SkaAuthenticationBackend(object):
         """
         try:
             return User._default_manager.get(pk=user_id)
-        except User.DoesNotExist as err:
+        except User.DoesNotExist:
             return None

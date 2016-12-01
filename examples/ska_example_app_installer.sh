@@ -4,8 +4,8 @@ virtualenv ska
 source ska/bin/activate
 mkdir ska_example_app_installer/
 tar -xvf ska_example_app_installer.tar.gz -C ska_example_app_installer
-cd ska_example_app_installer/ska-stable/example/example/
-#cd ska_example_app_installer/ska-master/example/example/
+cd ska_example_app_installer/ska-stable/examples/simple/
+#cd ska_example_app_installer/ska-master/examples/simple/
 pip install Django==1.5.5
 pip install -r ../../src/ska/contrib/django/ska/requirements.txt
 pip install -e git+https://github.com/barseghyanartur/ska@stable#egg=ska

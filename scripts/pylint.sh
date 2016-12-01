@@ -1,1 +1,2 @@
-pylint src/fobi/
+reset
+pylint src/ska/

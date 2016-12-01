@@ -1,12 +1,17 @@
 from __future__ import print_function
 
 import os
+import logging
 import random
 import unittest
+
+import pytest
 
 import radar
 
 from six import PY3
+
+from ska.gettext import _
 
 try:
     from six.moves import range as xrange
@@ -19,46 +24,47 @@ if not PY3:
 else:
     from string import punctuation
 
-from ska.gettext import _
-
-__title__ = 'ska.contrib.django.ska.tests'
-__author__ = 'Artur Barseghyan'
+__title__ = 'ska.contrib.django.ska.tests.test_django_ska'
+__author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2016 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
+
+logger = logging.getLogger(__name__)
 
 
 def project_dir(base):
     """Project dir."""
-    return os.path.join(os.path.dirname(__file__), base).replace('\\','/')
+    return os.path.join(os.path.dirname(__file__), base).replace('\\', '/')
 
 
 PROJECT_DIR = project_dir
 
 SKA_TEST_USER_USERNAME = 'test_admin'
 SKA_TEST_USER_PASSWORD = 'test'
-PRINT_INFO = True
+LOG_INFO = True
 
 
-def print_info(func):
+def log_info(func):
     """Prints some useful info."""
-    if not PRINT_INFO:
+    if not LOG_INFO:
         return func
 
     def inner(self, *args, **kwargs):
         """Inner."""
         result = func(self, *args, **kwargs)
 
-        print('\n\n%s' % func.__name__)
-        print('============================')
+        logger.debug('\n\n%s' % func.__name__)
+        logger.debug('============================')
         if func.__doc__:
-            print('""" %s """' % func.__doc__.strip())
-        print('----------------------------')
+            logger.debug('""" %s """' % func.__doc__.strip())
+        logger.debug('----------------------------')
         if result is not None:
-            print(result)
-        print('\n++++++++++++++++++++++++++++')
+            logger.debug(result)
+        logger.debug('\n++++++++++++++++++++++++++++')
 
         return result
     return inner
+
 
 # *********************************************************************
 # *********************************************************************
@@ -115,31 +121,31 @@ FACTORY = """
 """
 
 if not PY3:
-    def split_words(f):
+    def split_words(val):
         """Split words."""
         return list(
             set(
                 translate(
-                    f.lower(),
+                    val.lower(),
                     maketrans(punctuation, ' ' * len(punctuation))
                 ).split()
             )
         )
 else:
-    def split_words(f):
+    def split_words(val):
         """Split words."""
         return list(
             set(
-                f.lower().translate(
+                val.lower().translate(
                     str.maketrans("", "", punctuation)
                 ).split()
             )
         )
 
 
-def split_sentences(f):
+def split_sentences(val):
     """Split sentences."""
-    return f.split('?')
+    return val.split('?')
 
 
 def change_date():
@@ -150,7 +156,6 @@ def change_date():
 WORDS = split_words(FACTORY)
 SENTENCES = split_sentences(FACTORY)
 NUM_ITEMS = 5
-
 
 
 # *********************************************************************
@@ -167,8 +172,11 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
     from ska import sign_url
     from ska.defaults import DEFAULT_PROVIDER_PARAM
     from ska.contrib.django.ska.settings import (
-        SECRET_KEY, DB_STORE_SIGNATURES, DB_PERFORM_SIGNATURE_CHECK, PROVIDERS
-        )
+        SECRET_KEY,
+        DB_STORE_SIGNATURES,
+        DB_PERFORM_SIGNATURE_CHECK,
+        PROVIDERS
+    )
 
     from foo.models import FooItem
 
@@ -176,12 +184,13 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
 # *********************************************************************
 # *********************************************************************
 
+    @pytest.mark.django_db
     def create_admin_user():
         """
         Create a user for testing the dashboard.
 
-        TODO: At the moment an admin account is being tested. Automated tests with diverse accounts are
-        to be implemented.
+        TODO: At the moment an admin account is being tested. Automated tests
+        with diverse accounts are to be implemented.
         """
         u = User()
         u.username = SKA_TEST_USER_USERNAME
@@ -192,9 +201,10 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
 
         try:
             u.save()
-        except Exception as e:
+        except Exception:
             pass
 
+    @pytest.mark.django_db
     def generate_data(num_items=NUM_ITEMS):
         words = WORDS[:]
 
@@ -207,13 +217,17 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
 
             if not PY3:
                 i.title = unicode(random_name).capitalize()
-                i.body = unicode(SENTENCES[random.randint(0, len(SENTENCES) - 1)])
+                i.body = unicode(
+                    SENTENCES[random.randint(0, len(SENTENCES) - 1)]
+                )
             else:
                 i.title = str(random_name).capitalize()
                 i.body = str(SENTENCES[random.randint(0, len(SENTENCES) - 1)])
 
             i.slug = slugify(i.title)
-            random_date = radar.random_datetime() if change_date() else random_date
+            random_date = radar.random_datetime() \
+                if change_date() \
+                else random_date
             i.date_published = random_date
 
             try:
@@ -230,30 +244,34 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
     # *********************************************************************
     # *********************************************************************
 
+    @pytest.mark.django_db
     class SkaDecoratorsTest(unittest.TestCase):
         """
         Testing model- and view- decorators.
         """
+
+        pytestmark = pytest.mark.django_db
+
         def setUp(self):
             generate_data()
 
             # Testing the URLs
             self.item = FooItem._default_manager.all()[0]
 
-        @print_info
+        @log_info
         def test_01_model_decorator(self):
-            """
-            Test the ``ska.contrib.django.ska.decorators.sign_url`` model decorator.
+            """Test the ``ska.contrib.django.ska.decorators.sign_url``.
             """
             # Testing signed URLs
             signed_absolute_url = self.item.get_signed_absolute_url()
             self.assertTrue(signed_absolute_url is not None)
             return signed_absolute_url
 
-        @print_info
+        @log_info
         def test_02_view_decorator_with_signed_url(self):
-            """
-            Test the ``ska.contrib.django.ska.decorators.validate_signed_request`` view decorator with signed URL.
+            """Test view decorator with signed URL.
+
+            Test ``ska.contrib.django.ska.decorators.validate_signed_request``.
             """
             flow = []
 
@@ -266,14 +284,20 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
             c = Client()
             response = c.get(signed_absolute_url, {})
             self.assertTrue(response.status_code in (200, 201, 202))
-            flow.append(('Response status code for signed URL', response.status_code))
+            flow.append(
+                ('Response status code for signed URL', response.status_code)
+            )
 
             return flow
 
-        @print_info
+        @log_info
         def test_03_view_decorator_with_unsigned_url(self):
             """
-            Test the ``ska.contrib.django.ska.decorators.validate_signed_request`` view decorator with unsigned URL.
+            Test view decorator with unsigned URL.
+
+            Test the
+            ``ska.contrib.django.ska.decorators.validate_signed_request`` view
+            decorator with unsigned URL.
             """
             flow = []
 
@@ -286,23 +310,26 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
             c = Client()
             response = c.get(absolute_url, {})
             self.assertTrue(response.status_code in (401,))
-            flow.append(('Response status code for unsigned URL', response.status_code))
-            flow.append(('Response content for unsigned URL', response.content))
+            flow.append(
+                ('Response status code for unsigned URL', response.status_code)
+            )
+            flow.append(
+                ('Response content for unsigned URL', response.content)
+            )
 
             return flow
 
-        @print_info
-        def test_04_extra(self):
-            """
-            Testing extra dict.
-            """
-            #TODO
+        # @log_info
+        # def test_04_extra(self):
+        #     """Testing extra dict."""
+        #     # TODO
 
-
+    @pytest.mark.django_db
     class SkaAuthenticationBackendTest(unittest.TestCase):
-        """
-        Tests for authentication backends.
-        """
+        """Tests for authentication backends."""
+
+        pytestmark = pytest.mark.django_db
+
         def setUp(self):
             self.AUTH_USER = 'test_auth_backend_user'
             self.AUTH_USER_EMAIL = 'test_ska_auth_user@mail.example.com'
@@ -326,11 +353,11 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
                 extra.update({DEFAULT_PROVIDER_PARAM: provider_name})
 
             signed_login_url = sign_url(
-                auth_user = self.AUTH_USER,
-                secret_key = secret_key,
-                url = self.LOGIN_URL,
-                extra = extra
-                )
+                auth_user=self.AUTH_USER,
+                secret_key=secret_key,
+                url=self.LOGIN_URL,
+                extra=extra
+            )
 
             self.assertTrue(signed_login_url is not None)
             flow.append(('Signed login URL', signed_login_url))
@@ -339,33 +366,46 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
             c = Client()
             response = c.get(signed_login_url, {})
             self.assertTrue(response.status_code in (first_response_code,))
-            flow.append(('Response status code for signed URL', response.status_code))
+            flow.append(
+                ('Response status code for signed URL', response.status_code)
+            )
 
             if DB_STORE_SIGNATURES and DB_PERFORM_SIGNATURE_CHECK:
                 # Testing again with signed URL and this time, it should fail
                 c = Client()
                 response = c.get(signed_login_url, {})
-                self.assertTrue(response.status_code in (second_response_code,))
-                flow.append(('Response status code for signed URL', response.status_code))
+                self.assertTrue(
+                    response.status_code in (second_response_code,)
+                )
+                flow.append(
+                    (
+                        'Response status '
+                        'code for signed URL', response.status_code
+                    )
+                )
 
             return flow
 
-        @print_info
+        @log_info
         def test_01_login(self):
             """
             Test authentication using general ``SECRET_KEY``.
             """
             return self.__test_login(SECRET_KEY, [302, 403])
 
-        @print_info
+        @log_info
         def test_02_provider_login(self):
             """
             Test authentication using ``SECRET_KEY`` defined in ``PROVIDERS``.
             """
             secret_key = PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
-            return self.__test_login(secret_key, [302, 403], self.PROVIDER_NAME)
+            return self.__test_login(
+                secret_key,
+                [302, 403],
+                self.PROVIDER_NAME
+            )
 
-        @print_info
+        @log_info
         def test_03_login_fail_wrong_secret_key(self):
             """
             Fail test authentication using general ``SECRET_KEY``, providing
@@ -373,23 +413,29 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
             """
             return self.__test_login(SECRET_KEY + 'wrong', [403, 403])
 
-        @print_info
+        @log_info
         def test_04_provider_login_fail_wrong_secret_key(self):
-            """
-            Fail test authentication using ``SECRET_KEY`` defined in ``PROVIDERS``, providing
-            wrong secret key.
-            """
-            secret_key = PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
-            return self.__test_login(secret_key + 'wrong', [403, 403], self.PROVIDER_NAME)
+            """Fail test authentication.
 
-        @print_info
-        def test_05_provider_login_fail_wrong_provider(self):
-            """
-            Fail test authentication using ``SECRET_KEY`` defined in ``PROVIDERS``, providing
-            wrong provider name.
+            Fail test authentication using ``SECRET_KEY`` defined in `
+            `PROVIDERS``, providing wrong secret key.
             """
             secret_key = PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
-            return self.__test_login(secret_key + 'wrong', [403, 403], self.PROVIDER_NAME + 'wrong')
+            return self.__test_login(
+                secret_key + 'wrong', [403, 403], self.PROVIDER_NAME
+            )
+
+        @log_info
+        def test_05_provider_login_fail_wrong_provider(self):
+            """Test provider login fail wrong provider.
+
+            Fail test authentication using ``SECRET_KEY`` defined in
+            ``PROVIDERS``, providing wrong provider name.
+            """
+            secret_key = PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
+            return self.__test_login(
+                secret_key + 'wrong', [403, 403], self.PROVIDER_NAME + 'wrong'
+            )
 
 
 if __name__ == "__main__":

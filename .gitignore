@@ -4,11 +4,14 @@
 .travis.yml~
 .hg/
 .tox/
+/.coverage
+/.cache
 
-example/static
-example/db/example.db
-example/tmp
-example/logs
+examples/simple/settings/local_settings.py
+examples/static
+examples/db/example.db
+examples/tmp
+examples/logs
 builddocs/
 builddocs.zip
 build/

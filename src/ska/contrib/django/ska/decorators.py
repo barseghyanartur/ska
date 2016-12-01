@@ -1,5 +1,28 @@
 from __future__ import absolute_import
 
+from django.utils.translation import ugettext_lazy as _
+from django.shortcuts import render
+
+from nine import versions
+
+from six import PY3, text_type
+
+from .... import validate_signed_request_data, sign_url as ska_sign_url
+from ....defaults import (
+    SIGNATURE_LIFETIME,
+    DEFAULT_URL_SUFFIX,
+    DEFAULT_SIGNATURE_PARAM,
+    DEFAULT_AUTH_USER_PARAM,
+    DEFAULT_VALID_UNTIL_PARAM,
+    DEFAULT_EXTRA_PARAM
+)
+
+from .http import HttpResponseUnauthorized
+from .settings import (
+    SECRET_KEY, AUTH_USER, UNAUTHORISED_REQUEST_ERROR_MESSAGE,
+    UNAUTHORISED_REQUEST_ERROR_TEMPLATE
+)
+
 """
 - ``validate_signed_request``: Function decorator. Validate request signature.
   Applies appropriate validation mechanism to the request data. Assumes
@@ -35,29 +58,18 @@ from __future__ import absolute_import
       the ``valid_until`` value.
 """
 
-from django.utils.translation import ugettext_lazy as _
-from django.shortcuts import render
-
-from nine import versions
-
-from six import PY3, text_type
-
-from ska import validate_signed_request_data, sign_url as ska_sign_url
-from ska.defaults import (
-    SIGNATURE_LIFETIME, DEFAULT_URL_SUFFIX, DEFAULT_SIGNATURE_PARAM,
-    DEFAULT_AUTH_USER_PARAM, DEFAULT_VALID_UNTIL_PARAM, DEFAULT_EXTRA_PARAM
-)
-from .settings import (
-    SECRET_KEY, AUTH_USER, UNAUTHORISED_REQUEST_ERROR_MESSAGE,
-    UNAUTHORISED_REQUEST_ERROR_TEMPLATE
-)
-from .http import HttpResponseUnauthorized
-
 __title__ = 'ska.contrib.django.ska.decorators'
-__author__ = 'Artur Barseghyan'
+__author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2016 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
-__all__ = ('validate_signed_request', 'sign_url')
+__all__ = (
+    'validate_signed_request',
+    'sign_url',
+    'BaseValidateSignedRequest',
+    'ValidateSignedRequest',
+    'MethodValidateSignedRequest',
+    'SignAbsoluteURL',
+)
 
 
 class BaseValidateSignedRequest(object):
@@ -99,7 +111,7 @@ class ValidateSignedRequest(BaseValidateSignedRequest):
     :example:
 
     >>> from ska.contrib.django.ska.decorators import validate_signed_request
-    >>> 
+    >>>
     >>> @validate_signed_request()
     >>> def detail(request, slug, template_name='foo/detail.html'):
     >>>     # Your code
@@ -148,6 +160,7 @@ class ValidateSignedRequest(BaseValidateSignedRequest):
                     )
         return inner
 
+
 validate_signed_request = ValidateSignedRequest
 
 
@@ -174,7 +187,7 @@ class MethodValidateSignedRequest(BaseValidateSignedRequest):
     :example:
 
     >>> from ska.contrib.django.ska.decorators import m_validate_signed_request
-    >>> 
+    >>>
     >>> class FooDetailView(View):
     >>>     @validate_signed_request()
     >>>     def get(self, request, slug, template_name='foo/detail.html'):
@@ -224,6 +237,7 @@ class MethodValidateSignedRequest(BaseValidateSignedRequest):
                     )
         return inner
 
+
 m_validate_signed_request = MethodValidateSignedRequest
 
 
@@ -254,7 +268,7 @@ class SignAbsoluteURL(object):
     :example:
 
     >>> from ska.contrib.django.ska.decorators import sign_url
-    >>> 
+    >>>
     >>> class FooItem(models.Model):
     >>>     title = models.CharField(_("Title"), max_length=100)
     >>>     slug = models.SlugField(unique=True, verbose_name=_("Slug"))
@@ -307,5 +321,6 @@ class SignAbsoluteURL(object):
                 extra_param=self.extra_param
             )
         return inner
+
 
 sign_url = SignAbsoluteURL

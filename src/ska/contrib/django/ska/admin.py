@@ -1,7 +1,9 @@
+from __future__ import absolute_import
+
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 
-from ska.contrib.django.ska.models import Signature
+from .models import Signature
 
 __title__ = 'ska.contrib.django.ska.admin'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
@@ -28,6 +30,7 @@ class SignatureAdmin(admin.ModelAdmin):
 
     class Meta:
         """Meta class."""
+
         app_label = _('Signature')
 
 

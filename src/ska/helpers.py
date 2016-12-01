@@ -2,19 +2,22 @@ from six import PY3
 
 try:
     from six.moves.urllib.parse import quote
-except ImportError as e:
+except ImportError:
     if PY3:
         from urllib.parse import quote
     else:
         from urllib import quote
 
 __title__ = 'ska.helpers'
-__author__ = 'Artur Barseghyan'
+__author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2016 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
 __all__ = (
-    'get_callback_func', 'dict_keys', 'dict_to_ordered_list',
-    'sorted_urlencode', 'extract_signed_data'
+    'get_callback_func',
+    'dict_keys',
+    'dict_to_ordered_list',
+    'sorted_urlencode',
+    'extract_signed_data'
 )
 
 
@@ -32,11 +35,12 @@ def get_callback_func(function):
     elif isinstance(function, str):
         path = function.split('.')
         try:
+            func = None
             exec('from %s import %s as %s' % (
                 '.'.join(path[0:-1]), path[-1], 'func'))
             if callable(func):
                 return func
-        except:
+        except Exception:
             return None
 
 
@@ -62,7 +66,7 @@ def dict_to_ordered_list(data):
     """Get extra as ordered list.
 
     Actually, I'm not sure whether I should or should not be using
-    ``ordereddict`` here.
+    ``OrderedDict`` here.
 
     :param dict data:
     :return list:
@@ -76,8 +80,8 @@ def sorted_urlencode(data, quoted=True):
     """Similar to built-in ``urlencode``, but always puts data in a sorted
     constant way that stays the same between various python versions.
     """
-    l = ["{0}={1}".format(k, v) for k, v in dict_to_ordered_list(data)]
-    res = '&'.join(l)
+    _sorted = ["{0}={1}".format(k, v) for k, v in dict_to_ordered_list(data)]
+    res = '&'.join(_sorted)
     if quoted:
         res = quote(res)
     return res

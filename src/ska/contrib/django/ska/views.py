@@ -1,16 +1,15 @@
+from django.contrib import messages
+from django.contrib.auth import authenticate, login as auth_login
 from django.http import HttpResponseForbidden, HttpResponseRedirect
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth import authenticate
-from django.contrib.auth import login as auth_login
-from django.contrib import messages
 
 from nine import versions
 
-from ska.contrib.django.ska.settings import REDIRECT_AFTER_LOGIN
-from ska.contrib.django.ska.utils import get_provider_data
+from .settings import REDIRECT_AFTER_LOGIN
+from .utils import get_provider_data
 
 __title__ = 'ska.contrib.django.ska.views'
-__author__ = 'Artur Barseghyan'
+__author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2016 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
 __all__ = ('login',)
@@ -43,7 +42,9 @@ def login(request):
     if user is not None:
         auth_login(request, user)
         name = user.first_name or user.username
-        messages.info(request, _("Login succeeded. Welcome, {0}.").format(name))
+        messages.info(
+            request, _("Login succeeded. Welcome, {0}.").format(name)
+        )
         return HttpResponseRedirect(next_url)
     else:
         return HttpResponseForbidden(_("Authentication error!"))

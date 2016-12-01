@@ -1,11 +1,11 @@
 # Django settings for example project.
 import os
-PROJECT_DIR = lambda base : os.path.abspath(os.path.join(os.path.dirname(__file__), base).replace('\\','/'))
-ugettext = lambda s: s
+from .core import PROJECT_DIR, gettext
 
 DEBUG = False
 DEBUG_TOOLBAR = False
 TEMPLATE_DEBUG = DEBUG
+DEV = False
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
@@ -15,13 +15,18 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': PROJECT_DIR(os.path.join('..', 'db', 'example.db')), # Or path to database file if using sqlite3.
+        # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'ENGINE': 'django.db.backends.sqlite3',
+        # Or path to database file if using sqlite3.
+        'NAME': PROJECT_DIR(os.path.join('..', '..', 'db', 'example.db')),
         # The following settings are not used with sqlite3:
         'USER': '',
         'PASSWORD': '',
-        'HOST': '', # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '', # Set to empty string for default.
+        # Empty for localhost through domain sockets or '127.0.0.1' for
+        # localhost through TCP.
+        'HOST': '',
+        # Set to empty string for default.
+        'PORT': '',
     }
 }
 
@@ -37,7 +42,7 @@ TIME_ZONE = 'America/Chicago'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en'
 
 SITE_ID = 1
 
@@ -133,7 +138,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    PROJECT_DIR('templates')
+    PROJECT_DIR('templates'),
 )
 
 INSTALLED_APPS = (
@@ -149,7 +154,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
 
     'ska.contrib.django.ska',
-    'foo', # Our example app
+    'foo',  # Our example app
 )
 
 # Global secret key
@@ -213,7 +218,7 @@ LOGGING = {
         'django_log': {
             'level':'DEBUG',
             'class':'logging.handlers.RotatingFileHandler',
-            'filename': PROJECT_DIR("../logs/django.log"),
+            'filename': PROJECT_DIR("../../logs/django.log"),
             'maxBytes': 1048576,
             'backupCount': 99,
             'formatter': 'verbose',
@@ -221,7 +226,7 @@ LOGGING = {
         'ska_log': {
             'level':'DEBUG',
             'class':'logging.handlers.RotatingFileHandler',
-            'filename': PROJECT_DIR("../logs/ska.log"),
+            'filename': PROJECT_DIR("../../logs/ska.log"),
             'maxBytes': 1048576,
             'backupCount': 99,
             'formatter': 'verbose',
@@ -252,7 +257,7 @@ if DEBUG and DEBUG_TOOLBAR:
     # debug_toolbar
     MIDDLEWARE_CLASSES += (
         'debug_toolbar.middleware.DebugToolbarMiddleware',
-	)
+    )
 
     INSTALLED_APPS += (
         'debug_toolbar',
@@ -261,3 +266,4 @@ if DEBUG and DEBUG_TOOLBAR:
     DEBUG_TOOLBAR_CONFIG = {
         'INTERCEPT_REDIRECTS': False,
     }
+

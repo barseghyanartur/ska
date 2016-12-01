@@ -2,15 +2,18 @@ from six import PY3
 
 try:
     from six.moves.urllib.parse import urlencode
-except ImportError as e:
+except ImportError:
     if PY3:
         from urllib.parse import urlencode
     else:
         from urllib import urlencode
 
 from .defaults import (
-    DEFAULT_URL_SUFFIX, DEFAULT_EXTRA_PARAM, DEFAULT_SIGNATURE_PARAM,
-    DEFAULT_AUTH_USER_PARAM, DEFAULT_VALID_UNTIL_PARAM,
+    DEFAULT_URL_SUFFIX,
+    DEFAULT_EXTRA_PARAM,
+    DEFAULT_SIGNATURE_PARAM,
+    DEFAULT_AUTH_USER_PARAM,
+    DEFAULT_VALID_UNTIL_PARAM,
 )
 from .exceptions import InvalidData, ImproperlyConfigured
 from .helpers import (
@@ -19,10 +22,10 @@ from .helpers import (
 from .signatures import Signature
 
 __title__ = 'ska.utils'
-__author__ = 'Artur Barseghyan'
-__copyright__ = 'Copyright (c) 2013-2014 Artur Barseghyan'
+__author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
+__copyright__ = '2013-2016 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
-__all__ = ('',)
+__all__ = ('RequestHelper',)
 
 # ***************************************************************************
 # ***************************************************************************
@@ -39,7 +42,8 @@ class RequestHelper(object):
     :param str valid_until_param:
     :param str extra_param:
     """
-    def __init__(self, signature_param=DEFAULT_SIGNATURE_PARAM,
+    def __init__(self,
+                 signature_param=DEFAULT_SIGNATURE_PARAM,
                  auth_user_param=DEFAULT_AUTH_USER_PARAM,
                  valid_until_param=DEFAULT_VALID_UNTIL_PARAM,
                  extra_param=DEFAULT_EXTRA_PARAM,
@@ -144,16 +148,16 @@ class RequestHelper(object):
             'valid_until': '1378045287.0'
         }
         """
-        d = {
+        data = {
             self.signature_param: signature.signature,
             self.auth_user_param: signature.auth_user,
             self.valid_until_param: signature.valid_until,
             self.extra_param: dict_keys(signature.extra, return_string=True),
         }
 
-        d.update(signature.extra)
+        data.update(signature.extra)
 
-        return d
+        return data
 
     def validate_request_data(self, data, secret_key):
         """Validate the request data.

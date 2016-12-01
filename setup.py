@@ -40,7 +40,7 @@ setup(
     author='Artur Barseghyan',
     author_email='artur.barseghyan@gmail.com',
     url='https://github.com/barseghyanartur/ska',
-    package_dir={'':'src'},
+    package_dir={'': 'src'},
     packages=find_packages(where='./src'),
     include_package_data=True,
     package_data={
@@ -48,7 +48,7 @@ setup(
     },
     scripts=['src/ska/bin/ska-sign-url',],
     install_requires=[
-        'six>=1.1.0',
-        'django-nine>=1.9',
+        'six>=1.9',
+        'django-nine>=0.1.10',
     ]
 )
