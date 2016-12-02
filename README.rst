@@ -242,7 +242,7 @@ Adding of additional data to the signature works in the same way:
     }
 
 If you for some reason prefer a lower level implementation, read the same
-section in the `Advanced usage`_ chapter.
+section in the `Advanced usage (low-level)`_ chapter.
 
 Recipient side
 ~~~~~~~~~~~~~~
@@ -301,7 +301,7 @@ With all customisations, it would look as follows. Note, that
     )
 
 If you for some reason prefer a lower level implementation, read the same
-section in the `Advanced usage` chapter.
+section in the `Advanced usage (low-level)`_ chapter.
 
 Command line usage
 ------------------
