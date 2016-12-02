@@ -48,7 +48,7 @@ class SkaAuthenticationBackend(object):
         :return django.contrib.auth.models.User: Instance or None on failure.
         """
         if versions.DJANGO_GTE_1_7:
-            request_data = request.GET
+            request_data = request.GET.dict()
         else:
             request_data = request.REQUEST
 
@@ -70,8 +70,8 @@ class SkaAuthenticationBackend(object):
                 validate=True,
                 fail_silently=False
             )
-        except (ImproperlyConfigured, InvalidData) as e:
-            logger.debug(str(e))
+        except (ImproperlyConfigured, InvalidData) as err:
+            logger.debug(str(err))
             return None
 
         # Get the username from request.
@@ -93,7 +93,7 @@ class SkaAuthenticationBackend(object):
             )
             try:
                 token.save()
-            except IntegrityError as err:
+            except IntegrityError:
                 if DB_PERFORM_SIGNATURE_CHECK:
                     # Token has already been used. Do not authenticate.
                     return None

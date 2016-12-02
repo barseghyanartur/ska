@@ -1,4 +1,4 @@
-from __future__ import print_function
+from __future__ import absolute_import, print_function
 
 import os
 import logging
@@ -192,15 +192,15 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
         TODO: At the moment an admin account is being tested. Automated tests
         with diverse accounts are to be implemented.
         """
-        u = User()
-        u.username = SKA_TEST_USER_USERNAME
-        u.email = 'admin@dev.django-ska.com'
-        u.is_superuser = True
-        u.is_staff = True
-        u.set_password(SKA_TEST_USER_PASSWORD)
+        user = User()
+        user.username = SKA_TEST_USER_USERNAME
+        user.email = 'admin@dev.django-ska.com'
+        user.is_superuser = True
+        user.is_staff = True
+        user.set_password(SKA_TEST_USER_PASSWORD)
 
         try:
-            u.save()
+            user.save()
         except Exception:
             pass
 
@@ -212,33 +212,35 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
 
         for index in xrange(num_items):
             # Saving an item to database
-            i = FooItem()
+            item = FooItem()
             random_name = words[random.randint(0, len(words) - 1)]
 
             if not PY3:
-                i.title = unicode(random_name).capitalize()
-                i.body = unicode(
+                item.title = unicode(random_name).capitalize()
+                item.body = unicode(
                     SENTENCES[random.randint(0, len(SENTENCES) - 1)]
                 )
             else:
-                i.title = str(random_name).capitalize()
-                i.body = str(SENTENCES[random.randint(0, len(SENTENCES) - 1)])
+                item.title = str(random_name).capitalize()
+                item.body = str(
+                    SENTENCES[random.randint(0, len(SENTENCES) - 1)]
+                )
 
-            i.slug = slugify(i.title)
+            item.slug = slugify(item.title)
             random_date = radar.random_datetime() \
                 if change_date() \
                 else random_date
-            i.date_published = random_date
+            item.date_published = random_date
 
             try:
-                i.save()
+                item.save()
                 words.remove(random_name)
 
                 if 0 == len(words):
                     words = WORDS
 
-            except Exception as e:
-                print(e)
+            except Exception as err:
+                print(err)
 
     # *********************************************************************
     # *********************************************************************
@@ -264,7 +266,7 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
             """
             # Testing signed URLs
             signed_absolute_url = self.item.get_signed_absolute_url()
-            self.assertTrue(signed_absolute_url is not None)
+            self.assertIsNotNone(signed_absolute_url)
             return signed_absolute_url
 
         @log_info
@@ -277,13 +279,13 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
 
             # Testing signed URLs
             signed_absolute_url = self.item.get_signed_absolute_url()
-            self.assertTrue(signed_absolute_url is not None)
+            self.assertIsNotNone(signed_absolute_url)
             flow.append(('Signed absolute URL', signed_absolute_url))
 
             # Testing view with signed URL
-            c = Client()
-            response = c.get(signed_absolute_url, {})
-            self.assertTrue(response.status_code in (200, 201, 202))
+            client = Client()
+            response = client.get(signed_absolute_url, {})
+            self.assertIn(response.status_code, (200, 201, 202))
             flow.append(
                 ('Response status code for signed URL', response.status_code)
             )
@@ -307,9 +309,9 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
             flow.append(('Unsigned absolute URL', absolute_url))
 
             # Testing view with signed URL
-            c = Client()
-            response = c.get(absolute_url, {})
-            self.assertTrue(response.status_code in (401,))
+            client = Client()
+            response = client.get(absolute_url, {})
+            self.assertIn(response.status_code, (401,))
             flow.append(
                 ('Response status code for unsigned URL', response.status_code)
             )
@@ -359,24 +361,24 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
                 extra=extra
             )
 
-            self.assertTrue(signed_login_url is not None)
+            self.assertIsNotNone(signed_login_url)
             flow.append(('Signed login URL', signed_login_url))
 
             # Testing view with signed URL
-            c = Client()
-            response = c.get(signed_login_url, {})
-            self.assertTrue(response.status_code in (first_response_code,))
+            client = Client()
+            response = client.get(signed_login_url, {})
+            # if response.status_code not in (first_response_code,):
+            #     pytest.set_trace()
+            self.assertIn(response.status_code, (first_response_code,))
             flow.append(
                 ('Response status code for signed URL', response.status_code)
             )
 
             if DB_STORE_SIGNATURES and DB_PERFORM_SIGNATURE_CHECK:
                 # Testing again with signed URL and this time, it should fail
-                c = Client()
-                response = c.get(signed_login_url, {})
-                self.assertTrue(
-                    response.status_code in (second_response_code,)
-                )
+                client = Client()
+                response = client.get(signed_login_url, {})
+                self.assertIn(response.status_code, (second_response_code,))
                 flow.append(
                     (
                         'Response status '

@@ -1,5 +1,7 @@
 # Django settings for example project.
 import os
+import sys
+
 from .core import PROJECT_DIR, gettext
 
 DEBUG = False
@@ -70,7 +72,7 @@ MEDIA_URL = '/media/'
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = PROJECT_DIR(os.path.join('..', 'static'))
+STATIC_ROOT = PROJECT_DIR(os.path.join('..', '..', 'static'))
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
@@ -81,7 +83,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    PROJECT_DIR(os.path.join('..', 'media', 'static')),
+    PROJECT_DIR(os.path.join('..', '..', 'media', 'static')),
 )
 
 # List of finder classes that know how to find static files in
@@ -89,7 +91,7 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    # 'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -135,10 +137,11 @@ ROOT_URLCONF = 'urls'
 WSGI_APPLICATION = 'wsgi.application'
 
 TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
+    # Put strings here, like "/home/html/django_templates" or
+    # "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    PROJECT_DIR('templates'),
+    PROJECT_DIR(os.path.join('..', 'templates')),
 )
 
 INSTALLED_APPS = (
@@ -167,13 +170,13 @@ SKA_PROVIDERS = {
     # Client 1, group users
     'client_1.users': {
         'SECRET_KEY': 'client-1-users-secret-key',
-        },
+    },
 
     # Client 1, group power_users
     'client_1.power_users': {
         'SECRET_KEY': 'client-1-power-users-secret-key',
         'USER_CREATE_CALLBACK': 'foo.ska_callbacks.client1_power_users_create',
-        },
+    },
 
     # Client 1, group admins
     'client_1.admins': {
@@ -267,3 +270,9 @@ if DEBUG and DEBUG_TOOLBAR:
         'INTERCEPT_REDIRECTS': False,
     }
 
+
+# Make the `ska` package available without installation.
+if DEV:
+    ska_source_path = os.environ.get('SKA_SOURCE_PATH', 'src')
+    # sys.path.insert(0, os.path.abspath('src'))
+    sys.path.insert(0, os.path.abspath(ska_source_path))

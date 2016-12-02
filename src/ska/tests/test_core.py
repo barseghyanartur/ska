@@ -275,25 +275,23 @@ class SignatureTest(unittest.TestCase):
         )
 
         if PY3:
-            self.assertTrue(isinstance(validation_result.reason, map))
+            self.assertIsInstance(validation_result.reason, map)
         else:
-            self.assertTrue(isinstance(validation_result.reason, list))
-        self.assertTrue(isinstance(validation_result.errors, list))
-        self.assertTrue(isinstance(validation_result.message, text_type))
-        self.assertTrue(isinstance(' '.join(
-            validation_result.reason), text_type))
-        self.assertTrue(isinstance(' '.join(
-            map(text_type, validation_result.errors)), text_type))
+            self.assertIsInstance(validation_result.reason, list)
+        self.assertIsInstance(validation_result.errors, list)
+        self.assertIsInstance(validation_result.message, text_type)
+        self.assertIsInstance(' '.join(validation_result.reason), text_type)
+        self.assertIsInstance(
+            ' '.join(map(text_type, validation_result.errors)),
+            text_type
+        )
 
         flow.append(validation_result.message)
 
-        self.assertTrue(
-            error_codes.INVALID_SIGNATURE in validation_result.errors
-        )
-        self.assertTrue(
-            error_codes.SIGNATURE_TIMESTAMP_EXPIRED
-            in validation_result.errors
-        )
+        self.assertIn(error_codes.INVALID_SIGNATURE,
+                      validation_result.errors)
+        self.assertIn(error_codes.SIGNATURE_TIMESTAMP_EXPIRED,
+                      validation_result.errors)
 
         return flow
 

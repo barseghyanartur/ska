@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login
 from django.http import HttpResponseForbidden, HttpResponseRedirect

@@ -3,13 +3,15 @@ Release history
 ===============
 1.6
 ---
-2016-11-30 (not yet released)
+2016-12-02
 
 - Django 1.9 compatibility.
 - pep8 fixes.
 - The ``six`` package requirement increased to six >= 1.9.
-- Drop support of Django < 1.8.
+- Drop support of Django < 1.8 (it still may work, but no longer guaranteed).
 - Drop support of Python 2.6.x.
+- Fix broken Django authentication backend, due to deprecation of
+  ``request.REQUEST``.
 
 1.5
 ---
