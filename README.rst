@@ -94,7 +94,7 @@ Latest stable version from github.
 
 Usage examples
 ==============
-For integration with Django, see the `Django integration`__ section.
+For integration with Django, see the `Django integration`_ section.
 
 Basic usage
 -----------
@@ -242,7 +242,7 @@ Adding of additional data to the signature works in the same way:
     }
 
 If you for some reason prefer a lower level implementation, read the same
-section in the `Advanced usage`__ chapter.
+section in the `Advanced usage`_ chapter.
 
 Recipient side
 ~~~~~~~~~~~~~~
@@ -301,7 +301,7 @@ With all customisations, it would look as follows. Note, that
     )
 
 If you for some reason prefer a lower level implementation, read the same
-section in the `Advanced usage`__ chapter.
+section in the `Advanced usage`_ chapter.
 
 Command line usage
 ------------------
@@ -933,7 +933,7 @@ GPL 2.0/LGPL 2.1
 
 Support
 =======
-For any issues contact me at the e-mail given in the `Author`__ section.
+For any issues contact me at the e-mail given in the `Author`_ section.
 
 Author
 ======
