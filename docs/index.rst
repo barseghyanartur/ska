@@ -1,28 +1,30 @@
 ===
 ska
 ===
-Lets you easily sign data, using symmetric-key algorithm encryption. Allows you to validate signed data
-and identify possible validation errors. Uses sha-(1, 224, 256, 385 and 512)/hmac for signature encryption.
-Allows to use custom hash algorithms. Comes with shortcut functions for signing (and validating) dictionaries
-and URLs.
+Lets you easily sign data, using symmetric-key algorithm encryption. Allows
+you to validate signed data and identify possible validation errors. Uses
+sha-(1, 224, 256, 385 and 512)/hmac for signature encryption. Allows to use
+custom hash algorithms. Comes with shortcut functions for signing (and
+validating) dictionaries and URLs.
 
 Key concepts
 ============
-Hosts, that communicate with each other, share the Secret Key, which is used to sign data (requests).
-Secret key is never sent around.
+Hosts, that communicate with each other, share the Secret Key, which is used
+to sign data (requests). Secret key is never sent around.
 
-One of the cases is signing of HTTP requests. Each (HTTP) request is signed on the sender side using the
-shared Secret Key and as an outcome produces the triple (``signature``, ``auth_user``, ``valid_until``)
-which are used to sign the requests.
+One of the cases is signing of HTTP requests. Each (HTTP) request is signed
+on the sender side using the shared Secret Key and as an outcome produces the
+triple (``signature``, ``auth_user``, ``valid_until``) which are used to sign
+the requests.
 
-- `signature` (str): Signature generated.
-- `auth_user` (str): User making the request. Can be anything.
-- `valid_until` (float|str): Signature expiration time (Unix timestamp).
+- ``signature`` (str): Signature generated.
+- ``auth_user`` (str): User making the request. Can be anything.
+- ``valid_until`` (float|str): Signature expiration time (Unix timestamp).
 
-On the recipient side, (HTTP request) data is validated using the shared Secret Key. It's being checked
-whether signature is valid and not expired.
+On the recipient side, (HTTP request) data is validated using the shared
+Secret Key. It's being checked whether signature is valid and not expired.
 
-.. code-block:: none
+.. code-block:: text
 
     ┌─────────────┐           Data              ┌─────────────┐
     │   Host 1    ├────────────────────────────>│   Host 2    │
@@ -39,22 +41,37 @@ Core `ska` module
 - Validate signed dictionaries.
 - Sign URLs. Append and sign additional URL data.
 - Validate URLs.
-- Use one of the built-in algorythms (HMAC SHA-1, HMAC SHA-224, HMAC SHA-256, HMAC SHA-384 or
-  HMAC SHA-512) or define a custom one.
+- Use one of the built-in algorythms (HMAC SHA-1, HMAC SHA-224, HMAC SHA-256,
+  HMAC SHA-384 or HMAC SHA-512) or define a custom one.
 
 Django `ska` module (`ska.contrib.django.ska`)
 ----------------------------------------------
-- Model decorators for signing absolute URLs. View (including class-based views) decorators for protecting
-  views to authorised parties only (no authentication required).
-- Authentication backend for Django based on the signatures (tokens) generated using `ska`, which
-  allows you to get a password-less login to Django web site. Multiple Secret Keys (per provider)
-  supported. Comes with handy callbacks (possible to customise per provider) for various states of
+- Model decorators for signing absolute URLs. View (including class-based
+  views) decorators for protecting views to authorised parties only (no
+  authentication required).
+- Authentication backend for Django based on the signatures (tokens) generated
+  using `ska`, which allows you to get a password-less login to Django web
+  site. Multiple Secret Keys (per provider) supported. Comes with handy
+  callbacks (possible to customise per provider) for various states of
   authentication.
 
 Prerequisites
 =============
-- Core `ska` module requires Python 2.6.8+, 2.7.+, 3.3.+
-- Django `ska` module (`ska.contrib.django.ska`) requires the mentioned above plus Django 1.5.+
+Present
+-------
+- Core ``ska`` module requires Python 2.7, 3.4, 3.5.
+- Django ``ska`` module (``ska.contrib.django.ska``) requires the mentioned
+  above plus Django 1.8 or greater.
+
+Past
+----
+- Dropping support of Django 1.5, 1.6 and 1.7 has been announced in version
+  1.6. As of 1.6 everything is still backwards compatible with mentioned
+  versions, but in future backwards compatibility will be wiped out.
+- Dropping support of Python 2.6 and 3.3 has been announced in version 1.6.
+  As of 1.6 everything is still backwards compatible (as much as it's possible
+  within this package) with mentioned versions, but in future backwards
+  compatibility will be wiped out.
 
 Installation
 ============
@@ -78,7 +95,7 @@ Latest stable version from github.
 
 Usage examples
 ==============
-For integration with Django, see the `Django integration` section.
+For integration with Django, see the `Django integration`_ section.
 
 Basic usage
 -----------
@@ -99,63 +116,80 @@ Producing a signed URL.
 .. code-block:: python
 
     signed_url = sign_url(
-        auth_user='user', secret_key='your-secret_key', url='http://e.com/api/'
-        )
+        auth_user='user',
+        secret_key='your-secret_key',
+        url='http://e.com/api/'
+    )
 
-.. code-block:: none
+.. code-block:: text
 
-    http://e.com/api/?valid_until=1378045287.0&auth_user=user&signature=YlZpLFsjUKBalL4x5trhkeEgqE8%3D
+    GET http://e.com/api/?valid_until=1378045287.0&auth_user=user&signature=YlZpLFsjUKBalL4x5trhkeEgqE8%3D
 
-Default lifetime of a signature is 10 minutes (600 seconds). If you want it to be different, provide a
-``lifetime`` argument to ``sign_url`` function.
+Default lifetime of a signature is 10 minutes (600 seconds). If you want it
+to be different, provide a ``lifetime`` argument to ``sign_url`` function.
 
-Default name of the (GET) param holding the generated signature value is `signature`. If you want it
-to be different, provide a ``signature_param`` argument to ``sign_url`` function.
+Default name of the (GET) param holding the generated signature value
+is ``signature``. If you want it to be different, provide a ``signature_param``
+argument to ``sign_url`` function.
 
-Default name of the (GET) param holding the ``auth_user`` value is `auth_user`. If you want it
-to be different, provide a ``auth_user_param`` argument to ``sign_url`` function.
+Default name of the (GET) param holding the ``auth_user`` value is
+``auth_user``. If you want it to be different, provide a ``auth_user_param``
+argument to ``sign_url`` function.
 
-Default name of the (GET) param holding the ``valid_until`` value is `valid_until`. If you want it
-to be different, provide a ``valid_until_param`` argument to ``sign_url`` function.
+Default name of the (GET) param holding the ``valid_until`` value is
+`valid_until`. If you want it to be different, provide a ``valid_until_param``
+argument to ``sign_url`` function.
 
-Note, that by default a suffix '?' is added after the given ``url`` and generated signature params.
-If you want that suffix to be custom, provide a ``suffix`` argument to the ``sign_url``
-function. If you want it to be gone, set its' value to empty string.
+Note, that by default a suffix '?' is added after the given ``url`` and
+generated signature params. If you want that suffix to be custom, provide a
+``suffix`` argument to the ``sign_url`` function. If you want it to be gone,
+set its' value to empty string.
 
 With all customisations, it would look as follows:
 
 .. code-block:: python
 
-    from ska import HMACSHA512Signature # Use HMAC SHA-512 algorithm
+    from ska import HMACSHA512Signature  # Use HMAC SHA-512 algorithm
 
     signed_url = sign_url(
-        auth_user='user', secret_key='your-secret_key', lifetime=120,
-        url='http://e.com/api/', signature_param='signature',
-        auth_user_param='auth_user', valid_until_param='valid_until',
+        auth_user='user',
+        secret_key='your-secret_key',
+        lifetime=120,
+        url='http://e.com/api/',
+        signature_param='signature',
+        auth_user_param='auth_user',
+        valid_until_param='valid_until',
         signature_cls = HMACSHA512Signature
-        )
+    )
 
-It's also possible to add additional data to the signature by providing a ``extra`` argument (dict).
-Note, that additional data is signed as well. If request is somehow tampered (values vary from
-originally provided ones), signature becomes invalid.
+It's also possible to add additional data to the signature by providing a
+``extra`` argument (dict). Note, that additional data is signed as well.
+If request is somehow tampered (values vary from originally provided ones),
+signature becomes invalid.
 
 .. code-block:: python
 
     sign_url(
-        auth_user='user', secret_key='your-secret_key', url='http://e.com/api/',
-        extra={'email': 'doe@example.com', 'last_name': 'Doe', 'first_name': 'Joe'}
-        )
+        auth_user='user',
+        secret_key='your-secret_key',
+        url='http://e.com/api/',
+        extra={
+            'email': 'doe@example.com',
+            'last_name': 'Doe',
+            'first_name': 'Joe'
+        }
+    )
 
-You may now proceed with the signed URL request. If you use the famous ``requests`` library, it would
-be as follows.
+You may now proceed with the signed URL request. If you use the famous
+``requests`` library, it would be as follows.
 
 .. code-block:: python
 
     import requests
     requests.get(signed_url)
 
-If you want to use POST method instead, you would likely want to get a dictionary back,
-in order to append it to the POST data later.
+If you want to use POST method instead, you would likely want to get a
+dictionary back, in order to append it to the POST data later.
 
 Required imports.
 
@@ -163,17 +197,18 @@ Required imports.
 
     from ska import signature_to_dict
 
-Producing a dictionary containing the signature data, ready to be put into the request (for
-example POST) data. All customisations mentioned above for the ``sign_url`` function, also
-apply to the ``signature_to_dict``:
+Producing a dictionary containing the signature data, ready to be put into
+the request (for example POST) data. All customisations mentioned above for
+the ``sign_url`` function, also apply to the ``signature_to_dict``:
 
 .. code-block:: python
 
     signature_dict = signature_to_dict(
-        auth_user='user', secret_key='your-secret_key'
-        )
+        auth_user='user',
+        secret_key='your-secret_key'
+    )
 
-.. code-block:: none
+.. code-block:: text
 
     {
         'signature': 'YlZpLFsjUKBalL4x5trhkeEgqE8=',
@@ -186,16 +221,16 @@ Adding of additional data to the signature works in the same way:
 .. code-block:: python
 
     signature_dict = signature_to_dict(
-        auth_user = 'user',
-        secret_key = 'your-secret_key',
-        extra = {
+        auth_user='user',
+        secret_key='your-secret_key',
+        extra={
             'email': 'john.doe@mail.example.com',
             'first_name': 'John',
             'last_name': 'Doe'
         }
-        )
+    )
 
-.. code-block:: none
+.. code-block:: text
 
     {
         'auth_user': 'user',
@@ -207,8 +242,8 @@ Adding of additional data to the signature works in the same way:
         'valid_until': 1387616469.0
     }
 
-If you for some reason prefer a lower level implementation, read the same section in the
-`Advanced usage` chapter.
+If you for some reason prefer a lower level implementation, read the same
+section in the `Advanced usage (low-level)`_ chapter.
 
 Recipient side
 ~~~~~~~~~~~~~~
@@ -220,62 +255,63 @@ Required imports.
 
     from ska import validate_signed_request_data
 
-Validating the signed request data. Note, that ``data`` value is expected to be a dictionary;
-``request.GET`` is given as an example. It will most likely vary from what's used in your
-framework (unless you use Django).
+Validating the signed request data. Note, that ``data`` value is expected to
+be a dictionary; ``request.GET`` is given as an example. It will most likely
+vary from what's used in your framework (unless you use Django).
 
 .. code-block:: python
 
     validation_result = validate_signed_request_data(
-        data = request.GET, # Note, that ``request.GET`` is given as example.
-        secret_key = 'your-secret_key'
-        )
+        data=request.GET,  # Note, that ``request.GET`` is given as example.
+        secret_key='your-secret_key'
+    )
 
-The ``validate_signed_request_data`` produces a ``ska.SignatureValidationResult`` object,
-which holds the following data.
+The ``validate_signed_request_data`` produces a
+``ska.SignatureValidationResult`` object, which holds the following data.
 
-- `result` (bool): True if data is valid. False otherwise.
-- `reason` (list): List of strings, indicating validation errors. Empty list in case if ``result``
-  is True.
+- ``result`` (bool): True if data is valid. False otherwise.
+- ``reason`` (list): List of strings, indicating validation errors. Empty list
+  in case if ``result`` is True.
 
-Default name of the (GET) param holding the signature value is `signature`. If you want it
-to be different, provide a ``signature_param`` argument to ``validate_signed_request_data``
-function.
+Default name of the (GET) param holding the signature value is `signature`.
+If you want it to be different, provide a ``signature_param`` argument to
+``validate_signed_request_data`` function.
 
-Default name of the (GET) param holding the ``auth_user`` value is `auth_user`. If you want it
-to be different, provide a ``auth_user_param`` argument to ``validate_signed_request_data``
-function.
+Default name of the (GET) param holding the ``auth_user`` value is
+``auth_user``. If you want it to be different, provide a ``auth_user_param``
+argument to ``validate_signed_request_data`` function.
 
-Default name of the (GET) param holding the ``valid_until`` value is `valid_until`. If you want it
-to be different, provide a ``valid_until_param`` argument to ``validate_signed_request_data``
-function.
+Default name of the (GET) param holding the ``valid_until`` value is
+``valid_until``. If you want it to be different, provide a
+``valid_until_param`` argument to ``validate_signed_request_data`` function.
 
-With all customisations, it would look as follows. Note, that ``request.GET`` is given as example.
+With all customisations, it would look as follows. Note, that
+``request.GET`` is given as example.
 
 .. code-block:: python
 
-    from ska import HMACSHA256Signature # Use HMAC SHA-256 algorithm
+    from ska import HMACSHA256Signature  # Use HMAC SHA-256 algorithm
 
     validation_result = validate_signed_request_data(
-        data = request.GET,
-        secret_key = 'your-secret_key',
-        signature_param = 'signature',
-        auth_user_param = 'auth_user',
-        valid_until_param = 'valid_until',
-        signature_cls = HMACSHA256Signature
-        )
+        data=request.GET,
+        secret_key='your-secret_key',
+        signature_param='signature',
+        auth_user_param='auth_user',
+        valid_until_param='valid_until',
+        signature_cls=HMACSHA256Signature
+    )
 
-If you for some reason prefer a lower level implementation, read the same section in the
-`Advanced usage` chapter.
+If you for some reason prefer a lower level implementation, read the same
+section in the `Advanced usage (low-level)`_ chapter.
 
 Command line usage
 ------------------
-It's possible to generate a signed URL from command line using the `ska.generate_signed_url`
-module.
+It's possible to generate a signed URL from command line using the
+``ska.generate_signed_url`` module.
 
 :Arguments:
 
-.. code-block:: none
+.. code-block:: text
 
     -h, --help            show this help message and exit
 
@@ -304,9 +340,9 @@ module.
 
 :Example:
 
-.. code-block:: none
+.. code-block:: sh
 
-    $ ska-sign-url -au user -sk your-secret-key
+    ska-sign-url -au user -sk your-secret-key
 
 Advanced usage (low-level)
 --------------------------
@@ -324,66 +360,73 @@ Generate a signature.
 .. code-block:: python
 
     signature = Signature.generate_signature(
-        auth_user = 'user',
-        secret_key = 'your-secret-key'
-        )
+        auth_user='user',
+        secret_key='your-secret-key'
+    )
 
-Default lifetime of a signature is 10 minutes (600 seconds). If you want it to be different, provide a
-``lifetime`` argument to ``generate_signature`` method.
-
-.. code-block:: python
-
-    signature = Signature.generate_signature(
-        auth_user = 'user',
-        secret_key = 'your-secret-key',
-        lifetime = 120 # Signatre lifetime set to 120 seconds.
-        )
-
-Adding of additional data to the signature works in the same way as in `sign_url`.
+Default lifetime of a signature is 10 minutes (600 seconds). If you want it to
+be different, provide a ``lifetime`` argument to ``generate_signature``
+method.
 
 .. code-block:: python
 
     signature = Signature.generate_signature(
-        auth_user = 'user',
-        secret_key = 'your-secret-key',
-        extra = {'email': 'doe@example.com', 'last_name': 'Doe', 'first_name': 'Joe'}
-        )
+        auth_user='user',
+        secret_key='your-secret-key',
+        lifetime=120  # Signatre lifetime set to 120 seconds.
+    )
 
-For HMAC SHA-384 algorityhm it would look as follows.
+Adding of additional data to the signature works in the same way as in
+``sign_url``.
+
+.. code-block:: python
+
+    signature = Signature.generate_signature(
+        auth_user='user',
+        secret_key='your-secret-key',
+        extra={
+            'email': 'doe@example.com',
+            'last_name': 'Doe',
+            'first_name': 'Joe'
+        }
+    )
+
+For HMAC SHA-384 algorithm it would look as follows.
 
 .. code-block:: python
 
     from ska import HMACSHA384Signature
 
     signature = HMACSHA384Signature.generate_signature(
-        auth_user = 'user',
-        secret_key = 'your-secret-key'
-        )
+        auth_user='user',
+        secret_key='your-secret-key'
+    )
 
-Your endpoint operates with certain param names and you need to wrap generated signature params into
-the URL. In order to have the job done in an easy way, create a request helper. Feed names of the
-(GET) params to the request helper and let it make a signed endpoint URL for you.
+Your endpoint operates with certain param names and you need to wrap generated
+signature params into the URL. In order to have the job done in an easy way,
+create a request helper. Feed names of the (GET) params to the request helper
+and let it make a signed endpoint URL for you.
 
 .. code-block:: python
 
     request_helper = RequestHelper(
-        signature_param = 'signature',
-        auth_user_param = 'auth_user',
-        valid_until_param = 'valid_until'
-        )
+        signature_param='signature',
+        auth_user_param='auth_user',
+        valid_until_param='valid_until'
+    )
 
 Append signature params to the endpoint URL.
 
 .. code-block:: python
 
     signed_url = request_helper.signature_to_url(
-        signature = signature,
-        endpoint_url = 'http://e.com/api/'
-        )
+        signature=signature,
+        endpoint_url='http://e.com/api/'
+    )
 
-.. code-block:: none
+.. code-block:: text
 
-    http://e.com/api/?valid_until=1378045287.0&auth_user=user&signature=YlZpLFsjUKBalL4x5trhkeEgqE8%3D
+    GET http://e.com/api/?valid_until=1378045287.0&auth_user=user&signature=YlZpLFsjUKBalL4x5trhkeEgqE8%3D
 
 Make a request.
 
@@ -393,23 +436,23 @@ Make a request.
     r = requests.get(signed_url)
 
 
-For HMAC SHA-384 algorityhm it would look as follows.
+For HMAC SHA-384 algorithm it would look as follows.
 
 .. code-block:: python
 
     from ska import HMACSHA384Signature
 
     request_helper = RequestHelper(
-        signature_param = 'signature',
-        auth_user_param = 'auth_user',
-        valid_until_param = 'valid_until',
-        signature_cls = HMACSHA384Signature
-        )
+        signature_param='signature',
+        auth_user_param='auth_user',
+        valid_until_param='valid_until',
+        signature_cls=HMACSHA384Signature
+    )
 
     signed_url = request_helper.signature_to_url(
-        signature = signature,
-        endpoint_url = 'http://e.com/api/'
-        )
+        signature=signature,
+        endpoint_url='http://e.com/api/'
+    )
 
 Recipient side
 ~~~~~~~~~~~~~~
@@ -419,26 +462,27 @@ Required imports.
 
     from ska import RequestHelper
 
-Create a request helper. Your endpoint operates with certain param names. In order to have the job done
-in an easy way, we feed those params to the request helper and let it extract data from signed request
-for us.
+Create a request helper. Your endpoint operates with certain param names. In
+order to have the job done in an easy way, we feed those params to the
+request helper and let it extract data from signed request for us.
 
 .. code-block:: python
 
     request_helper = RequestHelper(
-        signature_param = 'signature',
-        auth_user_param = 'auth_user',
-        valid_until_param = 'valid_until'
-        )
+        signature_param='signature',
+        auth_user_param='auth_user',
+        valid_until_param='valid_until'
+    )
 
-Validate the request data. Note, that ``request.GET`` is given just as an example.
+Validate the request data. Note, that ``request.GET`` is given just as an
+example.
 
 .. code-block:: python
 
     validation_result = request_helper.validate_request_data(
-        data = request.GET,
-        secret_key = 'your-secret-key'
-        )
+        data=request.GET,
+        secret_key='your-secret-key'
+    )
 
 Your implementation further depends on you, but may look as follows.
 
@@ -451,43 +495,46 @@ Your implementation further depends on you, but may look as follows.
         # Validation not passed.
         raise Http404(validation_result.reason)
 
-You can also just validate the signature by calling ``validate_signature`` method of
-the ``ska.Signature``.
+You can also just validate the signature by calling ``validate_signature``
+method of the ``ska.Signature``.
 
 .. code-block:: python
 
     Signature.validate_signature(
-        signature = 'EBS6ipiqRLa6TY5vxIvZU30FpnM=',
-        auth_user = 'user',
-        secret_key = 'your-secret-key',
-        valid_until = '1377997396.0'
-        )
+        signature='EBS6ipiqRLa6TY5vxIvZU30FpnM=',
+        auth_user='user',
+        secret_key='your-secret-key',
+        valid_until='1377997396.0'
+    )
 
 Django integration
 ------------------
-`ska` comes with Django model- and view-decorators for producing signed URLs and and validating the
-endpoints, as well as with authentication backend, which allows password-less login into Django
-web site using `ska` generated signature tokens.
+``ska`` comes with Django model- and view-decorators for producing signed URLs
+and and validating the endpoints, as well as with authentication backend,
+which allows password-less login into Django web site using `ska` generated
+signature tokens.
 
 Demo
 ~~~~
-In order to be able to quickly evaluate the `ska`, a demo app (with a quick installer) has been created
-(works on Ubuntu/Debian, may work on other Linux systems as well, although not guaranteed). Follow the
-instructions below for having the demo running within a minute.
+In order to be able to quickly evaluate the ``ska``, a demo app (with a quick
+installer) has been created (works on Ubuntu/Debian, may work on other Linux
+systems as well, although not guaranteed). Follow the instructions below for
+having the demo running within a minute.
 
-Grab the latest `ska_example_app_installer.sh`:
+Grab the latest ``ska_example_app_installer.sh``:
 
-.. code-block:: none
+.. code-block:: sh
 
-    $ wget https://raw.github.com/barseghyanartur/ska/stable/example/ska_example_app_installer.sh
+    wget https://raw.github.com/barseghyanartur/ska/stable/example/ska_example_app_installer.sh
 
-Assign execute rights to the installer and run the `django_dash_example_app_installer.sh`:
+Assign execute rights to the installer and run the
+``ska_example_app_installer.sh``:
 
-.. code-block:: none
+.. code-block:: sh
 
-    $ chmod +x ska_example_app_installer.sh
+    chmod +x ska_example_app_installer.sh
 
-    $ ./ska_example_app_installer.sh
+    ./ska_example_app_installer.sh
 
 Open your browser and test the app.
 
@@ -513,24 +560,27 @@ Secret key (str) must be defined in `settings` module of your project.
 
     SKA_SECRET_KEY = 'my-secret-key'
 
-The following variables can be overridden in `settings` module of your project.
+The following variables can be overridden in ``settings`` module of your
+project.
 
-- `SKA_UNAUTHORISED_REQUEST_ERROR_MESSAGE` (str): Plain text error message. Defaults to
-  "Unauthorised request. {0}".
-- `SKA_UNAUTHORISED_REQUEST_ERROR_TEMPLATE` (str): Path to 401 template that should be rendered in
-  case of 401
+- ``SKA_UNAUTHORISED_REQUEST_ERROR_MESSAGE`` (str): Plain text error message.
+  Defaults to "Unauthorised request. {0}".
+- ``SKA_UNAUTHORISED_REQUEST_ERROR_TEMPLATE`` (str): Path to 401 template that
+  should be rendered in case of 401
   responses. Defaults to empty string (not provided).
-- `SKA_AUTH_USER` (str): The ``auth_user`` argument for ``ska.sign_url`` function. Defaults to
-  "ska-auth-user".
+- ``SKA_AUTH_USER`` (str): The ``auth_user`` argument for ``ska.sign_url``
+  function. Defaults to "ska-auth-user".
 
-See the working `example project <https://github.com/barseghyanartur/ska/tree/stable/example>`_.
+See the working `example project
+<https://github.com/barseghyanartur/ska/tree/stable/example>`_.
 
 Django model method decorator ``sign_url``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This is most likely be used in module `models` (models.py).
+This is most likely be used in module ``models`` (models.py).
 
-Imagine, you have a some objects listing and you want to protect the URLs to be viewed by authorised
-parties only. You would then use ``get_signed_absolute_url`` method when rendering the listing (HTML).
+Imagine, you have a some objects listing and you want to protect the URLs to
+be viewed by authorised parties only. You would then use
+``get_signed_absolute_url`` method when rendering the listing (HTML).
 
 .. code-block:: python
 
@@ -556,23 +606,31 @@ parties only. You would then use ``get_signed_absolute_url`` method when renderi
 
 Note, that ``sign_url`` decorator accepts the following optional arguments.
 
-- `auth_user` (str): Username of the user making the request.
-- `secret_key`: The shared secret key. If set, overrides the ``SKA_SECRET_KEY`` variable set in
-  the `settings` module of your project.
-- `valid_until` (float or str ): Unix timestamp. If not given, generated automatically (now + lifetime).
-- `lifetime` (int): Signature lifetime in seconds.
-- `suffix` (str): Suffix to add after the ``endpoint_url`` and before the appended signature params.
-- `signature_param` (str): Name of the GET param name which would hold the generated signature value.
-- `auth_user_param` (str): Name of the GET param name which would hold the ``auth_user`` value.
-- `valid_until_param` (str): Name of the GET param name which would hold the ``valid_until`` value.
+- ``auth_user`` (str): Username of the user making the request.
+- ``secret_key``: The shared secret key. If set, overrides
+  the ``SKA_SECRET_KEY`` variable set in the `settings` module of your
+  project.
+- ``valid_until`` (float or str ): Unix timestamp. If not given, generated
+  automatically (now + lifetime).
+- ``lifetime`` (int): Signature lifetime in seconds.
+- ``suffix`` (str): Suffix to add after the ``endpoint_url`` and before the
+  appended signature params.
+- ``signature_param`` (str): Name of the GET param name which would hold the
+  generated signature value.
+- `auth_user_param` (str): Name of the GET param name which would hold
+  the ``auth_user`` value.
+- ``valid_until_param`` (str): Name of the GET param name which would hold
+  the ``valid_until`` value.
 
 Django view decorator ``validate_signed_request``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-To be used to protect views (file views.py). Should be applied to views (endpoints) that require
-signed requests. If checks are not successful, a ``ska.contrib.django.ska.http.HttpResponseUnauthorized``
-is returned, which is a subclass of Django's ``django.http.HttpResponse``. You can provide your own
-template for 401 error. Simply point the ``SKA_UNAUTHORISED_REQUEST_ERROR_TEMPLATE`` in `settings`
-module to the right template. See `ska/contrib/django/ska/templates/ska/401.html` as a template
+To be used to protect views (file views.py). Should be applied to
+views (endpoints) that require signed requests. If checks are not successful,
+a ``ska.contrib.django.ska.http.HttpResponseUnauthorized`` is returned, which
+is a subclass of Django's ``django.http.HttpResponse``. You can provide your
+own template for 401 error. Simply point the
+``SKA_UNAUTHORISED_REQUEST_ERROR_TEMPLATE`` in `settings` module to the right
+template. See ``ska/contrib/django/ska/templates/ska/401.html`` as a template
 example.
 
 .. code-block:: python
@@ -584,27 +642,29 @@ example.
     def detail(request, slug, template_name='foo/detail.html'):
         # Your code
 
-Note, that ``validate_signed_request`` decorator accepts the following optional arguments.
+Note, that ``validate_signed_request`` decorator accepts the following optional
+arguments.
 
-- `secret_key` (str) : The shared secret key. If set, overrides the ``SKA_SECRET_KEY`` variable 
-  set in the `settings` module of your project.
-- `signature_param` (str): Name of the (for example GET or POST) param name which holds
-  the ``signature`` value.
-- `auth_user_param` (str): Name of the (for example GET or POST) param name which holds
-  the ``auth_user`` value.
-- `valid_until_param` (str): Name of the (foe example GET or POST) param name which holds
-  the ``valid_until`` value.
+- ``secret_key`` (str) : The shared secret key. If set, overrides
+  the ``SKA_SECRET_KEY`` variable  set in the ``settings`` module of your
+  project.
+- ``signature_param`` (str): Name of the (for example GET or POST) param name
+  which holds the ``signature`` value.
+- ``auth_user_param`` (str): Name of the (for example GET or POST) param name
+  which holds the ``auth_user`` value.
+- ``valid_until_param`` (str): Name of the (foe example GET or POST) param
+  name which holds the ``valid_until`` value.
 
-If you're using class based views, use the ``m_validate_signed_request`` decorator instead
-of ``validate_signed_request``.
+If you're using class based views, use the ``m_validate_signed_request``
+decorator instead of ``validate_signed_request``.
 
 Authentication backend
 ~~~~~~~~~~~~~~~~~~~~~~
 Allows you to get a password-less login to Django web site.
 
-By default, number of logins using the same token is not limited. If you wish that single
-tokens become invalid after first use, set the following variables to True in your
-projects' Django settings module.
+By default, number of logins using the same token is not limited. If you wish
+that single tokens become invalid after first use, set the following variables
+to True in your projects' Django settings module.
 
 .. code-block:: python
 
@@ -613,8 +673,8 @@ projects' Django settings module.
 
 Recipient side
 ++++++++++++++
-Recipient is the host (Django site), to which the sender tries to get authenticated (log in). On the
-recipient side the following shall be present.
+Recipient is the host (Django site), to which the sender tries to get
+authenticated (log in). On the recipient side the following shall be present.
 
 settings.py
 ^^^^^^^^^^^
@@ -648,11 +708,14 @@ Callbacks
 ^^^^^^^^^
 There are several callbacks implemented in authentication backend.
 
-- `USER_GET_CALLBACK` (string): Fired if user was successfully fetched from database (existing user).
-- `USER_CREATE_CALLBACK` (string): Fired right after user has been created (user didn't exist).
-- `USER_INFO_CALLBACK` (string): Fired upon successful authentication.
+- ``USER_GET_CALLBACK`` (string): Fired if user was successfully fetched from
+  database (existing user).
+- ``USER_CREATE_CALLBACK`` (string): Fired right after user has been
+  created (user didn't exist).
+- ``USER_INFO_CALLBACK`` (string): Fired upon successful authentication.
 
-Example of a callback function (let's say, it resides in module `my_app.ska_callbacks`):
+Example of a callback function (let's say, it resides in module
+``my_app.ska_callbacks``):
 
 .. code-block:: python
 
@@ -661,18 +724,19 @@ Example of a callback function (let's say, it resides in module `my_app.ska_call
 
 ...where:
 
-- `user` is ``django.contrib.auth.models.User`` instance.
-- `request` is ``django.http.HttpRequest`` instance.
-- `signed_request_data` is dictionary with signed request data.
+- ``user`` is ``django.contrib.auth.models.User`` instance.
+- ``request`` is ``django.http.HttpRequest`` instance.
+- ``signed_request_data`` is dictionary with signed request data.
 
-For example, if you need to assign user to some local Django group, you could specify the group
-name on the client side (add it to the ``extra`` dictionary) and based on that, add the user to
-the group in the callback.
+For example, if you need to assign user to some local Django group, you could
+specify the group name on the client side (add it to the ``extra`` dictionary)
+and based on that, add the user to the group in the callback.
 
-The callback is a path qualifier of the callback function. Considering the example above, it would
-be "my_app.ska_callbacks.my_callback".
+The callback is a path qualifier of the callback function. Considering the
+example above, it would be ``my_app.ska_callbacks.my_callback``.
 
-Prefix names of each callback variable with `SKA_` in your projects' settings module.
+Prefix names of each callback variable with `SKA_` in your projects' settings
+module.
 
 Example:
 
@@ -683,9 +747,9 @@ Example:
 
 Purging of old signature data
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-If you have lots of visitors and the ``SKA_DB_STORE_SIGNATURES`` set to True, your database
-grows. If you wish to get rid of old signature token data, you may want to execute the following
-command using a cron job.
+If you have lots of visitors and the ``SKA_DB_STORE_SIGNATURES`` set to True,
+your database grows. If you wish to get rid of old signature token data, you
+may want to execute the following command using a cron job.
 
 .. code-block:: sh
 
@@ -693,13 +757,14 @@ command using a cron job.
 
 Sender side
 +++++++++++
-Sender is the host (another Django web site) from which users authenticate to the Recipient using signed
-URLs.
+Sender is the host (another Django web site) from which users authenticate to
+the Recipient using signed URLs.
 
-On the sender side, the only thing necessary to be present is the `ska` module for Django and
-of course the same ``SECRET_KEY`` as on the server side. Further, the server `ska` login URL (in our case
-"/ska/login/") shall be signed using `ska` (for example, using `sign_url` function). The `auth_user` param
-would be used as a Django username. See the example below.
+On the sender side, the only thing necessary to be present is the ``ska``
+module for Django and of course the same ``SECRET_KEY`` as on the server side.
+Further, the server ``ska`` login URL (in our case "/ska/login/") shall be
+signed using ``ska`` (for example, using ``sign_url`` function). The
+``auth_user`` param would be used as a Django username. See the example below.
 
 .. code-block:: python
 
@@ -709,51 +774,49 @@ would be used as a Django username. See the example below.
     server_ska_login_url = 'https://server-url.com/ska/login/'
 
     signed_url = sign_url(
-        auth_user = 'test_ska_user_0',
-        secret_key = SECRET_KEY,
-        url = server_ska_login_url
-        extra = {
+        auth_user='test_ska_user_0',
+        secret_key=SECRET_KEY,
+        url=server_ska_login_url
+        extra={
             'email': 'john.doe@mail.example.com',
             'first_name': 'John',
             'last_name': 'Doe',
         }
-        )
+    )
 
-Note, that you ``extra`` dictionary is optional! If `email`, `first_name` and `last_name` keys are present,
-upon successul validation, the data would be saved into users' profile.
+Note, that you ``extra`` dictionary is optional! If ``email``, ``first_name``
+and ``last_name`` keys are present, upon successful validation, the data
+would be saved into users' profile.
 
-Put this code, for instance, in your view and then make the generated URL available in template context 
-and render it as a URL so that user can click on it for authenticating to the server.
+Put this code, for instance, in your view and then make the generated URL
+available in template context and render it as a URL so that user can click
+on it for authenticating to the server.
 
 .. code-block:: python
 
     def auth_to_server(request, template_name='auth_to_server.html'):
         # Some code + obtaining the `signed_url` (code shown above)
-        context = {
-            'signed_url': signed_url,
-        }
+        context = {'signed_url': signed_url}
 
-        return render_to_response(
-            template_name,
-            context,
-            context_instance = RequestContext(request)
-        )
+        return render(request, template_name, context)
 
 Security notes
 ++++++++++++++
-From point of security, you should be serving the following pages via HTTP secure connection:
+From point of security, you should be serving the following pages via HTTP
+secure connection:
 
 - The server login page (/ska/login/).
 - The client page containing the authentication links.
 
 Multiple secret keys
 ~~~~~~~~~~~~~~~~~~~~
-Imagine, you have a site to which you want to offer a password-less login for various clients/senders
-and you don't want them all to have one shared secret key, but rather have their own one. Moreover,
-you specifically want to execute very custom callbacks not only for each separate client/sender, but
-also for different sort of users authenticating.
+Imagine, you have a site to which you want to offer a password-less login for
+various clients/senders and you don't want them all to have one shared secret
+key, but rather have their own one. Moreover, you specifically want to execute
+very custom callbacks not only for each separate client/sender, but also for
+different sort of users authenticating.
 
-.. code-block:: none
+.. code-block:: text
 
                               ┌────────────────┐
                               │ Site providing │
@@ -777,9 +840,10 @@ also for different sort of users authenticating.
     │    'sk-1'    │  │    'sk-2'    │  │    'sk-3'    │  │    'sk-4'    │
     └──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘
 
-In order to make the stated above possible, the concept of providers is introduced. You can define
-a secret key, callbacks or redirect URL. See an example below. Note, that keys of
-the ``SKA_PROVIDERS`` ("client_1", "client_2", etc.) are the provider keys.
+In order to make the stated above possible, the concept of providers is
+introduced. You can define a secret key, callbacks or redirect URL. See an
+example below. Note, that keys of the ``SKA_PROVIDERS`` ("client_1",
+"client_2", etc.) are the provider keys.
 
 .. code-block:: python
 
@@ -831,11 +895,13 @@ the ``SKA_PROVIDERS`` ("client_1", "client_2", etc.) are the provider keys.
 
 See the "Callbacks" section for the list of callbacks.
 
-Obviously, server would have to have the full list of providers defined. On the client side
-you would only have to store the general secret key and of course the provider UID(s).
+Obviously, server would have to have the full list of providers defined. On
+the client side you would only have to store the general secret key and of
+course the provider UID(s).
 
-When making a signed URL on the sender side, you should be providing the "provider" key in
-the ``extra`` argument. See the example below for how you would do it for "client_1.power_users".
+When making a signed URL on the sender side, you should be providing the
+``provider`` key in the ``extra`` argument. See the example below for how you
+would do it for ``client_1.power_users``.
 
 .. code-block:: python
 
@@ -868,16 +934,11 @@ GPL 2.0/LGPL 2.1
 
 Support
 =======
-For any issues contact me at the e-mail given in the `Author` section.
+For any issues contact me at the e-mail given in the `Author`_ section.
 
 Author
 ======
 Artur Barseghyan <artur.barseghyan@gmail.com>
-
-.. image:: https://d2weczhvl823v0.cloudfront.net/barseghyanartur/ska/trend.png
-   :alt: Bitdeli badge
-   :target: https://bitdeli.com/free
-
 
 Documentation
 ===================================================
