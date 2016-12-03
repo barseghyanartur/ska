@@ -19,7 +19,9 @@ are used for versioning (schema follows below):
 -----
 2016-12-03
 
-- Fixes in tests of django ska package.
+- Fixes in tests of django-ska package.
+- Add shell.py command for easy debugging.
+- Minor fixes.
 - Clean up docs.
 
 1.6

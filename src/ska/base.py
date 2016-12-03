@@ -102,8 +102,7 @@ class AbstractSignature(object):
     __repr__ = __str__
 
     def __bool__(self):
-        # TODO: Can it be that this should be self.signature.result?
-        return self.result
+        return not self.is_expired()
     __nonzero__ = __bool__
 
     @classmethod
