@@ -6,7 +6,7 @@ tar -xvf ska_example_app_installer.tar.gz -C ska_example_app_installer
 cd ska_example_app_installer/ska-stable/examples/simple/
 #cd ska_example_app_installer/ska-master/examples/simple/
 pip install -r ../../src/ska/contrib/django/ska/requirements.txt
-pip install -e https://github.com/barseghyanartur/ska/archive/stable.tar.gz
+pip install https://github.com/barseghyanartur/ska/archive/stable.tar.gz
 mkdir ../media/
 mkdir ../media/static/
 mkdir ../static/
