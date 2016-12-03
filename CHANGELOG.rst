@@ -34,7 +34,7 @@ are used for versioning (schema follows below):
 ---
 2016-12-02
 
-- Django 1.9 compatibility.
+- Django 1.8, 1.9 and 1.10 compatibility.
 - pep8 fixes.
 - The ``six`` package requirement increased to six >= 1.9.
 - Drop support of Django < 1.8 (it still may work, but no longer guaranteed).
