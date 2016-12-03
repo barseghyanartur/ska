@@ -91,7 +91,7 @@ Latest stable version from github.
 
 .. code-block:: sh
 
-    pip install -e git+https://github.com/barseghyanartur/ska@stable#egg=ska
+    pip install https://github.com/barseghyanartur/ska/archive/stable.tar.gz
 
 Usage examples
 ==============
