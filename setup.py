@@ -51,5 +51,12 @@ setup(
     install_requires=[
         'six>=1.9',
         'django-nine>=0.1.10',
+    ],
+    tests_require=[
+        'factory_boy',
+        'fake-factory',
+        'pytest',
+        'pytest-django',
+        'radar',
     ]
 )
