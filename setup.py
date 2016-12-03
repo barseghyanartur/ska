@@ -6,7 +6,7 @@ try:
 except:
     readme = ''
 
-version = '1.6'
+version = '1.6.1'
 
 exec_dirs = [
     'src/ska/bin/',
@@ -19,15 +19,16 @@ for exec_dir in exec_dirs:
 setup(
     name='ska',
     version=version,
-    description=("Sign- and validate- data (dictionaries, strings) using "
-                 "symmetric-key algorithm."),
+    description="Sign- and validate- data (dictionaries, strings) using "
+                "symmetric-key algorithm.",
     long_description=readme,
     classifiers=[
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2.6",
+        "Programming Language :: Python :: 2",
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.3",
+        "Programming Language :: Python :: 3.4",
+        "Programming Language :: Python :: 3.5",
         "Topic :: Security :: Cryptography",
         "Environment :: Web Environment",
         "Intended Audience :: Developers",
@@ -46,7 +47,7 @@ setup(
     package_data={
         'ska': execs,
     },
-    scripts=['src/ska/bin/ska-sign-url',],
+    scripts=['src/ska/bin/ska-sign-url'],
     install_requires=[
         'six>=1.9',
         'django-nine>=0.1.10',

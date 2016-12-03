@@ -45,7 +45,7 @@ LOG_INFO = True
 
 
 def log_info(func):
-    """Prints some useful info."""
+    """Logs some useful info."""
     if not LOG_INFO:
         return func
 
@@ -165,7 +165,7 @@ NUM_ITEMS = 5
 # Skipping from non-Django tests.
 if os.environ.get("DJANGO_SETTINGS_MODULE", None):
 
-    from django.test import Client
+    from django.test import Client, TransactionTestCase
     from django.utils.text import slugify
     from django.contrib.auth.models import User
 
@@ -186,8 +186,7 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
 
     @pytest.mark.django_db
     def create_admin_user():
-        """
-        Create a user for testing the dashboard.
+        """Create a user for testing the dashboard.
 
         TODO: At the moment an admin account is being tested. Automated tests
         with diverse accounts are to be implemented.
@@ -206,6 +205,7 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
 
     @pytest.mark.django_db
     def generate_data(num_items=NUM_ITEMS):
+        """Generate data."""
         words = WORDS[:]
 
         random_date = radar.random_datetime()
@@ -247,10 +247,8 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
     # *********************************************************************
 
     @pytest.mark.django_db
-    class SkaDecoratorsTest(unittest.TestCase):
-        """
-        Testing model- and view- decorators.
-        """
+    class SkaDecoratorsTest(TransactionTestCase):
+        """Testing model- and view- decorators."""
 
         pytestmark = pytest.mark.django_db
 
@@ -262,8 +260,7 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
 
         @log_info
         def test_01_model_decorator(self):
-            """Test the ``ska.contrib.django.ska.decorators.sign_url``.
-            """
+            """Test the ``ska.contrib.django.ska.decorators.sign_url``."""
             # Testing signed URLs
             signed_absolute_url = self.item.get_signed_absolute_url()
             self.assertIsNotNone(signed_absolute_url)
@@ -294,8 +291,7 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
 
         @log_info
         def test_03_view_decorator_with_unsigned_url(self):
-            """
-            Test view decorator with unsigned URL.
+            """Test view decorator with unsigned URL.
 
             Test the
             ``ska.contrib.django.ska.decorators.validate_signed_request`` view
@@ -327,8 +323,8 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
         #     # TODO
 
     @pytest.mark.django_db
-    class SkaAuthenticationBackendTest(unittest.TestCase):
-        """Tests for authentication backends."""
+    class SkaAuthenticationBackendTest(TransactionTestCase):
+        """Tests for auth backend."""
 
         pytestmark = pytest.mark.django_db
 
@@ -390,16 +386,12 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
 
         @log_info
         def test_01_login(self):
-            """
-            Test authentication using general ``SECRET_KEY``.
-            """
+            """Test auth using general ``SECRET_KEY``."""
             return self.__test_login(SECRET_KEY, [302, 403])
 
         @log_info
         def test_02_provider_login(self):
-            """
-            Test authentication using ``SECRET_KEY`` defined in ``PROVIDERS``.
-            """
+            """Test auth using ``SECRET_KEY`` defined in ``PROVIDERS``."""
             secret_key = PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
             return self.__test_login(
                 secret_key,
@@ -409,9 +401,10 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
 
         @log_info
         def test_03_login_fail_wrong_secret_key(self):
-            """
-            Fail test authentication using general ``SECRET_KEY``, providing
-            wrong secret key.
+            """Fail test auth using general ``SECRET_KEY``.
+
+            Fail test auth using general ``SECRET_KEY`` providing wrong
+            secret key.
             """
             return self.__test_login(SECRET_KEY + 'wrong', [403, 403])
 

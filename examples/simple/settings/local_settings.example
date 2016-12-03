@@ -32,11 +32,6 @@ EMAIL_FILE_PATH = PROJECT_DIR(os.path.join('..', 'tmp'))
 DEFAULT_FROM_EMAIL = '<no-reply@example.com>'
 
 SKA_UNAUTHORISED_REQUEST_ERROR_TEMPLATE = 'ska/401.html'
-# Note, that at the moment (ska==1.6) something broke in between Django 1.6
-# and Django 1.7 and checks don't go well. This will be fixed ASAP shortly.
-# However, for the time being, setting ``SKA_DB_STORE_SIGNATURES`` and
-# ``SKA_DB_PERFORM_SIGNATURE_CHECK`` to True breaks Django tests. Therefore,
-# wait until it's fixed or set to False in the meanwhile.
 # SKA_DB_STORE_SIGNATURES = True
 # SKA_DB_PERFORM_SIGNATURE_CHECK = True
 

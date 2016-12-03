@@ -1,3 +1,2 @@
-Django==1.5.5
+Django>=1.8<1.9
 radar==0.3
-#-e git+https://github.com/barseghyanartur/ska/@stable#egg=ska

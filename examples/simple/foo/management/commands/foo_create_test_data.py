@@ -1,16 +1,17 @@
-__author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
-__copyright__ = 'Copyright (c) 2013 Artur Barseghyan'
-__license__ = 'GPL 2.0/LGPL 2.1'
-__all__ = ('Command',)
-
 from django.core.management.base import BaseCommand
 
 from ska.contrib.django.ska.tests import create_admin_user, generate_data
 
+__author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
+__copyright__ = '2013-2016 Artur Barseghyan'
+__license__ = 'GPL 2.0/LGPL 2.1'
+__all__ = ('Command',)
+
+
 class Command(BaseCommand):
+    """Purges old signature data (valid_until < now)."""
+
     def handle(self, *args, **options):
-        """
-        Purges old signature data (valid_until < now).
-        """
+        """Handle."""
         create_admin_user()
         generate_data()

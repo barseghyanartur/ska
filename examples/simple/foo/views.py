@@ -24,7 +24,7 @@ def browse(request, template_name='foo/browse.html'):
     """
     queryset = FooItem._default_manager.all()
 
-    context = {'items': queryset,}
+    context = {'items': queryset}
 
     return render(request, template_name, context)
 

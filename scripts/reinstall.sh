@@ -1,3 +1,3 @@
 reset
-./uninstall.sh
-./install.sh
+./scripts/uninstall.sh
+./scripts/install.sh

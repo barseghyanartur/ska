@@ -201,7 +201,8 @@ LOGGING = {
     },
     'formatters': {
         'verbose': {
-            'format': '%(levelname)s %(asctime)s [%(pathname)s:%(lineno)s] %(message)s'
+            'format': '%(levelname)s %(asctime)s [%(pathname)s:%(lineno)s] '
+                      '%(message)s'
         },
         'simple': {
             'format': '%(levelname)s %(message)s'
@@ -219,16 +220,16 @@ LOGGING = {
             'formatter': 'verbose'
         },
         'django_log': {
-            'level':'DEBUG',
-            'class':'logging.handlers.RotatingFileHandler',
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
             'filename': PROJECT_DIR("../../logs/django.log"),
             'maxBytes': 1048576,
             'backupCount': 99,
             'formatter': 'verbose',
         },
         'ska_log': {
-            'level':'DEBUG',
-            'class':'logging.handlers.RotatingFileHandler',
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
             'filename': PROJECT_DIR("../../logs/ska.log"),
             'maxBytes': 1048576,
             'backupCount': 99,
