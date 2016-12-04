@@ -20,3 +20,4 @@ syntax: regexp
 ^dist/
 ^src/ska.egg-info
 ^src/ska/contrib/plone/
+^examples/simple/tmp/

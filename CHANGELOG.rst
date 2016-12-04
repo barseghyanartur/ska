@@ -15,6 +15,12 @@ are used for versioning (schema follows below):
   0.3.4 to 0.4).
 - All backwards incompatible changes are mentioned in this document.
 
+1.6.3
+-----
+2016-12-04
+
+- Fixes in django ska decorators.
+
 1.6.2
 -----
 2016-12-03

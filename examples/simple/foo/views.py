@@ -1,16 +1,15 @@
+from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import render
-from django.template import RequestContext
 from django.views.generic.base import View
-from django.core.urlresolvers import reverse
 
 from ska import sign_url
-from ska.defaults import DEFAULT_PROVIDER_PARAM
 from ska.contrib.django.ska.decorators import (
     validate_signed_request,
     m_validate_signed_request
 )
 from ska.contrib.django.ska.settings import SECRET_KEY, PROVIDERS
+from ska.defaults import DEFAULT_PROVIDER_PARAM
 
 from foo.models import FooItem
 
@@ -87,8 +86,7 @@ def authenticate(request, template_name='foo/authenticate.html'):
 
 @validate_signed_request()
 def detail(request, slug, template_name='foo/detail.html'):
-    """
-    Foo item detail.
+    """Foo item detail.
 
     :param django.http.HttpRequest request:
     :param str slug: Foo item slug.
@@ -110,6 +108,7 @@ class FooDetailView(View):
 
     @m_validate_signed_request()
     def get(self, request, slug, template_name='foo/detail.html'):
+        """Get."""
         try:
             item = FooItem._default_manager.get(slug=slug)
         except Exception as e:

@@ -4,6 +4,13 @@
 
 {% block content %}
     <h1>{% trans "`ska` - Signing (HTTP) requests using symmetric-key algorithm." %}</h1>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
     <h2>{% trans "Intro" %}</h2>
     <h3>{% trans "`ska` core module" %}</h3>
     <p>

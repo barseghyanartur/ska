@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 
-from django.utils.translation import ugettext_lazy as _
 from django.shortcuts import render
+from django.utils.translation import ugettext_lazy as _
 
 from nine import versions
 
@@ -19,7 +19,9 @@ from ....defaults import (
 
 from .http import HttpResponseUnauthorized
 from .settings import (
-    SECRET_KEY, AUTH_USER, UNAUTHORISED_REQUEST_ERROR_MESSAGE,
+    SECRET_KEY,
+    AUTH_USER,
+    UNAUTHORISED_REQUEST_ERROR_MESSAGE,
     UNAUTHORISED_REQUEST_ERROR_TEMPLATE
 )
 
@@ -123,7 +125,7 @@ class ValidateSignedRequest(BaseValidateSignedRequest):
             """Inner."""
             # Validating the request.
             if versions.DJANGO_GTE_1_7:
-                request_data = request.GET
+                request_data = request.GET.dict()
             else:
                 request_data = request.REQUEST
             validation_result = validate_signed_request_data(
@@ -199,7 +201,7 @@ class MethodValidateSignedRequest(BaseValidateSignedRequest):
         def inner(this, request, *args, **kwargs):
             """Inner."""
             if versions.DJANGO_GTE_1_7:
-                request_data = request.GET
+                request_data = request.GET.dict()
             else:
                 request_data = request.REQUEST
             # Validating the request.
