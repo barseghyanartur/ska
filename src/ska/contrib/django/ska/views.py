@@ -30,7 +30,7 @@ def login(request):
 
     if not next_url:
         if versions.DJANGO_GTE_1_7:
-            request_data = request.GET
+            request_data = request.GET.dict()
         else:
             request_data = request.REQUEST
         provider_data = get_provider_data(request_data)

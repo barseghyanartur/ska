@@ -12,6 +12,7 @@ syntax: regexp
 ^examples/static
 ^examples/db/example.db
 ^examples/tmp
+^releases/
 ^examples/logs
 ^builddocs/
 ^builddocs.zip
