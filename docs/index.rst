@@ -54,6 +54,7 @@ Django `ska` module (`ska.contrib.django.ska`)
   site. Multiple Secret Keys (per provider) supported. Comes with handy
   callbacks (possible to customise per provider) for various states of
   authentication.
+- Template tags for signing URLs from within templates.
 
 Prerequisites
 =============
@@ -521,20 +522,11 @@ installer) has been created (works on Ubuntu/Debian, may work on other Linux
 systems as well, although not guaranteed). Follow the instructions below for
 having the demo running within a minute.
 
-Grab the latest ``ska_example_app_installer.sh``:
+Grab the latest ``ska_example_app_installer.sh`` and execute it:
 
 .. code-block:: sh
 
-    wget https://raw.github.com/barseghyanartur/ska/stable/example/ska_example_app_installer.sh
-
-Assign execute rights to the installer and run the
-``ska_example_app_installer.sh``:
-
-.. code-block:: sh
-
-    chmod +x ska_example_app_installer.sh
-
-    ./ska_example_app_installer.sh
+    wget -O - https://raw.github.com/barseghyanartur/ska/stable/examples/ska_example_app_installer.sh | bash
 
 Open your browser and test the app.
 

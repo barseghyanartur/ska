@@ -11,7 +11,7 @@ import radar
 
 from six import PY3
 
-from ska.gettext import _
+# from ska.gettext import _
 
 try:
     from six.moves import range as xrange

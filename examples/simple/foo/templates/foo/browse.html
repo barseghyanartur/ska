@@ -6,17 +6,18 @@
     <h1>{% trans "Foo listing" %}</h1>
     <p>
         {% blocktrans %}
-        Below you can see the list of URLs, divided into 3 categories: (1) Fail, (2) success and (3) success
-        (class based). Fail URLs obviously fail (401 Unauthorized). The other two should work.
+        Below you can see the list of URLs, divided into 3 categories: (1) Fail, (2) success, (3) success
+        (class based) and (4) signed with template tag. Fail URLs obviously fail (401 Unauthorized). The
+        other three should work.
         {% endblocktrans %}
     </p>
     <table>
         <thead>
             <tr>
                 <td><strong>{% trans "Fail" %}</strong></td>
-                <td><strong>{% trans "Success" %}</strong></td>
-                <td><strong>{% trans "Success (class based)" %}</strong></td>
-                <td><strong>{% trans "Signed with templatetag" %}</strong></td>
+                <td><strong>{% trans "Success (signed with decorator, decorator validation)" %}</strong></td>
+                <td><strong>{% trans "Success (signed with decorator, class based decorator validation)" %}</strong></td>
+                <td><strong>{% trans "Success (signed with templatetag)" %}</strong></td>
             </tr>
         </thead>
         <tbody>

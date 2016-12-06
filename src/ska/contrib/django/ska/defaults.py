@@ -1,7 +1,3 @@
-from __future__ import absolute_import
-
-from ska.gettext import _
-
 """
 - `UNAUTHORISED_REQUEST_ERROR_MESSAGE` (str): Plain text error message.
   Defaults to "Unauthorised request. {0}".
@@ -27,6 +23,10 @@ from ska.gettext import _
   is a required key. The rest are optional, and if given, override
   respectively the values of ``ska.contrib.django.ska.settings``.
 """
+
+from __future__ import absolute_import
+
+from ska.gettext import _
 
 __title__ = 'ska.contrib.django.ska.defaults'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'

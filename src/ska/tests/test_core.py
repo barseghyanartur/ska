@@ -16,7 +16,7 @@ from .. import (
 )
 from .. import sign_url, validate_signed_request_data, signature_to_dict
 from .. import error_codes
-from .base import log_info, timestap_to_human_readable, parse_url_params
+from .base import log_info, timestamp_to_human_readable, parse_url_params
 
 __title__ = 'ska.tests.test_core'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
@@ -61,7 +61,7 @@ class SignatureTest(unittest.TestCase):
 
         flow.append(('Valid until used', sig.valid_until))
         flow.append(('Valid until (human readable)',
-                     timestap_to_human_readable(sig.valid_until)))
+                     timestamp_to_human_readable(sig.valid_until)))
         flow.append(('Signature generated', sig.signature))
         flow.append(('Signature is expired', sig.is_expired()))
 
@@ -110,7 +110,7 @@ class SignatureTest(unittest.TestCase):
 
         flow.append(('Valid until used', datetime_time_lapse))
         flow.append(('Valid until used (human readable)',
-                     timestap_to_human_readable(datetime_time_lapse)))
+                     timestamp_to_human_readable(datetime_time_lapse)))
 
         # Generate signature
         sig = signature_cls.generate_signature(
@@ -175,7 +175,7 @@ class SignatureTest(unittest.TestCase):
 
         flow.append(('Valid until used', datetime_time_lapse))
         flow.append(('Valid until used (human readable)',
-                     timestap_to_human_readable(datetime_time_lapse)))
+                     timestamp_to_human_readable(datetime_time_lapse)))
 
         # Generate signature
         sig = signature_cls.generate_signature(
@@ -238,7 +238,7 @@ class SignatureTest(unittest.TestCase):
 
         flow.append(('Valid until used', 1377997396.0))
         flow.append(('Valid until used (human readable)',
-                     timestap_to_human_readable(1377997396.0)))
+                     timestamp_to_human_readable(1377997396.0)))
         flow.append(('Signature generated', 'EBS6ipiqRLa6TY5vxIvZU30FpnM='))
         flow.append(('Signature is expired', True))
 
@@ -505,7 +505,7 @@ class ShortcutsTest(unittest.TestCase):
 
         flow.append(('Valid until used', datetime_time_lapse))
         flow.append(('Valid until used (human readable)',
-                     timestap_to_human_readable(datetime_time_lapse)))
+                     timestamp_to_human_readable(datetime_time_lapse)))
 
         signed_url = sign_url(
             auth_user=self.auth_user,

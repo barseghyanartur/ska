@@ -1,4 +1,5 @@
 import datetime
+import logging
 
 from six import PY3
 
@@ -19,11 +20,12 @@ __license__ = 'GPL 2.0/LGPL 2.1'
 __all__ = (
     'LOG_INFO',
     'log_info',
-    'timestap_to_human_readable',
+    'timestamp_to_human_readable',
     'parse_url_params',
 )
 
 
+logger = logging.getLogger(__name__)
 LOG_INFO = True
 
 
@@ -36,20 +38,20 @@ def log_info(func):
         """Inner"""
         result = func(self, *args, **kwargs)
 
-        print('\n\n%s' % func.__name__)
-        print('============================')
+        logger.debug('\n\n%s' % func.__name__)
+        logger.debug('============================')
         if func.__doc__:
-            print('""" %s """' % func.__doc__.strip())
-        print('----------------------------')
+            logger.debug('""" %s """' % func.__doc__.strip())
+        logger.debug('----------------------------')
         if result is not None:
-            print(result)
-        print('\n++++++++++++++++++++++++++++')
+            logger.debug(result)
+        logger.debug('\n++++++++++++++++++++++++++++')
 
         return result
     return inner
 
 
-def timestap_to_human_readable(timestamp):
+def timestamp_to_human_readable(timestamp):
     """Convert Unix timestamp to human readable string.
 
     :param float:
