@@ -512,7 +512,7 @@ Django integration
 ``ska`` comes with Django model- and view-decorators for producing signed URLs
 and and validating the endpoints, as well as with authentication backend,
 which allows password-less login into Django web site using `ska` generated
-signature tokens.
+signature tokens. There's also a template tag for signing URLs.
 
 Demo
 ~~~~
@@ -657,6 +657,35 @@ arguments.
 
 If you're using class based views, use the ``m_validate_signed_request``
 decorator instead of ``validate_signed_request``.
+
+Template tags
+~~~~~~~~~~~~~
+The ``sign_url`` template tag accepts template context and the following
+params:
+
+- url
+- auth_user: If not given, request.user.get_username() is used.
+- secret_key: If not given, the secret key from settings is used.
+- valid_until: If not given, calculated from ``lifetime``.
+- lifetime: Defaults to ``ska.defaults.SIGNATURE_LIFETIME``.
+- suffix: Defaults to ``ska.defaults.DEFAULT_URL_SUFFIX``.
+- signature_param: Defaults to ``ska.defaultsDEFAULT_SIGNATURE_PARAM``.
+- auth_user_param: Defaults to ``ska.defaults.DEFAULT_AUTH_USER_PARAM``.
+- valid_until_param: Defaults to ``ska.defaults.DEFAULT_VALID_UNTIL_PARAM``.
+- signature_cls: Defaults to ``ska.signatures.Signature``.
+
+Usage example:
+
+.. code-block:: html
+
+    {% load ska_tags %}
+
+    {% for item in items%}
+
+        {% sign_url item.get_absolute_url as item_signed_absolute_url %}
+        <a href="{{ item_signed_absolute_url }}">{{ item }}</a>
+
+    {% endfor %}
 
 Authentication backend
 ~~~~~~~~~~~~~~~~~~~~~~

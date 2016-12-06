@@ -1,4 +1,9 @@
+import datetime
+import time
+
 from six import PY3
+
+from .defaults import SIGNATURE_LIFETIME
 
 try:
     from six.moves.urllib.parse import quote
@@ -17,7 +22,8 @@ __all__ = (
     'dict_keys',
     'dict_to_ordered_list',
     'sorted_urlencode',
-    'extract_signed_data'
+    'extract_signed_data',
+    'make_valid_until',
 )
 
 
@@ -100,3 +106,16 @@ def extract_signed_data(data, extra):
             extracted_extra.pop(key)
 
     return extracted_extra
+
+
+def make_valid_until(lifetime=SIGNATURE_LIFETIME):
+    """Make valid until.
+
+    :param int lifetime:
+    :return datetime.datetime"""
+    return time.mktime(
+        (
+            datetime.datetime.now() +
+            datetime.timedelta(seconds=lifetime)
+        ).timetuple()
+    )

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% load i18n %}
+{% load i18n ska_tags %}
 
 {% block content %}
     <h1>{% trans "Foo listing" %}</h1>
@@ -16,6 +16,7 @@
                 <td><strong>{% trans "Fail" %}</strong></td>
                 <td><strong>{% trans "Success" %}</strong></td>
                 <td><strong>{% trans "Success (class based)" %}</strong></td>
+                <td><strong>{% trans "Signed with templatetag" %}</strong></td>
             </tr>
         </thead>
         <tbody>
@@ -24,6 +25,7 @@
             <td><a href="{{ item.get_absolute_url }}" class="unsigned">{{ item }}</a></td>
             <td><a href="{{ item.get_signed_absolute_url }}" class="signed">{{ item }}</a></td>
             <td><a href="{{ item.get_signed_class_based_absolute_url }}" class="signed">{{ item }}</a></td>
+            <td><a href="{% sign_url item.get_absolute_url as item_signed_absolute_url %}{{ item_signed_absolute_url }}" class="signed">{{ item }}</a></td>
         </tr>
         {% endfor %}
         </tbody>
