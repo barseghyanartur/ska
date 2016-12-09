@@ -6,6 +6,7 @@
 /.tox/
 /.coverage
 /.cache
+/.hgtags
 
 /examples/simple/settings/local_settings.py
 /examples/static

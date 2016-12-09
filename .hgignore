@@ -7,6 +7,7 @@ syntax: regexp
 \.tox
 \.cache
 \.coverage$
+\.hgtags$
 
 ^examples/simple/settings/local_settings\.py
 ^examples/static
