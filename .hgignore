@@ -10,6 +10,7 @@ syntax: regexp
 \.hgtags$
 ^htmlcov/
 \.py,cover
+^\.eggs/
 
 ^examples/simple/settings/local_settings\.py
 ^examples/static

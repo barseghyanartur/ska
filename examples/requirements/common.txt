@@ -16,3 +16,4 @@ isort
 pre-commit
 check-manifest
 restview
+check-manifest

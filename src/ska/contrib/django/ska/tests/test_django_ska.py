@@ -10,14 +10,9 @@ import pytest
 import radar
 
 from six import PY3
+from six.moves import range as xrange
 
 # from ska.gettext import _
-
-try:
-    from six.moves import range as xrange
-except ImportError:
-    if PY3:
-        xrange = range
 
 if not PY3:
     from string import translate, maketrans, punctuation

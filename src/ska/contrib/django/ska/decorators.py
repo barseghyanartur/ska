@@ -36,7 +36,7 @@
 from __future__ import absolute_import
 
 from django.shortcuts import render
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext, ugettext_lazy as _
 
 from nine import versions
 
@@ -156,7 +156,7 @@ class ValidateSignedRequest(BaseValidateSignedRequest):
                     # Otherwise, return plain text message with describing the
                     # error.
                     return HttpResponseUnauthorized(
-                        _(UNAUTHORISED_REQUEST_ERROR_MESSAGE).format(
+                        ugettext(UNAUTHORISED_REQUEST_ERROR_MESSAGE).format(
                             '; '.join(validation_result.reason)
                         )
                     )
@@ -233,7 +233,7 @@ class MethodValidateSignedRequest(BaseValidateSignedRequest):
                     # Otherwise, return plain text message with describing the
                     # error.
                     return HttpResponseUnauthorized(
-                        _(UNAUTHORISED_REQUEST_ERROR_MESSAGE).format(
+                        ugettext(UNAUTHORISED_REQUEST_ERROR_MESSAGE).format(
                             '; '.join(validation_result.reason)
                         )
                     )
@@ -287,7 +287,7 @@ class SignAbsoluteURL(object):
                  signature_param=DEFAULT_SIGNATURE_PARAM,
                  auth_user_param=DEFAULT_AUTH_USER_PARAM,
                  valid_until_param=DEFAULT_VALID_UNTIL_PARAM,
-                 extra={}, extra_param=DEFAULT_EXTRA_PARAM):
+                 extra=None, extra_param=DEFAULT_EXTRA_PARAM):
         """Constructor."""
         self.auth_user = auth_user
         self.secret_key = secret_key
@@ -297,7 +297,7 @@ class SignAbsoluteURL(object):
         self.signature_param = signature_param
         self.auth_user_param = auth_user_param
         self.valid_until_param = valid_until_param
-        self.extra = extra
+        self.extra = extra if extra is not None else {}
         self.extra_param = extra_param
 
     def __call__(self, func):

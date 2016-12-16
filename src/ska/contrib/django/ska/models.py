@@ -31,7 +31,7 @@ class Signature(models.Model):
     valid_until = models.DateTimeField(_("Valid until"))
     created = models.DateTimeField(_("Date created"), auto_now_add=True)
 
-    class Meta:
+    class Meta(object):
         """Meta class."""
 
         verbose_name = _("Token")

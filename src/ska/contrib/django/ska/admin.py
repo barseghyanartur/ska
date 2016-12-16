@@ -28,7 +28,7 @@ class SignatureAdmin(admin.ModelAdmin):
         }),
     )
 
-    class Meta:
+    class Meta(object):
         """Meta class."""
 
         app_label = _('Signature')
