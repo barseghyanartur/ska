@@ -14,3 +14,5 @@ pylint
 flake8
 isort
 pre-commit
+check-manifest
+restview

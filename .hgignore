@@ -8,6 +8,8 @@ syntax: regexp
 \.cache
 \.coverage$
 \.hgtags$
+^htmlcov/
+\.py,cover
 
 ^examples/simple/settings/local_settings\.py
 ^examples/static

@@ -1,12 +1,4 @@
-from six import PY3
-
-try:
-    from six.moves.urllib.parse import urlencode
-except ImportError:
-    if PY3:
-        from urllib.parse import urlencode
-    else:
-        from urllib import urlencode
+from six.moves.urllib.parse import urlencode
 
 from .defaults import (
     DEFAULT_URL_SUFFIX,
