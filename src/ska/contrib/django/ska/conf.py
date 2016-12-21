@@ -17,9 +17,11 @@ def get_setting(setting, override=None):
 
     If override is not None, it will be used instead of the setting.
     """
-    if override is not None:
-        return override
-    if hasattr(settings, 'SKA_%s' % setting):
-        return getattr(settings, 'SKA_%s' % setting)
+    attr_name = 'SKA_{}'.format(setting)
+    if hasattr(settings, attr_name):
+        return getattr(settings, attr_name)
     else:
-        return getattr(defaults, setting)
+        if hasattr(defaults, setting):
+            return getattr(defaults, setting)
+        else:
+            return override

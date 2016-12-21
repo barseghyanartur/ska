@@ -48,10 +48,10 @@ def log_info(func):
         """Inner."""
         result = func(self, *args, **kwargs)
 
-        logger.debug('\n\n%s' % func.__name__)
+        logger.debug('\n\n%s', func.__name__)
         logger.debug('============================')
         if func.__doc__:
-            logger.debug('""" %s """' % func.__doc__.strip())
+            logger.debug('""" %s """', func.__doc__.strip())
         logger.debug('----------------------------')
         if result is not None:
             logger.debug(result)
@@ -277,9 +277,10 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
             # Testing view with signed URL
             client = Client()
             response = client.get(signed_absolute_url, {})
-            self.assertIn(response.status_code, (200, 201, 202))
+            response_status_code = getattr(response, 'status_code', None)
+            self.assertIn(response_status_code, (200, 201, 202))
             flow.append(
-                ('Response status code for signed URL', response.status_code)
+                ('Response status code for signed URL', response_status_code)
             )
 
             return flow
@@ -302,12 +303,14 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
             # Testing view with signed URL
             client = Client()
             response = client.get(absolute_url, {})
-            self.assertIn(response.status_code, (401,))
+            response_status_code = getattr(response, 'status_code', None)
+            response_content = getattr(response, 'content', "")
+            self.assertIn(response_status_code, (401,))
             flow.append(
-                ('Response status code for unsigned URL', response.status_code)
+                ('Response status code for unsigned URL', response_status_code)
             )
             flow.append(
-                ('Response content for unsigned URL', response.content)
+                ('Response content for unsigned URL', response_content)
             )
 
             return flow
@@ -358,22 +361,24 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
             # Testing view with signed URL
             client = Client()
             response = client.get(signed_login_url, {})
+            response_status_code = getattr(response, 'status_code', None)
             # if response.status_code not in (first_response_code,):
             #     pytest.set_trace()
-            self.assertIn(response.status_code, (first_response_code,))
+            self.assertIn(response_status_code, (first_response_code,))
             flow.append(
-                ('Response status code for signed URL', response.status_code)
+                ('Response status code for signed URL', response_status_code)
             )
 
             if DB_STORE_SIGNATURES and DB_PERFORM_SIGNATURE_CHECK:
                 # Testing again with signed URL and this time, it should fail
                 client = Client()
                 response = client.get(signed_login_url, {})
-                self.assertIn(response.status_code, (second_response_code,))
+                response_status_code = getattr(response, 'status_code', None)
+                self.assertIn(response_status_code, (second_response_code,))
                 flow.append(
                     (
                         'Response status '
-                        'code for signed URL', response.status_code
+                        'code for signed URL', response_status_code
                     )
                 )
 
