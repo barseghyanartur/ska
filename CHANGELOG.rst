@@ -19,7 +19,7 @@ are used for versioning (schema follows below):
 -----
 2017-02-09
 
-- Tested against Python 3.6, PyPy and Django 1.11 (alpha).
+- Tested against Python 3.6 and Django 1.11 (alpha).
 
 1.6.6
 -----

@@ -60,7 +60,7 @@ Prerequisites
 =============
 Present
 -------
-- Core ``ska`` module requires Python 2.7, 3.4, 3.5, 3.6 or PyPy.
+- Core ``ska`` module requires Python 2.7, 3.4, 3.5 or 3.6.
 - Django ``ska`` module (``ska.contrib.django.ska``) requires the mentioned
   above plus Django 1.8, 1.9, 1.10 and 1.11. Note that Django 1.11 is yet
   experimental.
