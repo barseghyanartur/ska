@@ -26,10 +26,10 @@ from .shortcuts import (
 from .utils import RequestHelper
 
 __title__ = 'ska'
-__version__ = '1.6.6'
-__build__ = 0x00001a
+__version__ = '1.6.7'
+__build__ = 0x00001b
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
-__copyright__ = '2013-2016 Artur Barseghyan'
+__copyright__ = '2013-2017 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
 __all__ = (
     'sign_url',

@@ -475,7 +475,7 @@ convey the exclusion of warranty; and each file should have at least the
           possible validation errors. Uses sha1/hmac for signature
           encryption. Comes with shortcut functions for signing (and
           validating) dictionaries and URLs.
-    Copyright (C) 2013-2016 Artur Barseghyan
+    Copyright (C) 2013-2017 Artur Barseghyan
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public

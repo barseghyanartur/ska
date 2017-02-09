@@ -295,7 +295,7 @@ the "copyright" line and a pointer to where the full notice is found.
           possible validation errors. Uses sha1/hmac for signature
           encryption. Comes with shortcut functions for signing (and
           validating) dictionaries and URLs.
-    Copyright (C) 2013-2016 Artur Barseghyan
+    Copyright (C) 2013-2017 Artur Barseghyan
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

@@ -60,9 +60,10 @@ Prerequisites
 =============
 Present
 -------
-- Core ``ska`` module requires Python 2.7, 3.4, 3.5.
+- Core ``ska`` module requires Python 2.7, 3.4, 3.5, 3.6 or PyPy.
 - Django ``ska`` module (``ska.contrib.django.ska``) requires the mentioned
-  above plus Django 1.8 or greater.
+  above plus Django 1.8, 1.9, 1.10 and 1.11. Note that Django 1.11 is yet
+  experimental.
 
 Past
 ----
@@ -582,7 +583,9 @@ be viewed by authorised parties only. You would then use
 
     from ska.contrib.django.ska.decorators import sign_url
 
+
     class FooItem(models.Model):
+
         title = models.CharField(_("Title"), max_length=100)
         slug = models.SlugField(unique=True, verbose_name=_("Slug"))
         body = models.TextField(_("Body"))
@@ -949,7 +952,6 @@ would do it for ``client_1.power_users``.
         }
     )
 
-
 Testing
 =======
 Simply type:
@@ -958,17 +960,23 @@ Simply type:
 
     ./runtests.py
 
-or use tox:
+Or use tox:
 
 .. code-block:: sh
 
     tox
 
-or use tox to check specific env:
+Or use tox to check specific env:
 
 .. code-block:: sh
 
     tox -e py35
+
+Or run Django tests:
+
+.. code-block:: sh
+
+    python examples/simple/manage.py test ska --settings=settings.testing
 
 License
 =======
