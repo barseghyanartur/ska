@@ -16,6 +16,7 @@
 /examples/db/example.db
 /examples/tmp
 /examples/logs
+/examples/var/
 /releases/
 /builddocs/
 /builddocs.zip
