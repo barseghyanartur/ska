@@ -1,5 +1,6 @@
 from __future__ import absolute_import, print_function
 
+import datetime
 import os
 import logging
 import random
@@ -163,6 +164,7 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
     from django.test import Client, TransactionTestCase
     from django.utils.text import slugify
     from django.contrib.auth.models import User
+    from django.core.management import call_command
 
     from ska import sign_url
     from ska.defaults import DEFAULT_PROVIDER_PARAM
@@ -172,6 +174,7 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
         DB_PERFORM_SIGNATURE_CHECK,
         PROVIDERS
     )
+    from ska.contrib.django.ska.models import Signature
 
     from foo.models import FooItem
 
@@ -334,7 +337,11 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
             self.PROVIDER_NAME = 'client_1.admins'
             self.LOGIN_URL = '/ska/login/'
 
-        def __test_login(self, secret_key, response_codes, provider_name=None):
+        def __test_login(self,
+                         secret_key,
+                         response_codes,
+                         provider_name=None,
+                         logout=False):
             flow = []
 
             first_response_code, second_response_code = response_codes
@@ -359,8 +366,8 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
             flow.append(('Signed login URL', signed_login_url))
 
             # Testing view with signed URL
-            client = Client()
-            response = client.get(signed_login_url, {})
+            self._client = Client()
+            response = self._client.get(signed_login_url, {})
             response_status_code = getattr(response, 'status_code', None)
             # if response.status_code not in (first_response_code,):
             #     pytest.set_trace()
@@ -369,10 +376,14 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
                 ('Response status code for signed URL', response_status_code)
             )
 
+            if logout:
+                self.__logout()
+
             if DB_STORE_SIGNATURES and DB_PERFORM_SIGNATURE_CHECK:
                 # Testing again with signed URL and this time, it should fail
-                client = Client()
-                response = client.get(signed_login_url, {})
+
+                self._client = Client()
+                response = self._client.get(signed_login_url, {})
                 response_status_code = getattr(response, 'status_code', None)
                 self.assertIn(response_status_code, (second_response_code,))
                 flow.append(
@@ -381,13 +392,19 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
                         'code for signed URL', response_status_code
                     )
                 )
+                if logout:
+                    self.__logout()
 
             return flow
+
+        def __logout(self):
+            """Log out."""
+            self._client.logout()
 
         @log_info
         def test_01_login(self):
             """Test auth using general ``SECRET_KEY``."""
-            return self.__test_login(SECRET_KEY, [302, 403])
+            return self.__test_login(SECRET_KEY, [302, 403], logout=True)
 
         @log_info
         def test_02_provider_login(self):
@@ -396,7 +413,8 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
             return self.__test_login(
                 secret_key,
                 [302, 403],
-                self.PROVIDER_NAME
+                self.PROVIDER_NAME,
+                logout=True
             )
 
         @log_info
@@ -406,7 +424,11 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
             Fail test auth using general ``SECRET_KEY`` providing wrong
             secret key.
             """
-            return self.__test_login(SECRET_KEY + 'wrong', [403, 403])
+            return self.__test_login(
+                SECRET_KEY + 'wrong',
+                [403, 403],
+                logout=True
+            )
 
         @log_info
         def test_04_provider_login_fail_wrong_secret_key(self):
@@ -417,7 +439,10 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
             """
             secret_key = PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
             return self.__test_login(
-                secret_key + 'wrong', [403, 403], self.PROVIDER_NAME
+                secret_key + 'wrong',
+                [403, 403],
+                self.PROVIDER_NAME,
+                logout=True
             )
 
         @log_info
@@ -429,8 +454,48 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
             """
             secret_key = PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
             return self.__test_login(
-                secret_key + 'wrong', [403, 403], self.PROVIDER_NAME + 'wrong'
+                secret_key + 'wrong',
+                [403, 403],
+                self.PROVIDER_NAME + 'wrong',
+                logout=True
             )
+
+        @log_info
+        def test_06_purge_stored_signatures_data(self):
+            """Test purge stored signature data."""
+            secret_key = PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
+            # Login
+            self.__test_login(
+                secret_key,
+                [302, 403],
+                self.PROVIDER_NAME,
+                logout=True
+            )
+
+            # Duplicate signatures
+            signature = Signature.objects.first()
+            signature.id = None
+            signature.signature += '0'
+            signature.save()
+            signature.id = None
+            signature.signature += '0'
+            signature.save()
+            # There should be 3
+            self.assertEqual(Signature.objects.all().count(), 3)
+
+            # Manually set valid_until to no longer valid so that we can
+            # test
+            invalid_until = (
+                datetime.datetime.now() - datetime.timedelta(minutes=20)
+            )
+            Signature.objects.update(
+                valid_until=invalid_until
+            )
+
+            # Call purge command
+            call_command('ska_purge_stored_signature_data')
+            # All old records shall be gone
+            self.assertEqual(Signature.objects.all().count(), 0)
 
 
 if __name__ == "__main__":
