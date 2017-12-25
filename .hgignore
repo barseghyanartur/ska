@@ -11,6 +11,7 @@ syntax: regexp
 ^htmlcov/
 \.py,cover
 ^\.eggs/
+^\.idea/
 
 ^examples/simple/settings/local_settings\.py
 ^examples/static
