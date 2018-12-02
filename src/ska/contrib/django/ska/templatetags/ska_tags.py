@@ -24,7 +24,7 @@ __all__ = ('sign_url',)
 register = template.Library()
 
 
-@register.assignment_tag(takes_context=True)
+@register.simple_tag(takes_context=True)
 def sign_url(context,
              url='',
              auth_user=None,
