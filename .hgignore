@@ -12,6 +12,7 @@ syntax: regexp
 \.py,cover
 ^\.eggs/
 ^\.idea/
+^\.pytest_cache/
 
 ^examples/simple/settings/local_settings\.py
 ^examples/static

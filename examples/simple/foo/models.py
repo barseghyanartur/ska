@@ -1,10 +1,16 @@
-from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+
+from nine import versions
 
 from six import python_2_unicode_compatible
 
 from ska.contrib.django.ska.decorators import sign_url
+
+if versions.DJANGO_GTE_1_10:
+    from django.urls import reverse
+else:
+    from django.core.urlresolvers import reverse
 
 
 @python_2_unicode_compatible

@@ -129,7 +129,7 @@ if versions.DJANGO_GTE_1_10:
                 'loaders': [
                     'django.template.loaders.filesystem.Loader',
                     'django.template.loaders.app_directories.Loader',
-                    'django.template.loaders.eggs.Loader',
+                    # 'django.template.loaders.eggs.Loader',
                 ],
                 'debug': DEBUG_TEMPLATE,
             }
@@ -156,7 +156,7 @@ elif versions.DJANGO_GTE_1_9:
                 'loaders': [
                     'django.template.loaders.filesystem.Loader',
                     'django.template.loaders.app_directories.Loader',
-                    'django.template.loaders.eggs.Loader',
+                    # 'django.template.loaders.eggs.Loader',
                 ],
                 'debug': DEBUG_TEMPLATE,
             }
@@ -183,7 +183,7 @@ elif versions.DJANGO_GTE_1_8:
                 'loaders': [
                     'django.template.loaders.filesystem.Loader',
                     'django.template.loaders.app_directories.Loader',
-                    'django.template.loaders.eggs.Loader',
+                    # 'django.template.loaders.eggs.Loader',
                 ],
                 'debug': DEBUG_TEMPLATE,
             }

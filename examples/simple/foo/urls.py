@@ -1,6 +1,12 @@
-from django.conf.urls import url
+from nine import versions
 
 from .views import FooDetailView, browse, authenticate, logged_in, detail
+
+if versions.DJANGO_GTE_2_1:
+    from django.urls import re_path as url
+else:
+    from django.conf.urls import url
+
 
 urlpatterns = [
     # Listing URL
