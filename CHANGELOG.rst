@@ -26,6 +26,7 @@ are used for versioning (schema follows below):
 - Django 2.0 and 2.1 compatibility.
 - Upgrade test suite.
 - Fixes in docs.
+- Python 3.4 is removed from support matrix (however, it might still work).
 
 1.6.7
 -----
