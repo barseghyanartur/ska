@@ -6,7 +6,7 @@ try:
 except:
     readme = ''
 
-version = '1.6.7'
+version = '1.6.8'
 
 exec_dirs = [
     'src/ska/bin/',
@@ -27,7 +27,6 @@ setup(
         "Programming Language :: Python :: 2",
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.4",
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
         "Topic :: Security :: Cryptography",
