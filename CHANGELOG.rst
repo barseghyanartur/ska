@@ -19,6 +19,10 @@ are used for versioning (schema follows below):
 -----
 2018-12-?? (not yet released)
 
+.. note::
+
+    Release dedicated to Charles Aznavour.
+
 - Django 2.0 and 2.1 compatibility.
 - Upgrade test suite.
 - Fixes in docs.

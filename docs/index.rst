@@ -800,7 +800,7 @@ signed using ``ska`` (for example, using ``sign_url`` function). The
     signed_url = sign_url(
         auth_user='test_ska_user_0',
         secret_key=SECRET_KEY,
-        url=server_ska_login_url
+        url=server_ska_login_url,
         extra={
             'email': 'john.doe@mail.example.com',
             'first_name': 'John',

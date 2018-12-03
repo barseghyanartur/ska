@@ -240,7 +240,7 @@ else:
 #     'django.template.loaders.eggs.Loader',
 # )
 
-MIDDLEWARE_CLASSES = (
+_MIDDLEWARE = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -378,7 +378,7 @@ except:
 
 if DEBUG and DEBUG_TOOLBAR:
     # debug_toolbar
-    MIDDLEWARE_CLASSES += (
+    _MIDDLEWARE += (
         'debug_toolbar.middleware.DebugToolbarMiddleware',
     )
 
@@ -396,3 +396,8 @@ if DEV:
     ska_source_path = os.environ.get('SKA_SOURCE_PATH', 'src')
     # sys.path.insert(0, os.path.abspath('src'))
     sys.path.insert(0, os.path.abspath(ska_source_path))
+
+if versions.DJANGO_GTE_2_0:
+    MIDDLEWARE = _MIDDLEWARE
+else:
+    MIDDLEWARE_CLASSES = _MIDDLEWARE
