@@ -9,7 +9,7 @@ from nine import versions
 if versions.DJANGO_GTE_2_1:
     from django.urls import include, re_path as url
 else:
-    from django.conf.urls import url
+    from django.conf.urls import url, include
 
 admin.autodiscover()
 
