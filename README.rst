@@ -60,7 +60,7 @@ Prerequisites
 =============
 Present
 -------
-- Core ``ska`` module requires Python 2.7, 3.5 or 3.6.
+- Core ``ska`` module requires Python 2.7, 3.5, 3.6 or 3.7.
 - Django ``ska`` module (``ska.contrib.django.ska``) requires the mentioned
   above plus Django 1.8, 1.9, 1.10, 1.11, 2.0 or 2.1.
 
@@ -160,7 +160,7 @@ With all customisations, it would look as follows:
         signature_param='signature',
         auth_user_param='auth_user',
         valid_until_param='valid_until',
-        signature_cls = HMACSHA512Signature
+        signature_cls=HMACSHA512Signature
     )
 
 It's also possible to add additional data to the signature by providing a

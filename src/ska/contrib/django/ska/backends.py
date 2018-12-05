@@ -41,7 +41,7 @@ __all__ = ('SkaAuthenticationBackend',)
 class SkaAuthenticationBackend(object):
     """Authentication backend."""
 
-    def authenticate(self, request):
+    def authenticate(self, request, **kwargs):
         """Authenticate.
 
         :param django.http.HttpRequest request:
@@ -103,15 +103,19 @@ class SkaAuthenticationBackend(object):
             user = User._default_manager.get(username=auth_user)
 
             # User get callback
-            user_get_callback = provider_data.get('USER_GET_CALLBACK',
-                                                  USER_GET_CALLBACK)
+            user_get_callback = provider_data.get(
+                'USER_GET_CALLBACK',
+                USER_GET_CALLBACK
+            )
             if user_get_callback is not None:
                 callback_func = get_callback_func(user_get_callback)
                 if callback_func:
                     try:
-                        callback_func(user,
-                                      request=request,
-                                      signed_request_data=signed_request_data)
+                        callback_func(
+                            user,
+                            request=request,
+                            signed_request_data=signed_request_data
+                        )
                     except Exception as err:
                         logger.debug(str(err))
 
@@ -126,28 +130,36 @@ class SkaAuthenticationBackend(object):
             user.save()
 
             # User create callback
-            user_create_callback = provider_data.get('USER_CREATE_CALLBACK',
-                                                     USER_CREATE_CALLBACK)
+            user_create_callback = provider_data.get(
+                'USER_CREATE_CALLBACK',
+                USER_CREATE_CALLBACK
+            )
             if user_create_callback is not None:
                 callback_func = get_callback_func(user_create_callback)
                 if callback_func:
                     try:
-                        callback_func(user,
-                                      request=request,
-                                      signed_request_data=signed_request_data)
+                        callback_func(
+                            user,
+                            request=request,
+                            signed_request_data=signed_request_data
+                        )
                     except Exception as err:
                         logger.debug(str(err))
 
         # User info callback
-        user_info_callback = provider_data.get('USER_INFO_CALLBACK',
-                                               USER_INFO_CALLBACK)
+        user_info_callback = provider_data.get(
+            'USER_INFO_CALLBACK',
+            USER_INFO_CALLBACK
+        )
         if user_info_callback is not None:
             callback_func = get_callback_func(user_info_callback)
             if callback_func:
                 try:
-                    callback_func(user,
-                                  request=request,
-                                  signed_request_data=signed_request_data)
+                    callback_func(
+                        user,
+                        request=request,
+                        signed_request_data=signed_request_data
+                    )
                 except Exception as err:
                     logger.debug(str(err))
 
