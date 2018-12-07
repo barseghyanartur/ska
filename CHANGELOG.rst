@@ -17,9 +17,10 @@ are used for versioning (schema follows below):
 
 1.6.9
 -----
-yyyy-mm-dd (not yet released).
+2018-12-07
 
 - Tested against Python 3.7.
+- Add initial migrations for Django contrib package.
 
 1.6.8
 -----

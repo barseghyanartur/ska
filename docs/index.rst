@@ -66,13 +66,19 @@ Present
 
 Past
 ----
+.. note::
+
+    In future releases (any time) compatibility with no-longer-supported
+    versions might/will be wiped out.
+
+- Dropping support of Python 3.4 has been announced in version 1.6.8. As of
+  1.6.8 everything still worked.
 - Dropping support of Django 1.5, 1.6 and 1.7 has been announced in version
   1.6. As of 1.6 everything is still backwards compatible with mentioned
-  versions, but in future backwards compatibility will be wiped out.
+  versions.
 - Dropping support of Python 2.6 and 3.3 has been announced in version 1.6.
   As of 1.6 everything is still backwards compatible (as much as it's possible
-  within this package) with mentioned versions, but in future backwards
-  compatibility will be wiped out.
+  within this package) with mentioned versions.
 
 Installation
 ============
