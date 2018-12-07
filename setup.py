@@ -37,6 +37,7 @@ setup(
         "Development Status :: 5 - Production/Stable",
         "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
         "License :: OSI Approved :: GNU Lesser General Public License v2 or "
+        "later (LGPLv2+)",
     ],
     keywords='sign data, sign (HTTP) request, symmetric-key algorithm '
              'encryption, sign URL, python, django, password-less login '
