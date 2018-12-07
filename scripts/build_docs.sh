@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 ./scripts/uninstall.sh
 #reset
 ./scripts/install.sh

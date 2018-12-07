@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 reset
 pip uninstall ska -y
 rm build -rf

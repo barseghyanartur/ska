@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # ska tests
 ./scripts/uninstall.sh
 reset

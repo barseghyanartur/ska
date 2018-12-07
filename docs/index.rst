@@ -1003,6 +1003,7 @@ Contents:
    :maxdepth: 20
 
    ska
+   index
 
 Indices and tables
 ===================================================
