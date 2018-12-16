@@ -41,11 +41,12 @@ class GenerateSignedUrlTest(unittest.TestCase):
                     url=self.url,
                 )
             )
-        )
+        ).strip()
+        # It's necessary to `strip` the value, since in Python 2 there might
+        # be a \n added at the end of the string.
 
         parsed_url = parse.urlparse(str(signed_url))
         parsed_query_params = parse.parse_qs(parsed_url.query)
-
         data = {
             'signature': parsed_query_params.get('signature')[0],
             'auth_user': parsed_query_params.get('auth_user')[0],

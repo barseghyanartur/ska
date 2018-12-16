@@ -38,7 +38,7 @@ def get_callback_func(func, fail_silently=True):
         except ValueError as err:
             if not fail_silently:
                 raise ImportError(
-                    "%s doesn't look like a module path" % func) from err
+                    "%s doesn't look like a module path" % func)
 
         module = import_module(module_path)
 
@@ -49,7 +49,7 @@ def get_callback_func(func, fail_silently=True):
                 raise ImportError(
                     'Module "%s" does not define a "%s" attribute/class' % (
                         module_path, class_name)
-                    ) from err
+                    )
 
 
 def dict_keys(data, return_string=False):
