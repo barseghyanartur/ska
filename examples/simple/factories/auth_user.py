@@ -59,54 +59,36 @@ class AbstractUserFactory(DjangoModelFactory):
 
 
 class InactiveUserFactory(AbstractUserFactory):
-    """Factory for creating inactive users.
-
-    No roles. Incomplete MFA setup.
-    """
+    """Factory for creating inactive users."""
 
 
 class UserFactory(AbstractUserFactory):
-    """Factory for creating active users.
-
-    No roles. Incomplete MFA setup.
-    """
+    """Factory for creating active users."""
 
     is_active = True
 
 
 class StaffUserFactory(UserFactory):
-    """Factory for creating staff (admin) users.
-
-    No roles. Incomplete MFA setup.
-    """
+    """Factory for creating staff (admin) users."""
 
     is_staff = True
 
 
 class SuperuserUserFactory(UserFactory):
-    """Factory for creating superuser users.
-
-    No roles. Incomplete MFA setup.
-    """
+    """Factory for creating superuser users."""
 
     is_superuser = True
 
 
 class SuperAdminUserFactory(UserFactory):
-    """Factory for creating super admin users.
-
-    No roles. Incomplete MFA setup.
-    """
+    """Factory for creating super admin users."""
 
     is_staff = True
     is_superuser = True
 
 
 class TestAdminUsernameSuperAdminUserFactory(UserFactory):
-    """Factory for creating super admin user test_admin.
-
-    No roles. Incomplete MFA setup.
-    """
+    """Factory for creating super admin user test_admin."""
 
     username = TEST_ADMIN_USERNAME
     is_staff = True
@@ -114,19 +96,13 @@ class TestAdminUsernameSuperAdminUserFactory(UserFactory):
 
 
 class TestUsernameUserFactory(UserFactory):
-    """Factory for creating user test_user.
-
-    No roles. Incomplete MFA setup.
-    """
+    """Factory for creating user test_user."""
 
     username = TEST_USERNAME
 
 
 class LimitedUserFactory(UserFactory):
-    """User factory, but limited to 20 users.
-
-    No roles. Incomplete MFA setup.
-    """
+    """User factory, but limited to 20 users."""
 
     id = LazyAttribute(
         lambda __x: random.randint(1, 20)

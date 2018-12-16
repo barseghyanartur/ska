@@ -31,11 +31,11 @@ class BaseFooItemFactory(DjangoModelFactory):
 
 
 class FooItemFactory(BaseFooItemFactory):
-    """Genre factory."""
+    """FooItem factory."""
 
 
 class LimitedFooItemFactory(BaseFooItemFactory):
-    """FooItem factory, but limited to 20 genres."""
+    """FooItem factory, but limited to 20 records."""
 
     id = LazyAttribute(
         lambda __x: random.randint(1, 20)
