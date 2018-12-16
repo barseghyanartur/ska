@@ -1004,6 +1004,7 @@ Contents:
 
    ska
    index
+   changelog
 
 Indices and tables
 ===================================================
