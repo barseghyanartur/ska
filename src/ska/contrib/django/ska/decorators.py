@@ -49,7 +49,7 @@ from ....defaults import (
     DEFAULT_SIGNATURE_PARAM,
     DEFAULT_AUTH_USER_PARAM,
     DEFAULT_VALID_UNTIL_PARAM,
-    DEFAULT_EXTRA_PARAM
+    DEFAULT_EXTRA_PARAM,
 )
 
 from .http import HttpResponseUnauthorized
@@ -57,12 +57,12 @@ from .settings import (
     SECRET_KEY,
     AUTH_USER,
     UNAUTHORISED_REQUEST_ERROR_MESSAGE,
-    UNAUTHORISED_REQUEST_ERROR_TEMPLATE
+    UNAUTHORISED_REQUEST_ERROR_TEMPLATE,
 )
 
 __title__ = 'ska.contrib.django.ska.decorators'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
-__copyright__ = '2013-2017 Artur Barseghyan'
+__copyright__ = '2013-2018 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
 __all__ = (
     'validate_signed_request',

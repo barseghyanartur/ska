@@ -1,21 +1,14 @@
 import datetime
+from importlib import import_module
 import time
 
-from six import PY3
+from six.moves.urllib.parse import quote
 
 from .defaults import SIGNATURE_LIFETIME
 
-try:
-    from six.moves.urllib.parse import quote
-except ImportError:
-    if PY3:
-        from urllib.parse import quote
-    else:
-        from urllib import quote
-
 __title__ = 'ska.helpers'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
-__copyright__ = '2013-2017 Artur Barseghyan'
+__copyright__ = '2013-2018 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
 __all__ = (
     'get_callback_func',
@@ -27,27 +20,36 @@ __all__ = (
 )
 
 
-def get_callback_func(function):
+def get_callback_func(func, fail_silently=True):
     """Take a string and try to extract a function from it.
 
-    :param mixed function: If `callable` is given, return as is. If `string`
+    :param mixed func: If `callable` is given, return as is. If `string`
         is given, try to extract the function from the string given and
         return.
+    :param fail_silently: bool
     :return callable: Returns `callable` if what's extracted is callable or
         None otherwise.
     """
-    if callable(function):
-        return function
-    elif isinstance(function, str):
-        path = function.split('.')
+    if callable(func):
+        return func
+    elif isinstance(func, str):
         try:
-            func = None
-            exec('from %s import %s as %s' % (
-                '.'.join(path[0:-1]), path[-1], 'func'))
-            if callable(func):
-                return func
-        except Exception:
-            return None
+            module_path, class_name = func.rsplit('.', 1)
+        except ValueError as err:
+            if not fail_silently:
+                raise ImportError(
+                    "%s doesn't look like a module path" % func) from err
+
+        module = import_module(module_path)
+
+        try:
+            return getattr(module, class_name)
+        except AttributeError as err:
+            if not fail_silently:
+                raise ImportError(
+                    'Module "%s" does not define a "%s" attribute/class' % (
+                        module_path, class_name)
+                    ) from err
 
 
 def dict_keys(data, return_string=False):

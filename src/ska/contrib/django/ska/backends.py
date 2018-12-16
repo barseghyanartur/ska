@@ -14,7 +14,7 @@ from ....defaults import (
     DEFAULT_SIGNATURE_PARAM,
     DEFAULT_AUTH_USER_PARAM,
     DEFAULT_VALID_UNTIL_PARAM,
-    DEFAULT_EXTRA_PARAM
+    DEFAULT_EXTRA_PARAM,
 )
 from ....exceptions import ImproperlyConfigured, InvalidData
 
@@ -25,7 +25,7 @@ from .settings import (
     USER_CREATE_CALLBACK,
     USER_INFO_CALLBACK,
     DB_STORE_SIGNATURES,
-    DB_PERFORM_SIGNATURE_CHECK
+    DB_PERFORM_SIGNATURE_CHECK,
 )
 from .utils import get_provider_data
 
@@ -33,7 +33,7 @@ logger = logging.getLogger(__file__)
 
 __title__ = 'ska.contrib.django.ska.backends'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
-__copyright__ = '2013-2017 Artur Barseghyan'
+__copyright__ = '2013-2018 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
 __all__ = ('SkaAuthenticationBackend',)
 
@@ -138,7 +138,7 @@ class SkaAuthenticationBackend(object):
                 callback_func = get_callback_func(user_create_callback)
                 if callback_func:
                     try:
-                        callback_func(
+                        user_create_callback_resp = callback_func(
                             user,
                             request=request,
                             signed_request_data=signed_request_data

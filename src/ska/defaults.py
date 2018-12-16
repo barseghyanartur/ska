@@ -23,7 +23,7 @@ Application defaults.
 
 __title__ = 'ska.defaults'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
-__copyright__ = '2013-2017 Artur Barseghyan'
+__copyright__ = '2013-2018 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
 __all__ = (
     'TIMESTAMP_FORMAT',
@@ -36,7 +36,7 @@ __all__ = (
     'DEFAULT_PROVIDER_PARAM',
     'DEFAULT_URL_SUFFIX',
     'DEFAULT_RESERVED_PARAMS',
-    'DEBUG'
+    'DEBUG',
 )
 
 TIMESTAMP_FORMAT = "%Y-%m-%dT%H:%M:%S"

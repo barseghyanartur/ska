@@ -349,7 +349,7 @@ It's possible to generate a signed URL from command line using the
 
 .. code-block:: sh
 
-    ska-sign-url -au user -sk your-secret-key
+    ska-sign-url -au user -sk your-secret-key --url http://example.com
 
 Advanced usage (low-level)
 --------------------------

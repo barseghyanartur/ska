@@ -42,6 +42,13 @@ class FooItem(models.Model):
         """
         return reverse('foo.detail', kwargs={'slug': self.slug})
 
+    def get_cbv_absolute_url(self):
+        """Absolute URL, which goes to the foo item detail page.
+
+        :return str:
+        """
+        return reverse('foo.class-based.detail', kwargs={'slug': self.slug})
+
     @sign_url()
     def get_signed_absolute_url(self):
         """Absolute URL, which goes to the foo item detail page.

@@ -284,6 +284,10 @@ SKA_SECRET_KEY = 'secret-key'
 SKA_UNAUTHORISED_REQUEST_ERROR_TEMPLATE = 'ska/401.html'
 # Page to redirect to after successful login
 SKA_REDIRECT_AFTER_LOGIN = '/foo/logged-in/'
+# Store used signatures in database
+SKA_DB_STORE_SIGNATURES = True
+# Perform signature check
+SKA_DB_PERFORM_SIGNATURE_CHECK = True
 # List of additional secret keys per provider
 SKA_PROVIDERS = {
     # Client 1, group users
@@ -301,6 +305,8 @@ SKA_PROVIDERS = {
     'client_1.admins': {
         'SECRET_KEY': 'client-1-admins-secret-key',
         'USER_CREATE_CALLBACK': 'foo.ska_callbacks.client1_admins_create',
+        'USER_GET_CALLBACK': 'foo.ska_callbacks.client1_admins_get',
+        'USER_INFO_CALLBACK': 'foo.ska_callbacks.client1_admins_info',
         'REDIRECT_AFTER_LOGIN': '/admin/'
     },
 }

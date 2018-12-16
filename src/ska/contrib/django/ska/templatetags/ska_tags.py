@@ -9,14 +9,14 @@ from .....defaults import (
     DEFAULT_SIGNATURE_PARAM,
     DEFAULT_AUTH_USER_PARAM,
     DEFAULT_VALID_UNTIL_PARAM,
-    DEFAULT_EXTRA_PARAM
+    DEFAULT_EXTRA_PARAM,
 )
 from .....signatures import Signature
 from ..settings import SECRET_KEY
 
 __title__ = 'ska.contrib.django.ska.templatetags.ska_tags'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
-__copyright__ = '2013-2017 Artur Barseghyan'
+__copyright__ = '2013-2018 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
 __all__ = ('sign_url',)
 

@@ -1,11 +1,24 @@
-"""Examples of how you could implement custom callbacks for each provider."""
-
+"""
+Examples of how you could implement custom callbacks for each provider.
+"""
 from django.core.mail import send_mail
 from django.utils.translation import ugettext_lazy as _
 
 
-class Client1Create(object):
-    """Client 1 callbacks."""
+__all__ = (
+    'Client1Create',
+    'Client1Get',
+    'Client1Info',
+    'client1_power_users_create',
+    'client1_admins_create',
+    'client1_power_users_get',
+    'client1_admins_get',
+    'client1_power_users_info',
+    'client1_admins_info',
+)
+
+
+class BaseClientAction(object):
 
     @staticmethod
     def _send_email(group_name, user, request, signed_request_data):
@@ -15,13 +28,21 @@ class Client1Create(object):
         first_name = signed_request_data.get('first_name', '')
         if email:
             send_mail(
-                _('Welcome!'),
+                _('Welcome {}!').format(group_name),
                 _("""Dear {0}\nYou have been added to the group power """
                   """users.\nBest regards""").format(first_name),
                 'from@example.com',
                 [email],
                 fail_silently=True
             )
+
+# **************************************************************************
+# ************************* USER_CREATE_CALLBACK ***************************
+# **************************************************************************
+
+
+class Client1Create(BaseClientAction):
+    """Client 1 `USER_CREATE_CALLBACK` callbacks."""
 
     @staticmethod
     def power_users(user, request, signed_request_data):
@@ -42,7 +63,7 @@ class Client1Create(object):
         user.is_staff = True
         user.save()
         return Client1Create._send_email(
-            _('admins'),
+            _('create::admins'),
             user,
             request,
             signed_request_data
@@ -51,3 +72,67 @@ class Client1Create(object):
 
 client1_power_users_create = Client1Create.power_users
 client1_admins_create = Client1Create.admins
+
+
+# **************************************************************************
+# *************************** USER_GET_CALLBACK ****************************
+# **************************************************************************
+
+class Client1Get(BaseClientAction):
+    """Client 1 `USER_GET_CALLBACK` callbacks."""
+
+    @staticmethod
+    def power_users(user, request, signed_request_data):
+        """Custom callback for power users."""
+        return Client1Create._send_email(
+            _('get::power users'),
+            user,
+            request,
+            signed_request_data
+        )
+
+    @staticmethod
+    def admins(user, request, signed_request_data):
+        """Custom callback for admins."""
+        return Client1Create._send_email(
+            _('get::admins'),
+            user,
+            request,
+            signed_request_data
+        )
+
+
+client1_power_users_get = Client1Get.power_users
+client1_admins_get = Client1Get.admins
+
+# **************************************************************************
+# *************************** USER_INFO_CALLBACK ***************************
+# **************************************************************************
+
+
+class Client1Info(BaseClientAction):
+    """Client 1 `USER_INFO_CALLBACK` callbacks."""
+
+    @staticmethod
+    def power_users(user, request, signed_request_data):
+        """Custom callback for power users."""
+        return Client1Create._send_email(
+            _('info::power users'),
+            user,
+            request,
+            signed_request_data
+        )
+
+    @staticmethod
+    def admins(user, request, signed_request_data):
+        """Custom callback for admins."""
+        return Client1Create._send_email(
+            _('info::admins'),
+            user,
+            request,
+            signed_request_data
+        )
+
+
+client1_power_users_info = Client1Info.power_users
+client1_admins_info = Client1Info.admins

@@ -6,7 +6,7 @@ from .defaults import (
     DEFAULT_SIGNATURE_PARAM,
     DEFAULT_AUTH_USER_PARAM,
     DEFAULT_VALID_UNTIL_PARAM,
-    DEFAULT_EXTRA_PARAM
+    DEFAULT_EXTRA_PARAM,
 )
 from .signatures import (
     Signature,
@@ -15,21 +15,20 @@ from .signatures import (
     HMACSHA224Signature,
     HMACSHA256Signature,
     HMACSHA384Signature,
-    HMACSHA512Signature
+    HMACSHA512Signature,
 )
 from .shortcuts import (
     sign_url,
     signature_to_dict,
     validate_signed_request_data,
-    extract_signed_request_data
+    extract_signed_request_data,
 )
 from .utils import RequestHelper
 
 __title__ = 'ska'
-__version__ = '1.6.7'
-__build__ = 0x00001b
+__version__ = '1.6.10'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
-__copyright__ = '2013-2017 Artur Barseghyan'
+__copyright__ = '2013-2018 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
 __all__ = (
     'sign_url',

@@ -36,7 +36,7 @@ from .conf import get_setting
 
 __title__ = 'ska.contrib.django.ska.settings'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
-__copyright__ = '2013-2017 Artur Barseghyan'
+__copyright__ = '2013-2018 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
 __all__ = (
     'UNAUTHORISED_REQUEST_ERROR_MESSAGE',
@@ -49,7 +49,7 @@ __all__ = (
     'REDIRECT_AFTER_LOGIN',
     'DB_STORE_SIGNATURES',
     'DB_PERFORM_SIGNATURE_CHECK',
-    'PROVIDERS'
+    'PROVIDERS',
 )
 
 UNAUTHORISED_REQUEST_ERROR_MESSAGE = get_setting(
@@ -62,7 +62,7 @@ AUTH_USER = get_setting('AUTH_USER')
 
 try:
     SECRET_KEY = settings.SKA_SECRET_KEY
-except:
+except Exception:
     raise ImproperlyConfigured(
         _("You should define a variable ``SKA_SECRET_KEY`` in your "
           "`settings` module!")
