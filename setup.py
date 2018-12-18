@@ -56,9 +56,9 @@ setup(
         'six>=1.9',
         'django-nine>=0.1.10',
     ],
-    extras_require=[
-        'django-constance',
-    ],
+    extras_require={
+        'django-constance': ['django-constance'],
+    },
     tests_require=[
         'factory_boy',
         'fake-factory',
