@@ -844,7 +844,8 @@ Relies on dynamic settings functionality provided by
     ``django-json-widget``, ``django-picklefield``, ``jsonfield2`` and
     ``redis``).
 
-**settings.py**
+settings.py
+^^^^^^^^^^^
 
 .. code-block:: python
 
@@ -890,7 +891,6 @@ Relies on dynamic settings functionality provided by
         'port': 6379,
         'db': 0,
     }
-
 
 .. note::
 
@@ -972,7 +972,7 @@ With ``DatabaseBackend`` it would look as follows:
   You have used the dynamic settings.
 
 urls.py
-*******
+^^^^^^^
 ``django-constance`` specific views and urls are used. See
 `ska.contrib.django.ska.views.constance_views
 <https://github.com/barseghyanartur/ska/blob/master/src/ska/contrib/django/ska/views/constance_views.py>`_

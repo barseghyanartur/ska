@@ -15,11 +15,21 @@ are used for versioning (schema follows below):
   0.3.4 to 0.4).
 - All backwards incompatible changes are mentioned in this document.
 
+1.6.11
+------
+2018-12-19
+
+- Additions to the Django contrib app mainly. Authentication backend has
+  been made customisable. Most of the code is moved to the
+  ``BaseSkaAuthenticationBackend``. Introduced new authentication backend
+  ``SkaAuthenticationConstanceBackend`` to be used in combination with
+  ``django-constance``.
+
 1.6.10
 ------
 2018-12-16
 
-- Fixes in the callbacks import of the django contrib app.
+- Fixes in the callbacks import of the Django contrib app.
 - Testing shell commands; minor fixes in tests.
 
 1.6.9
