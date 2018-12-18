@@ -1,5 +1,4 @@
 from __future__ import absolute_import
-
 import logging
 
 from django.contrib.auth.hashers import make_password
@@ -8,18 +7,18 @@ from django.db import IntegrityError
 
 from nine import versions
 
-from .... import Signature, extract_signed_request_data
-from ....helpers import get_callback_func
-from ....defaults import (
+from ..... import Signature, extract_signed_request_data
+from .....helpers import get_callback_func
+from .....defaults import (
     DEFAULT_SIGNATURE_PARAM,
     DEFAULT_AUTH_USER_PARAM,
     DEFAULT_VALID_UNTIL_PARAM,
     DEFAULT_EXTRA_PARAM,
 )
-from ....exceptions import ImproperlyConfigured, InvalidData
+from .....exceptions import ImproperlyConfigured, InvalidData
 
-from .models import Signature as SignatureModel
-from .settings import (
+from ..models import Signature as SignatureModel
+from ..settings import (
     SECRET_KEY,
     USER_GET_CALLBACK,
     USER_CREATE_CALLBACK,
@@ -27,19 +26,28 @@ from .settings import (
     DB_STORE_SIGNATURES,
     DB_PERFORM_SIGNATURE_CHECK,
 )
-from .utils import get_provider_data
+from ..utils import get_provider_data
 
 logger = logging.getLogger(__file__)
 
-__title__ = 'ska.contrib.django.ska.backends'
+__title__ = 'ska.contrib.django.ska.backends.constance_backend'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2018 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
-__all__ = ('SkaAuthenticationBackend',)
+__all__ = ('BaseSkaAuthenticationBackend',)
 
 
-class SkaAuthenticationBackend(object):
-    """Authentication backend."""
+class BaseSkaAuthenticationBackend(object):
+    """Base authentication backend."""
+
+    def get_settings(self):
+        """
+
+        :return:
+        """
+        raise NotImplementedError(
+            "You should implement this method in your authentication backend"
+        )
 
     def authenticate(self, request, **kwargs):
         """Authenticate.
@@ -52,7 +60,10 @@ class SkaAuthenticationBackend(object):
         else:
             request_data = request.REQUEST
 
-        provider_data = get_provider_data(request_data)
+        provider_settings = self.get_settings()
+
+        provider_data = get_provider_data(request_data, provider_settings)
+
         if provider_data:
             secret_key = provider_data['SECRET_KEY']
         else:

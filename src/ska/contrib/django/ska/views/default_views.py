@@ -7,10 +7,10 @@ from django.utils.translation import ugettext, ugettext_lazy as _
 
 from nine import versions
 
-from .settings import REDIRECT_AFTER_LOGIN
-from .utils import get_provider_data
+from ..settings import REDIRECT_AFTER_LOGIN
+from ..utils import get_provider_data
 
-__title__ = 'ska.contrib.django.ska.views'
+__title__ = 'ska.contrib.django.ska.views.default_views'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2018 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'

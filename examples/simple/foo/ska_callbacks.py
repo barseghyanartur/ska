@@ -15,6 +15,7 @@ __all__ = (
     'client1_admins_get',
     'client1_power_users_info',
     'client1_admins_info',
+    'client1_admins_info_constance',
 )
 
 
@@ -133,6 +134,18 @@ class Client1Info(BaseClientAction):
             signed_request_data
         )
 
+    @staticmethod
+    def admins_constance(user, request, signed_request_data):
+        """Custom callback for admins."""
+        print('Constance callback!')
+        return Client1Create._send_email(
+            _('info::admins'),
+            user,
+            request,
+            signed_request_data
+        )
+
 
 client1_power_users_info = Client1Info.power_users
 client1_admins_info = Client1Info.admins
+client1_admins_info_constance = Client1Info.admins_constance

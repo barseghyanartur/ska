@@ -45,7 +45,7 @@ def get_secret_key(data, default=SECRET_KEY):
     return default
 
 
-def get_provider_data(data):
+def get_provider_data(data, settings=None):
     """Obtain the secret key from request data given.
 
     This happens by looking up the secret key by `provider` param from the
@@ -54,10 +54,11 @@ def get_provider_data(data):
     by default the globally set secret key.
 
     :param dict data:
-    :param string default: Secret key value to be used as default. By default,
-        the globally set secret key is used.
+    :param dict settings: Settings dict.
     """
+    if not settings or not isinstance(settings, dict):
+        settings = PROVIDERS
     provider = data.get(DEFAULT_PROVIDER_PARAM, None)
     if provider:
-        return PROVIDERS.get(provider, None)
+        return settings.get(provider, None)
     return {}

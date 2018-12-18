@@ -82,19 +82,19 @@ Past
 
 Installation
 ============
-Latest stable version from PyPI.
+Latest stable version from PyPI:
 
 .. code-block:: sh
 
     pip install ska
 
-Latest stable version from bitbucket.
+or latest stable version from BitBucket:
 
 .. code-block:: sh
 
-    pip install -e hg+https://bitbucket.org/barseghyanartur/ska@stable#egg=ska
+    pip install https://bitbucket.org/barseghyanartur/ska/get/stable.tar.gz
 
-Latest stable version from github.
+or latest stable version from GitHub.
 
 .. code-block:: sh
 
@@ -687,9 +687,15 @@ Usage example:
 
     {% endfor %}
 
-Authentication backend
-~~~~~~~~~~~~~~~~~~~~~~
+Authentication backends
+~~~~~~~~~~~~~~~~~~~~~~~
 Allows you to get a password-less login to Django web site.
+
+At the moment there are two backends implemented:
+
+- `SkaAuthenticationBackend`_: Uses standard Django settings.
+- `SkaAuthenticationConstanceBackend`_: Relies on dynamic settings
+  functionality provided by `django-constance`.
 
 By default, number of logins using the same token is not limited. If you wish
 that single tokens become invalid after first use, set the following variables
@@ -700,13 +706,17 @@ to True in your projects' Django settings module.
     SKA_DB_STORE_SIGNATURES = True
     SKA_DB_PERFORM_SIGNATURE_CHECK = True
 
+SkaAuthenticationBackend
+++++++++++++++++++++++++
+``SkaAuthenticationBackend`` uses standard Django settings.
+
 Recipient side
-++++++++++++++
+^^^^^^^^^^^^^^
 Recipient is the host (Django site), to which the sender tries to get
 authenticated (log in). On the recipient side the following shall be present.
 
 settings.py
-^^^^^^^^^^^
+***********
 .. code-block:: python
 
     AUTHENTICATION_BACKENDS = (
@@ -725,7 +735,7 @@ settings.py
     SKA_REDIRECT_AFTER_LOGIN = '/foo/logged-in/'
 
 urls.py
-^^^^^^^
+*******
 .. code-block:: python
 
     urlpatterns = [
@@ -734,7 +744,7 @@ urls.py
     ]
 
 Callbacks
-^^^^^^^^^
+*********
 There are several callbacks implemented in authentication backend.
 
 - ``USER_GET_CALLBACK`` (string): Fired if user was successfully fetched from
@@ -774,18 +784,8 @@ Example:
     SKA_USER_GET_CALLBACK = 'my_app.ska_callbacks.my_get_callback'
     SKA_USER_CREATE_CALLBACK = 'my_app.ska_callbacks.my_create_callback'
 
-Purging of old signature data
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-If you have lots of visitors and the ``SKA_DB_STORE_SIGNATURES`` set to True,
-your database grows. If you wish to get rid of old signature token data, you
-may want to execute the following command using a cron job.
-
-.. code-block:: sh
-
-    ./manage.py ska_purge_stored_signature_data
-
 Sender side
-+++++++++++
+^^^^^^^^^^^
 Sender is the host (another Django web site) from which users authenticate to
 the Recipient using signed URLs.
 
@@ -828,6 +828,198 @@ on it for authenticating to the server.
         context = {'signed_url': signed_url}
 
         return render(request, template_name, context)
+
+SkaAuthenticationConstanceBackend
++++++++++++++++++++++++++++++++++
+Relies on dynamic settings functionality provided by
+`django-constance <https://django-constance.readthedocs.io>`_.
+
+*Only differences with `SkaAuthenticationBackend` are mentioned.*
+
+.. note::
+
+    Additional requirements shall be installed. See the `constance.txt
+    <https://github.com/barseghyanartur/ska/blob/master/examples/requirements/constance.txt>`_
+    file for additional requirements (``django-constance``,
+    ``django-json-widget``, ``django-picklefield``, ``jsonfield2`` and
+    ``redis``).
+
+**settings.py**
+
+.. code-block:: python
+
+    AUTHENTICATION_BACKENDS = (
+        'ska.contrib.django.ska.backends.SkaAuthenticationConstanceBackend',
+        'django.contrib.auth.backends.ModelBackend',
+    )
+
+    INSTALLED_APPS = (
+        # ...
+        'constance',  # django-constance
+        'ska.contrib.django.ska',
+        'django_json_widget',  # For nice admin JSON widget
+        # ...
+    )
+
+    CONSTANCE_CONFIG = {
+        'SKA_PROVIDERS': (
+            "",  # The default value
+            'JSON data',  # Help text in admin
+            'JSONField_config',  # Field config
+        )
+    }
+
+    CONSTANCE_ADDITIONAL_FIELDS = {
+        'JSONField_config': [
+            # `jsonfield2` package might be used for storing the JSON field,
+            # however, at the moment of writing it has a bug which makes
+            # the JSON invalid after the first save. To avoid that, it has
+            # been patched and resides in examples/simple/jsonfield2_addons/
+            # module.
+            'jsonfield2_addons.forms.JSONField',
+            {
+                'widget': 'django_json_widget.widgets.JSONEditorWidget',
+            }
+        ],
+    }
+
+    CONSTANCE_BACKEND = 'constance.backends.redisd.RedisBackend'
+
+    CONSTANCE_REDIS_CONNECTION = {
+        'host': 'localhost',
+        'port': 6379,
+        'db': 0,
+    }
+
+
+.. note::
+
+    In very tiny bits, although not required, the
+    `jsonfield2 <https://pypi.org/project/jsonfield2/>`_ and
+    `django-json-widget <https://pypi.org/project/django-json-widget/>`_
+    packages are used for editing of the ``SKA_PROVIDERS`` setting in Django
+    admin.
+
+.. note::
+
+    In the example shown above, the ``RedisBackend`` of ``django-constance``
+    is used. You could also use ``DatabaseBackend``. Study the
+    `documentation <https://django-constance.readthedocs.io/en/latest/backends.html>`_
+    for more.
+
+With ``DatabaseBackend`` it would look as follows:
+
+.. code-block:: python
+
+    CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
+
+    INSTALLED_APPS = (
+        # ...
+        'constance.backends.database',
+        # ...
+    )
+
+**Quick demo of the dynamic backend**
+
+- Clone this project:
+
+.. code-block:: sh
+
+    git clone git@github.com:barseghyanartur/ska.git
+
+- Install/migrate:
+
+.. code-block:: sh
+
+    ./scripts/install.sh
+    pip install -r examples/requirements/django_2_1.txt
+    ./scripts/migrate.sh --settings=settings.constance_settings
+
+- Run:
+
+.. code-block:: sh
+
+    ./scripts/runserver.sh --settings=settings.constance_settings
+
+- Go to `http://localhost:8000/admin/constance/config/
+  <http://localhost:8000/admin/constance/config/>`_.
+
+- Past the following code:
+
+.. code-block:: javascript
+
+    {
+       "client_1.users":{
+          "SECRET_KEY":"client-1-users-secret-key"
+       },
+       "client_1.power_users":{
+          "SECRET_KEY":"client-1-power-users-secret-key",
+          "USER_CREATE_CALLBACK":"foo.ska_callbacks.client1_power_users_create"
+       },
+       "client_1.admins":{
+          "SECRET_KEY":"client-1-admins-secret-key",
+          "USER_CREATE_CALLBACK":"foo.ska_callbacks.client1_admins_create",
+          "USER_GET_CALLBACK":"foo.ska_callbacks.client1_admins_get",
+          "USER_INFO_CALLBACK":"foo.ska_callbacks.client1_admins_info_constance",
+          "REDIRECT_AFTER_LOGIN":"/admin/auth/user/"
+       }
+    }
+
+- Open `http://localhost:8000/foo/authenticate/
+  <http://localhost:8000/foo/authenticate/>`_ in another browser and navigate
+  to the ``Log in - client_1.admins`` link in the ``Success`` table column of
+  the ``By provider`` section. Upon clicking, you should be logged in.
+  You have used the dynamic settings.
+
+urls.py
+*******
+``django-constance`` specific views and urls are used. See
+`ska.contrib.django.ska.views.constance_views
+<https://github.com/barseghyanartur/ska/blob/master/src/ska/contrib/django/ska/views/constance_views.py>`_
+and `ska.contrib.django.ska.urls.constance_urls
+<https://github.com/barseghyanartur/ska/blob/master/src/ska/contrib/django/ska/urls/constance_urls.py>`_
+for the reference.
+
+.. code-block:: python
+
+    urlpatterns = [
+        url(r'^ska/', include('ska.contrib.django.ska.urls.constance_urls')),
+        url(r'^admin/', include(admin.site.urls)),
+    ]
+
+Custom authentication backend
++++++++++++++++++++++++++++++
+To implement alternative authentication backend, see the following example:
+
+.. code-block:: python
+
+    from constance import config
+
+    from ska.contrib.django.backends import BaseSkaAuthenticationBackend
+
+    class SkaAuthenticationConstanceBackend(BaseSkaAuthenticationBackend):
+        """Authentication backend."""
+
+        def get_settings(self):
+            """
+
+            :return:
+            """
+            return config.SKA_PROVIDERS
+
+That's it. The only thing the ``get_settings`` method shall return is ``dict``
+with providers data (see the `Multiple secret keys`_ for the reference;
+return value of the ``get_settings` is ``SKA_PROVIDERS`` dict).
+
+Purging of old signature data
++++++++++++++++++++++++++++++
+If you have lots of visitors and the ``SKA_DB_STORE_SIGNATURES`` set to True,
+your database grows. If you wish to get rid of old signature token data, you
+may want to execute the following command using a cron job.
+
+.. code-block:: sh
+
+    ./manage.py ska_purge_stored_signature_data
 
 Security notes
 ++++++++++++++
@@ -982,6 +1174,34 @@ Or run Django tests:
 .. code-block:: sh
 
     python examples/simple/manage.py test ska --settings=settings.testing
+
+Writing documentation
+=====================
+Keep the following hierarchy.
+
+.. code-block:: text
+
+    =====
+    title
+    =====
+
+    header
+    ======
+
+    sub-header
+    ----------
+
+    sub-sub-header
+    ~~~~~~~~~~~~~~
+
+    sub-sub-sub-header
+    ++++++++++++++++++
+
+    sub-sub-sub-sub-header
+    ^^^^^^^^^^^^^^^^^^^^^^
+
+    sub-sub-sub-sub-sub-header
+    **************************
 
 License
 =======

@@ -6,7 +6,7 @@ try:
 except:
     readme = ''
 
-version = '1.6.10'
+version = '1.6.11'
 
 exec_dirs = [
     'src/ska/bin/',
@@ -55,6 +55,9 @@ setup(
     install_requires=[
         'six>=1.9',
         'django-nine>=0.1.10',
+    ],
+    extras_require=[
+        'django-constance',
     ],
     tests_require=[
         'factory_boy',
