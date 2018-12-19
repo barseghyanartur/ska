@@ -1,6 +1,6 @@
 -r common.txt
 -r testing.txt
--r constance.txt
+-r constance_django_2_1.txt
 
 Django>=2.1,<2.2
 sqlparse>=0.2.2
