@@ -8,6 +8,7 @@ Subpackages
 
     ska.contrib
     ska.signatures
+    ska.tests
 
 Submodules
 ----------
@@ -28,8 +29,8 @@ ska.defaults module
     :undoc-members:
     :show-inheritance:
 
-ska.error_codes module
-----------------------
+ska.error\_codes module
+-----------------------
 
 .. automodule:: ska.error_codes
     :members:
@@ -44,10 +45,18 @@ ska.exceptions module
     :undoc-members:
     :show-inheritance:
 
-ska.generate_signed_url module
-------------------------------
+ska.generate\_signed\_url module
+--------------------------------
 
 .. automodule:: ska.generate_signed_url
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+ska.gettext module
+------------------
+
+.. automodule:: ska.gettext
     :members:
     :undoc-members:
     :show-inheritance:
@@ -64,14 +73,6 @@ ska.shortcuts module
 --------------------
 
 .. automodule:: ska.shortcuts
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-ska.tests module
-----------------
-
-.. automodule:: ska.tests
     :members:
     :undoc-members:
     :show-inheritance:

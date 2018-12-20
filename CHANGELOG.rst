@@ -17,7 +17,7 @@ are used for versioning (schema follows below):
 
 1.6.11
 ------
-2018-12-19
+2018-12-20
 
 - Additions to the Django contrib app mainly. Authentication backend has
   been made customisable. Most of the code is moved to the

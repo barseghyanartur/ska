@@ -6,7 +6,13 @@ Subpackages
 
 .. toctree::
 
+    ska.contrib.django.ska.backends
     ska.contrib.django.ska.management
+    ska.contrib.django.ska.migrations
+    ska.contrib.django.ska.templatetags
+    ska.contrib.django.ska.tests
+    ska.contrib.django.ska.urls
+    ska.contrib.django.ska.views
 
 Submodules
 ----------
@@ -19,10 +25,10 @@ ska.contrib.django.ska.admin module
     :undoc-members:
     :show-inheritance:
 
-ska.contrib.django.ska.backends module
---------------------------------------
+ska.contrib.django.ska.apps module
+----------------------------------
 
-.. automodule:: ska.contrib.django.ska.backends
+.. automodule:: ska.contrib.django.ska.apps
     :members:
     :undoc-members:
     :show-inheritance:
@@ -51,14 +57,6 @@ ska.contrib.django.ska.defaults module
     :undoc-members:
     :show-inheritance:
 
-ska.contrib.django.ska.exceptions module
-----------------------------------------
-
-.. automodule:: ska.contrib.django.ska.exceptions
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 ska.contrib.django.ska.http module
 ----------------------------------
 
@@ -83,34 +81,10 @@ ska.contrib.django.ska.settings module
     :undoc-members:
     :show-inheritance:
 
-ska.contrib.django.ska.tests module
------------------------------------
-
-.. automodule:: ska.contrib.django.ska.tests
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-ska.contrib.django.ska.urls module
-----------------------------------
-
-.. automodule:: ska.contrib.django.ska.urls
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 ska.contrib.django.ska.utils module
 -----------------------------------
 
 .. automodule:: ska.contrib.django.ska.utils
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-ska.contrib.django.ska.views module
------------------------------------
-
-.. automodule:: ska.contrib.django.ska.views
     :members:
     :undoc-members:
     :show-inheritance:

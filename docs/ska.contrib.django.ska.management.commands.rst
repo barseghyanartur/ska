@@ -4,8 +4,8 @@ ska.contrib.django.ska.management.commands package
 Submodules
 ----------
 
-ska.contrib.django.ska.management.commands.ska_purge_stored_signature_data module
----------------------------------------------------------------------------------
+ska.contrib.django.ska.management.commands.ska\_purge\_stored\_signature\_data module
+-------------------------------------------------------------------------------------
 
 .. automodule:: ska.contrib.django.ska.management.commands.ska_purge_stored_signature_data
     :members:

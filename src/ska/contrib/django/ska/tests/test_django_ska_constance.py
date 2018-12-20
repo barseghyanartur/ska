@@ -8,22 +8,9 @@ import unittest
 
 import pytest
 
-from .helpers import (
-    project_dir,
-    PROJECT_DIR,
-    LOG_INFO,
-    log_info,
-    change_date,
-    NUM_ITEMS,
-)
+from .helpers import log_info
 
-if os.environ.get("DJANGO_SETTINGS_MODULE", None):
-    from .helpers import (
-        create_admin_user,
-        generate_data,
-    )
-
-__title__ = 'ska.contrib.django.ska.tests.test_django_ska'
+__title__ = 'ska.contrib.django.ska.tests.test_django_ska_constance'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2018 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
@@ -40,7 +27,7 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
 
     from django.core import mail
     from django.core.management import call_command
-    from django.test import Client, TransactionTestCase
+    from django.test import Client, TransactionTestCase, override_settings
 
     from ska import sign_url
     from ska.defaults import DEFAULT_PROVIDER_PARAM
@@ -48,152 +35,60 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
         SECRET_KEY,
         DB_STORE_SIGNATURES,
         DB_PERFORM_SIGNATURE_CHECK,
-        PROVIDERS
     )
     from ska.contrib.django.ska.models import Signature
+
+    from constance import config
+    from constance.test import override_config
 
     import factories
 
     SKA_TEST_USER_USERNAME = factories.TEST_ADMIN_USERNAME
     SKA_TEST_USER_PASSWORD = factories.TEST_PASSWORD
 
+    OVERRIDE_CONSTANCE_KWARGS = {
+        # 'SKA_PROVIDERS': {
+        #     # Client 1, group users
+        #     'client_1.users': {
+        #         'SECRET_KEY': 'client-1-users-secret-key',
+        #     },
+        #
+        #     # Client 1, group power_users
+        #     'client_1.power_users': {
+        #         'SECRET_KEY': 'client-1-power-users-secret-key',
+        #         'USER_CREATE_CALLBACK': 'foo.ska_callbacks.'
+        #                                 'client1_power_users_create',
+        #     },
+        #
+        #     # Client 1, group admins
+        #     'client_1.admins': {
+        #         'SECRET_KEY': 'client-1-admins-secret-key',
+        #         'USER_CREATE_CALLBACK': 'foo.ska_callbacks.'
+        #                                 'client1_admins_create',
+        #         'USER_GET_CALLBACK': 'foo.ska_callbacks.'
+        #                              'client1_admins_get',
+        #         'USER_INFO_CALLBACK': 'foo.ska_callbacks.'
+        #                               'client1_admins_info_constance',
+        #         'REDIRECT_AFTER_LOGIN': '/admin/'
+        #     },
+        # }
+    }
+    OVERRIDE_SETTINGS_KWARGS = {
+        'AUTHENTICATION_BACKENDS': (
+            'ska.contrib.django.ska.backends.constance_backend.'
+            'SkaAuthenticationConstanceBackend',
+            'django.contrib.auth.backends.ModelBackend',
+        ),
+        'ROOT_URLCONF': 'constance_urls',
+    }
 
     @pytest.mark.django_db
-    class SkaDecoratorsTest(TransactionTestCase):
-        """Testing model- and view- decorators."""
+    class SkaAuthenticationConstanceBackendTest(TransactionTestCase):
+        """Tests for auth constance backend."""
 
         pytestmark = pytest.mark.django_db
 
-        def setUp(self):
-            items = generate_data(NUM_ITEMS)
-
-            # Testing the URLs
-            self.item = items[0]
-
-        @log_info
-        def test_01_model_decorator(self):
-            """Test the ``ska.contrib.django.ska.decorators.sign_url``."""
-            # Testing signed URLs
-            signed_absolute_url = self.item.get_signed_absolute_url()
-            self.assertIsNotNone(signed_absolute_url)
-            return signed_absolute_url
-
-        @log_info
-        def test_02_view_decorator_with_signed_url(self):
-            """Test view decorator with signed URL.
-
-            Test ``ska.contrib.django.ska.decorators.validate_signed_request``.
-            """
-            flow = []
-
-            # Testing signed URLs
-            signed_absolute_url = self.item.get_signed_absolute_url()
-            self.assertIsNotNone(signed_absolute_url)
-            flow.append(('Signed absolute URL', signed_absolute_url))
-
-            # Testing view with signed URL
-            client = Client()
-            response = client.get(signed_absolute_url, {})
-            response_status_code = getattr(response, 'status_code', None)
-            self.assertIn(response_status_code, (200, 201, 202))
-            flow.append(
-                ('Response status code for signed URL', response_status_code)
-            )
-
-            return flow
-
-        @log_info
-        def test_03_view_decorator_with_unsigned_url(self):
-            """Test view decorator with unsigned URL.
-
-            Test the
-            ``ska.contrib.django.ska.decorators.validate_signed_request`` view
-            decorator with unsigned URL.
-            """
-            flow = []
-
-            # Testing unsigned URLs
-            absolute_url = self.item.get_absolute_url()
-            self.assertTrue(absolute_url is not None)
-            flow.append(('Unsigned absolute URL', absolute_url))
-
-            # Testing view with signed URL
-            client = Client()
-            response = client.get(absolute_url, {})
-            response_status_code = getattr(response, 'status_code', None)
-            response_content = getattr(response, 'content', "")
-            self.assertIn(response_status_code, (401,))
-            flow.append(
-                ('Response status code for unsigned URL', response_status_code)
-            )
-            flow.append(
-                ('Response content for unsigned URL', response_content)
-            )
-
-            return flow
-
-        @log_info
-        def test_04_class_based_view_decorator_with_signed_url(self):
-            """Test class based view decorator with signed URL.
-
-            Test ``ska.contrib.django.ska.decorators.validate_signed_request``.
-            """
-            flow = []
-
-            # Testing signed URLs
-            signed_absolute_url = self.item \
-                .get_signed_class_based_absolute_url()
-            self.assertIsNotNone(signed_absolute_url)
-            flow.append(('Signed absolute URL', signed_absolute_url))
-
-            # Testing view with signed URL
-            client = Client()
-            response = client.get(signed_absolute_url, {})
-            response_status_code = getattr(response, 'status_code', None)
-            self.assertIn(response_status_code, (200, 201, 202))
-            flow.append(
-                ('Response status code for signed URL', response_status_code)
-            )
-
-            return flow
-
-        @log_info
-        def test_05_class_based_view_decorator_with_unsigned_url(self):
-            """Test class based view decorator with unsigned URL.
-
-            Test the
-            ``ska.contrib.django.ska.decorators.validate_signed_request`` view
-            decorator with unsigned URL.
-            """
-            flow = []
-
-            # Testing unsigned URLs
-            absolute_url = self.item.get_cbv_absolute_url()
-            self.assertTrue(absolute_url is not None)
-            flow.append(('Unsigned absolute URL', absolute_url))
-
-            # Testing view with signed URL
-            client = Client()
-            response = client.get(absolute_url, {})
-            response_status_code = getattr(response, 'status_code', None)
-            response_content = getattr(response, 'content', "")
-            self.assertIn(response_status_code, (401,))
-            flow.append(
-                ('Response status code for unsigned URL', response_status_code)
-            )
-            flow.append(
-                ('Response content for unsigned URL', response_content)
-            )
-
-            return flow
-
-
-    @pytest.mark.django_db
-    class SkaAuthenticationBackendTest(TransactionTestCase):
-        """Tests for auth backend."""
-
-        pytestmark = pytest.mark.django_db
-
+        @override_settings(**OVERRIDE_SETTINGS_KWARGS)
         def setUp(self):
             self.AUTH_USER = 'test_auth_backend_user'
             self.AUTH_USER_EMAIL = 'test_ska_auth_user@mail.example.com'
@@ -202,6 +97,10 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
             self.PROVIDER_NAME = 'client_1.admins'
             self.LOGIN_URL = '/ska/login/'
 
+            factories.SkaProvidersConstanceFactory()
+
+        @override_settings(**OVERRIDE_SETTINGS_KWARGS)
+        @override_config(**OVERRIDE_CONSTANCE_KWARGS)
         def __test_login(self,
                          secret_key,
                          response_codes,
@@ -296,11 +195,15 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
 
             return flow
 
+        @override_settings(**OVERRIDE_SETTINGS_KWARGS)
+        @override_config(**OVERRIDE_CONSTANCE_KWARGS)
         def __logout(self):
             """Log out."""
             self._client.logout()
 
         @log_info
+        @override_settings(**OVERRIDE_SETTINGS_KWARGS)
+        @override_config(**OVERRIDE_CONSTANCE_KWARGS)
         def test_01_login(self):
             """Test auth using general ``SECRET_KEY``."""
             return self.__test_login(
@@ -311,9 +214,11 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
             )
 
         @log_info
+        @override_settings(**OVERRIDE_SETTINGS_KWARGS)
+        @override_config(**OVERRIDE_CONSTANCE_KWARGS)
         def test_02_provider_login(self):
             """Test auth using ``SECRET_KEY`` defined in ``PROVIDERS``."""
-            secret_key = PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
+            secret_key = config.SKA_PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
 
             # Authenticate for the first time. There shall be 2 emails
             # for `create` and `info` callbacks.
@@ -325,7 +230,7 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
                 test_email_data={
                     'emails': {
                         0: 'Welcome create::admins!',
-                        1: 'Welcome info::admins!',
+                        1: 'Welcome info::constance::admins!',
                     }
                 },
                 debug_info="test_02_provider_login::first time"
@@ -345,9 +250,9 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
                 test_email_data={
                     'emails': {
                         0: 'Welcome create::admins!',
-                        1: 'Welcome info::admins!',
+                        1: 'Welcome info::constance::admins!',
                         2: 'Welcome get::admins!',
-                        3: 'Welcome info::admins!',
+                        3: 'Welcome info::constance::admins!',
                     }
                 },
                 do_signature_check=False,
@@ -355,6 +260,8 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
             )
 
         @log_info
+        @override_settings(**OVERRIDE_SETTINGS_KWARGS)
+        @override_config(**OVERRIDE_CONSTANCE_KWARGS)
         def test_03_login_fail_wrong_secret_key(self):
             """Fail test auth using general ``SECRET_KEY``.
 
@@ -369,13 +276,15 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
             )
 
         @log_info
+        @override_settings(**OVERRIDE_SETTINGS_KWARGS)
+        @override_config(**OVERRIDE_CONSTANCE_KWARGS)
         def test_04_provider_login_fail_wrong_secret_key(self):
             """Fail test authentication.
 
             Fail test authentication using ``SECRET_KEY`` defined in `
             `PROVIDERS``, providing wrong secret key.
             """
-            secret_key = PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
+            secret_key = config.SKA_PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
             return self.__test_login(
                 secret_key + 'wrong',
                 [403, 403],
@@ -384,13 +293,15 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
             )
 
         @log_info
+        @override_settings(**OVERRIDE_SETTINGS_KWARGS)
+        @override_config(**OVERRIDE_CONSTANCE_KWARGS)
         def test_05_provider_login_fail_wrong_provider(self):
             """Test provider login fail wrong provider.
 
             Fail test authentication using ``SECRET_KEY`` defined in
             ``PROVIDERS``, providing wrong provider name.
             """
-            secret_key = PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
+            secret_key = config.SKA_PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
             return self.__test_login(
                 secret_key + 'wrong',
                 [403, 403],
@@ -400,9 +311,11 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
             )
 
         @log_info
+        @override_settings(**OVERRIDE_SETTINGS_KWARGS)
+        @override_config(**OVERRIDE_CONSTANCE_KWARGS)
         def test_06_purge_stored_signatures_data(self):
             """Test purge stored signature data."""
-            secret_key = PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
+            secret_key = config.SKA_PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
             # Login
             self.__test_login(
                 secret_key,

@@ -34,7 +34,8 @@ print(
             'SECRET_KEY': 'client-1-admins-secret-key',
             'USER_CREATE_CALLBACK': 'foo.ska_callbacks.client1_admins_create',
             'USER_GET_CALLBACK': 'foo.ska_callbacks.client1_admins_get',
-            'USER_INFO_CALLBACK': 'foo.ska_callbacks.client1_admins_info',
+            'USER_INFO_CALLBACK': 'foo.ska_callbacks.'
+                                  'client1_admins_info_constance',
             'REDIRECT_AFTER_LOGIN': '/admin/'
         },
     }),

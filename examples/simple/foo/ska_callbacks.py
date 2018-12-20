@@ -139,7 +139,7 @@ class Client1Info(BaseClientAction):
         """Custom callback for admins."""
         print('Constance callback!')
         return Client1Create._send_email(
-            _('info::admins'),
+            _('info::constance::admins'),
             user,
             request,
             signed_request_data
