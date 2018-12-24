@@ -21,8 +21,8 @@ are used for versioning (schema follows below):
 
 - Additions to the Django contrib app. Added additional callback
   ``USER_VALIDATE_CALLBACK`` to the authentication backends which is fired
-  right after the signature validation to allow custom logic to the incoming
-  authentication requests.
+  right after the signature validation to allow custom validation logic for
+  the incoming authentication requests.
 
 1.6.11
 ------
