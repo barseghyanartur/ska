@@ -747,6 +747,15 @@ Callbacks
 *********
 There are several callbacks implemented in authentication backend.
 
+- ``USER_VALIDATE_CALLBACK`` (string): Validate request callback. Created to
+  allow adding custom logic to the incoming authentication requests. The main
+  purpose is to provide a flexible way of raising exceptions if the incoming
+  authentication request shall be blocked (for instance, email or username is
+  in black-list or right the opposite - not in the white list). The only aim of
+  the `USER_VALIDATE_CALLBACK` is to raise a ``django.core.PermissionDenied``
+  exception if request data is invalid. In that case authentication flow will
+  halt. All other exceptions would simply be ignored (but logged) and if no
+  exception raised, the normal flow would be continued.
 - ``USER_GET_CALLBACK`` (string): Fired if user was successfully fetched from
   database (existing user).
 - ``USER_CREATE_CALLBACK`` (string): Fired right after user has been

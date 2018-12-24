@@ -17,7 +17,7 @@ are used for versioning (schema follows below):
 
 1.6.12
 ------
-yyyy-mm-dd (not released yet)
+2018-12-25
 
 - Additions to the Django contrib app. Added additional callback
   ``USER_VALIDATE_CALLBACK`` to the authentication backends which is fired
