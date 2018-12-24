@@ -6,7 +6,7 @@ try:
 except:
     readme = ''
 
-version = '1.6.11'
+version = '1.6.12'
 
 exec_dirs = [
     'src/ska/bin/',

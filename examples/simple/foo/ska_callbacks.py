@@ -1,21 +1,28 @@
 """
 Examples of how you could implement custom callbacks for each provider.
 """
+from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
 from django.utils.translation import ugettext_lazy as _
 
+from nine import versions
+
+from ska.defaults import DEFAULT_AUTH_USER_PARAM
 
 __all__ = (
+    'client1_admins_create',
+    'client1_admins_get',
+    'client1_admins_info',
+    'client1_admins_info_constance',
+    'client1_admins_validate',
+    'client1_power_users_create',
+    'client1_power_users_get',
+    'client1_power_users_info',
+    'client1_power_users_validate',
     'Client1Create',
     'Client1Get',
     'Client1Info',
-    'client1_power_users_create',
-    'client1_admins_create',
-    'client1_power_users_get',
-    'client1_admins_get',
-    'client1_power_users_info',
-    'client1_admins_info',
-    'client1_admins_info_constance',
+    'Client1Validate',
 )
 
 
@@ -36,6 +43,50 @@ class BaseClientAction(object):
                 [email],
                 fail_silently=True
             )
+
+# **************************************************************************
+# ************************* USER_VALIDATE_CALLBACK *************************
+# **************************************************************************
+
+
+class Client1Validate(BaseClientAction):
+    """Client 1 `USER_VALIDATE_CALLBACK` callbacks."""
+
+    @staticmethod
+    def power_users(request, signed_request_data):
+        """Custom callback for power users."""
+        return Client1Validate._send_email(
+            _('power users'),
+            None,
+            request,
+            signed_request_data
+        )
+
+    @staticmethod
+    def admins(request, signed_request_data):
+        """Custom callback for admins."""
+        if versions.DJANGO_GTE_1_7:
+            request_data = request.GET.dict()
+        else:
+            request_data = request.REQUEST
+        email = signed_request_data.get('email', '')
+        auth_user = request_data.get(DEFAULT_AUTH_USER_PARAM)
+        if auth_user == 'forbidden_username':
+            raise PermissionDenied("Access denied (username forbidden).")
+
+        if email == 'forbidden@example.com':
+            raise PermissionDenied("Access denied (email forbidden).")
+
+        return Client1Validate._send_email(
+            _('validate::admins'),
+            None,
+            request,
+            signed_request_data
+        )
+
+
+client1_power_users_validate = Client1Validate.power_users
+client1_admins_validate = Client1Validate.admins
 
 # **************************************************************************
 # ************************* USER_CREATE_CALLBACK ***************************

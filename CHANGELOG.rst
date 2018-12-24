@@ -15,6 +15,15 @@ are used for versioning (schema follows below):
   0.3.4 to 0.4).
 - All backwards incompatible changes are mentioned in this document.
 
+1.6.12
+------
+yyyy-mm-dd (not released yet)
+
+- Additions to the Django contrib app. Added additional callback
+  ``USER_VALIDATE_CALLBACK`` to the authentication backends which is fired
+  right after the signature validation to allow custom logic to the incoming
+  authentication requests.
+
 1.6.11
 ------
 2018-12-20

@@ -1,19 +1,19 @@
 import json
 from .base import *
 
-INSTALLED_APPS += (
-    'constance',
-    'constance.backends.database',  # Only if ``DatabaseBackend`` is used
-    'django_json_widget',
-)
+# INSTALLED_APPS += (
+#     'constance',
+#     'constance.backends.database',  # Only if ``DatabaseBackend`` is used
+#     'django_json_widget',
+# )
 
-CONSTANCE_CONFIG = {
-    'SKA_PROVIDERS': (
-        "",  # The default value
-        'JSON data',  # Help text in admin
-        'JSONField_config',  # Field config
-    )
-}
+# CONSTANCE_CONFIG = {
+#     'SKA_PROVIDERS': (
+#         "",  # The default value
+#         'JSON data',  # Help text in admin
+#         'JSONField_config',  # Field config
+#     )
+# }
 
 print(
     json.dumps({
@@ -41,8 +41,8 @@ print(
     }),
 )
 
-CONSTANCE_BACKEND = 'constance.backends.redisd.RedisBackend'
-# CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
+# CONSTANCE_BACKEND = 'constance.backends.redisd.RedisBackend'
+CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
 
 CONSTANCE_REDIS_CONNECTION = {
     'host': 'localhost',
@@ -53,6 +53,7 @@ CONSTANCE_REDIS_CONNECTION = {
 CONSTANCE_ADDITIONAL_FIELDS = {
     'JSONField_config': [
         'jsonfield2_addons.forms.JSONField',
+        # 'jsonfield.forms.JSONField',
         {
             # 'widget': 'django.forms.Textarea',
             'widget': 'django_json_widget.widgets.JSONEditorWidget',

@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 import logging
 
+from django.core.exceptions import PermissionDenied
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 from django.db import IntegrityError
@@ -19,12 +20,13 @@ from .....exceptions import ImproperlyConfigured, InvalidData
 
 from ..models import Signature as SignatureModel
 from ..settings import (
-    SECRET_KEY,
-    USER_GET_CALLBACK,
-    USER_CREATE_CALLBACK,
-    USER_INFO_CALLBACK,
-    DB_STORE_SIGNATURES,
     DB_PERFORM_SIGNATURE_CHECK,
+    DB_STORE_SIGNATURES,
+    SECRET_KEY,
+    USER_CREATE_CALLBACK,
+    USER_GET_CALLBACK,
+    USER_INFO_CALLBACK,
+    USER_VALIDATE_CALLBACK,
 )
 from ..utils import get_provider_data
 
@@ -95,6 +97,34 @@ class BaseSkaAuthenticationBackend(object):
         first_name = signed_request_data.get('first_name', '')
         last_name = signed_request_data.get('last_name', '')
 
+        # Validate request callback. Created to allow adding custom logic to
+        # the incoming authentication requests. The main purpose is to provide
+        # a flexible way of raising exceptions if the incoming authentication
+        # request shall be blocked (for instance, email or username is in
+        # black-list or right the opposite - not in the white list). The only
+        # aim of the `USER_VALIDATE_CALLBACK` is to raise a
+        # ``django.core.PermissionDenied`` exception if request data is
+        # invalid. In that case, the authentication flow will halt. All
+        # other exceptions would simply be ignored (but logged) and if no
+        # exception raised, the normal flow would be continued.
+        user_validate_callback = provider_data.get(
+            'USER_VALIDATE_CALLBACK',
+            USER_VALIDATE_CALLBACK
+        )
+        if user_validate_callback is not None:
+            callback_func = get_callback_func(user_validate_callback)
+            if callback_func:
+                try:
+                    user_validate_callback_resp = callback_func(
+                        request=request,
+                        signed_request_data=signed_request_data
+                    )
+                except PermissionDenied as err:
+                    logger.debug(str(err))
+                    raise err
+                except Exception as err:
+                    logger.debug(str(err))
+
         # Storing the signatures to database if set to be so.
         if DB_STORE_SIGNATURES:
             token = SignatureModel(
@@ -122,7 +152,7 @@ class BaseSkaAuthenticationBackend(object):
                 callback_func = get_callback_func(user_get_callback)
                 if callback_func:
                     try:
-                        callback_func(
+                        user_get_callback_resp = callback_func(
                             user,
                             request=request,
                             signed_request_data=signed_request_data

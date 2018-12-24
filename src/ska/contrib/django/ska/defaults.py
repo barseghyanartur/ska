@@ -8,6 +8,9 @@
   Defaults to "ska-auth-user".
 - `USER_GET_CALLBACK` (str): User get callback (when user is fetched in auth
   backend).
+- `USER_VALIDATE_CALLBACK` (str): User validate callback (fired before user is
+  created; created to allow custom logic to the user authentication before
+  user object is even created).
 - `USER_CREATE_CALLBACK` (str): User create callback (when user is created in
   auth backend).
 - `USER_INFO_CALLBACK` (str): User info callback.
@@ -34,15 +37,16 @@ __copyright__ = '2013-2018 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
 __all__ = (
     'AUTH_USER',
+    'DB_PERFORM_SIGNATURE_CHECK',
+    'DB_STORE_SIGNATURES',
+    'PROVIDERS',
+    'REDIRECT_AFTER_LOGIN',
     'UNAUTHORISED_REQUEST_ERROR_MESSAGE',
     'UNAUTHORISED_REQUEST_ERROR_TEMPLATE',
-    'USER_GET_CALLBACK',
     'USER_CREATE_CALLBACK',
+    'USER_GET_CALLBACK',
     'USER_INFO_CALLBACK',
-    'REDIRECT_AFTER_LOGIN',
-    'DB_STORE_SIGNATURES',
-    'DB_PERFORM_SIGNATURE_CHECK',
-    'PROVIDERS',
+    'USER_VALIDATE_CALLBACK',
 )
 
 AUTH_USER = 'ska-auth-user'
@@ -51,6 +55,7 @@ UNAUTHORISED_REQUEST_ERROR_MESSAGE = _("Unauthorised request. {0}")
 
 UNAUTHORISED_REQUEST_ERROR_TEMPLATE = ''
 
+USER_VALIDATE_CALLBACK = None
 USER_GET_CALLBACK = None
 USER_CREATE_CALLBACK = None
 USER_INFO_CALLBACK = None

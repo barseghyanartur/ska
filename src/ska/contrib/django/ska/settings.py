@@ -10,6 +10,9 @@
   module as ``SKA_SECRET_KEY``.
 - `USER_GET_CALLBACK` (str): User get callback (when user is fetched in auth
   backend).
+- `USER_VALIDATE_CALLBACK` (str): User validate callback (fired before user is
+  created; created to allow custom logic to the user authentication before
+  user object is even created).
 - `USER_CREATE_CALLBACK` (str): User create callback (when user is created in
   auth backend).
 - `USER_INFO_CALLBACK` (str): User info callback.
@@ -39,17 +42,18 @@ __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2018 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
 __all__ = (
+    'AUTH_USER',
+    'DB_PERFORM_SIGNATURE_CHECK',
+    'DB_STORE_SIGNATURES',
+    'PROVIDERS',
+    'REDIRECT_AFTER_LOGIN',
+    'SECRET_KEY',
     'UNAUTHORISED_REQUEST_ERROR_MESSAGE',
     'UNAUTHORISED_REQUEST_ERROR_TEMPLATE',
-    'AUTH_USER',
-    'SECRET_KEY',
-    'USER_GET_CALLBACK',
     'USER_CREATE_CALLBACK',
+    'USER_GET_CALLBACK',
     'USER_INFO_CALLBACK',
-    'REDIRECT_AFTER_LOGIN',
-    'DB_STORE_SIGNATURES',
-    'DB_PERFORM_SIGNATURE_CHECK',
-    'PROVIDERS',
+    'USER_VALIDATE_CALLBACK',
 )
 
 UNAUTHORISED_REQUEST_ERROR_MESSAGE = get_setting(
@@ -68,6 +72,7 @@ except Exception:
           "`settings` module!")
     )
 
+USER_VALIDATE_CALLBACK = get_setting('USER_VALIDATE_CALLBACK')
 USER_GET_CALLBACK = get_setting('USER_GET_CALLBACK')
 USER_CREATE_CALLBACK = get_setting('USER_CREATE_CALLBACK')
 USER_INFO_CALLBACK = get_setting('USER_INFO_CALLBACK')

@@ -11,8 +11,9 @@
     <h2>{% trans "General" %}</h2>
     <p>
         {% blocktrans %}
-        Below you can see the list of URLs, divided into 2 categories: (1) Fail, (2) success. Fail URLs obviously
-        fail (401 Unauthorized). The other two should work (you should get a password-less login into the
+        Below you can see the list of URLs, divided into 2 categories: (1)
+        Fail, (2) success. Fail URLs obviously fail (401 Unauthorized). The
+        other two should work (you should get a password-less login into the
         Django web site).
         {% endblocktrans %}
     </p>
@@ -36,9 +37,10 @@
     <h2>{% trans "By provider" %}</h2>
     <p>
         {% blocktrans %}
-        Below you can see the list of provider specific URLs, divided into 2 categories: (1) Fail, (2) success. 
-        Fail URLs obviously fail (401 Unauthorized). The other two should work (you should get a password-less login 
-        into the Django web site).
+        Below you can see the list of provider specific URLs, divided into 2
+        categories: (1) Fail, (2) success. Fail URLs obviously fail (401
+        Unauthorized). The other two should work (you should get a password-less
+        login into the Django web site).
         {% endblocktrans %}
     </p>
     <table>
@@ -57,5 +59,30 @@
     {% endfor %}
         </tbody>
     </table>
+
+    <p>
+        {% blocktrans %}
+        Below you can see the list of provider specific signed valid URLs that
+        still fail because they do not pass validation rules defined in the
+        ``examples.simple.foo.ska_callbacks.Client1Validate#admins`` callback.
+
+        Fail URLs obviously fail (403 Permission Denied).
+        {% endblocktrans %}
+    </p>
+    <table>
+        <thead>
+            <tr>
+                <td><strong>{% trans "Fail" %}</strong></td>
+            </tr>
+        </thead>
+        <tbody>
+    {% for title, description, signed_remote_ska_login_url in fail_only_remote_ska_login_urls_by_provider %}
+        <tr>
+            <td><a href="{{ signed_remote_ska_login_url }}" class="login">{% trans "Log in" %} - {{ title }}</a> ({{ description }})</td>
+        </tr>
+    {% endfor %}
+        </tbody>
+    </table>
+
 
 {% endblock content %}

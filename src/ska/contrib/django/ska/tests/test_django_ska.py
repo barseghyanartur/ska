@@ -209,6 +209,8 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
                          logout=False,
                          test_email_data=None,
                          do_signature_check=True,
+                         auth_user=None,
+                         auth_user_email=None,
                          debug_info=""):
             """Test login.
 
@@ -221,15 +223,22 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
                 used only if both `DB_STORE_SIGNATURES` and
                 `DB_PERFORM_SIGNATURE_CHECK` values are True, which means
                 that users can't use same signatures twice.
+            :param auth_user:
+            :param auth_user_email:
             :return:
             """
             flow = []
+
+            if not auth_user:
+                auth_user = self.AUTH_USER
+            if not auth_user_email:
+                auth_user_email = self.AUTH_USER_EMAIL
 
             first_response_code, second_response_code = response_codes
 
             # Testing signed URLs
             extra = {
-                'email': self.AUTH_USER_EMAIL,
+                'email': auth_user_email,
                 'first_name': self.AUTH_USER_FIRST_NAME,
                 'last_name': self.AUTH_USER_LAST_NAME,
             }
@@ -237,7 +246,7 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
                 extra.update({DEFAULT_PROVIDER_PARAM: provider_name})
 
             signed_login_url = sign_url(
-                auth_user=self.AUTH_USER,
+                auth_user=auth_user,
                 secret_key=secret_key,
                 url=self.LOGIN_URL,
                 extra=extra
@@ -324,8 +333,9 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
                 logout=True,
                 test_email_data={
                     'emails': {
-                        0: 'Welcome create::admins!',
-                        1: 'Welcome info::admins!',
+                        0: 'Welcome validate::admins!',
+                        1: 'Welcome create::admins!',
+                        2: 'Welcome info::admins!',
                     }
                 },
                 debug_info="test_02_provider_login::first time"
@@ -344,10 +354,17 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
                 logout=True,
                 test_email_data={
                     'emails': {
-                        0: 'Welcome create::admins!',
-                        1: 'Welcome info::admins!',
-                        2: 'Welcome get::admins!',
-                        3: 'Welcome info::admins!',
+                        # First round
+                        0: 'Welcome validate::admins!',
+                        1: 'Welcome create::admins!',
+                        2: 'Welcome info::admins!',
+                        # Second round
+                        # TODO: this is weird. validate::admin shall not
+                        # appear here twice.
+                        3: 'Welcome validate::admins!',
+                        4: 'Welcome validate::admins!',
+                        5: 'Welcome get::admins!',
+                        6: 'Welcome info::admins!',
                     }
                 },
                 do_signature_check=False,
@@ -436,6 +453,44 @@ if os.environ.get("DJANGO_SETTINGS_MODULE", None):
             call_command('ska_purge_stored_signature_data')
             # All old records shall be gone
             self.assertEqual(Signature.objects.all().count(), 0)
+
+        @log_info
+        def test_07_provider_login_forbidden_email(self):
+            """Test auth using ``SECRET_KEY`` defined in ``PROVIDERS``."""
+            secret_key = PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
+
+            # Authenticate for the first time. There shall be 2 emails
+            # for `create` and `info` callbacks.
+            self.__test_login(
+                secret_key,
+                [403, 403],
+                self.PROVIDER_NAME,
+                logout=True,
+                test_email_data={
+                    'emails': {}
+                },
+                auth_user_email='forbidden@example.com',
+                debug_info="test_07_provider_login_forbidden_email"
+            )
+
+        @log_info
+        def test_08_provider_login_forbidden_username(self):
+            """Test auth using ``SECRET_KEY`` defined in ``PROVIDERS``."""
+            secret_key = PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
+
+            # Authenticate for the first time. There shall be 2 emails
+            # for `create` and `info` callbacks.
+            self.__test_login(
+                secret_key,
+                [403, 403],
+                self.PROVIDER_NAME,
+                logout=True,
+                test_email_data={
+                    'emails': {}
+                },
+                auth_user='forbidden_username',
+                debug_info="test_08_provider_login_forbidden_username"
+            )
 
 
 if __name__ == "__main__":

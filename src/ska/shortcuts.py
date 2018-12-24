@@ -243,7 +243,8 @@ def extract_signed_request_data(data, secret_key=None,
                                 auth_user_param=DEFAULT_AUTH_USER_PARAM,
                                 valid_until_param=DEFAULT_VALID_UNTIL_PARAM,
                                 extra_param=DEFAULT_EXTRA_PARAM,
-                                validate=False, fail_silently=False,
+                                validate=False,
+                                fail_silently=False,
                                 signature_cls=Signature):
     """Validate the signed request data.
 
