@@ -745,7 +745,7 @@ urls.py
 
 Callbacks
 *********
-There are several callbacks implemented in authentication backend.
+There are several callbacks implemented for authentication backend.
 
 - ``USER_VALIDATE_CALLBACK`` (string): Validate request callback. Created to
   allow adding custom logic to the incoming authentication requests. The main
@@ -953,7 +953,7 @@ With ``DatabaseBackend`` it would look as follows:
 - Go to `http://localhost:8000/admin/constance/config/
   <http://localhost:8000/admin/constance/config/>`_.
 
-- Past the following code:
+- Paste the following code:
 
 .. code-block:: javascript
 
@@ -1123,7 +1123,10 @@ example below. Note, that keys of the ``SKA_PROVIDERS`` ("client_1",
         },
     }
 
-See the "Callbacks" section for the list of callbacks.
+See the `Callbacks`_ section for the list of callbacks. Note, that callbacks
+defined in the ``SKA_PROVIDERS`` are overrides. If a certain callback isn't
+defined in the ``SKA_PROVIDERS``, authentication backend falls back to the
+respective default callback function.
 
 Obviously, server would have to have the full list of providers defined. On
 the client side you would only have to store the general secret key and of

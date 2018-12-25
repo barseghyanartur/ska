@@ -136,7 +136,7 @@ class Client1Get(BaseClientAction):
     @staticmethod
     def power_users(user, request, signed_request_data):
         """Custom callback for power users."""
-        return Client1Create._send_email(
+        return Client1Get._send_email(
             _('get::power users'),
             user,
             request,
@@ -146,7 +146,7 @@ class Client1Get(BaseClientAction):
     @staticmethod
     def admins(user, request, signed_request_data):
         """Custom callback for admins."""
-        return Client1Create._send_email(
+        return Client1Get._send_email(
             _('get::admins'),
             user,
             request,
@@ -168,7 +168,7 @@ class Client1Info(BaseClientAction):
     @staticmethod
     def power_users(user, request, signed_request_data):
         """Custom callback for power users."""
-        return Client1Create._send_email(
+        return Client1Info._send_email(
             _('info::power users'),
             user,
             request,
@@ -178,7 +178,7 @@ class Client1Info(BaseClientAction):
     @staticmethod
     def admins(user, request, signed_request_data):
         """Custom callback for admins."""
-        return Client1Create._send_email(
+        return Client1Info._send_email(
             _('info::admins'),
             user,
             request,
@@ -189,7 +189,7 @@ class Client1Info(BaseClientAction):
     def admins_constance(user, request, signed_request_data):
         """Custom callback for admins."""
         print('Constance callback!')
-        return Client1Create._send_email(
+        return Client1Info._send_email(
             _('info::constance::admins'),
             user,
             request,
