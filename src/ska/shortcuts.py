@@ -196,7 +196,8 @@ def signature_to_dict(auth_user,
     return signature_dict
 
 
-def validate_signed_request_data(data, secret_key,
+def validate_signed_request_data(data,
+                                 secret_key,
                                  signature_param=DEFAULT_SIGNATURE_PARAM,
                                  auth_user_param=DEFAULT_AUTH_USER_PARAM,
                                  valid_until_param=DEFAULT_VALID_UNTIL_PARAM,
@@ -238,7 +239,8 @@ def validate_signed_request_data(data, secret_key,
     return validation_result
 
 
-def extract_signed_request_data(data, secret_key=None,
+def extract_signed_request_data(data,
+                                secret_key=None,
                                 signature_param=DEFAULT_SIGNATURE_PARAM,
                                 auth_user_param=DEFAULT_AUTH_USER_PARAM,
                                 valid_until_param=DEFAULT_VALID_UNTIL_PARAM,

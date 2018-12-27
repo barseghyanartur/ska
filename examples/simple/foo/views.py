@@ -135,6 +135,43 @@ def authenticate(request, template_name='foo/authenticate.html'):
     return render(request, template_name, context)
 
 
+def drf_permissions(request, template_name='foo/drf_permissions.html'):
+    """Django REST Framework permissions view.
+
+    :param request:
+    :param template_name:
+    :return:
+    """
+    drf_remote_ska_viewset_url = reverse('fooitemmodel-list')
+
+    # Login URLs by provider
+    drf_remote_ska_login_urls_by_provider = []
+    for uid, data in PROVIDERS.items():
+        signed_remote_ska_login_url = sign_url(
+            auth_user='test_ska_user_{0}'.format(uid),
+            # Using provider-specific secret key
+            secret_key=data.get('SECRET_KEY'),
+            url=drf_remote_ska_viewset_url,
+            extra={
+                'email': 'test_ska_user_{0}@mail.example.com'.format(uid),
+                'first_name': 'John {0}'.format(uid),
+                'last_name': 'Doe {0}'.format(uid),
+                DEFAULT_PROVIDER_PARAM: uid,
+            }
+        )
+        drf_remote_ska_login_urls_by_provider.append(
+            (uid, drf_remote_ska_viewset_url, signed_remote_ska_login_url)
+        )
+
+    # Template context
+    context = {
+        'drf_remote_ska_login_urls_by_provider':
+            drf_remote_ska_login_urls_by_provider,
+    }
+
+    return render(request, template_name, context)
+
+
 @validate_signed_request()
 def detail(request, slug, template_name='foo/detail.html'):
     """Foo item detail.

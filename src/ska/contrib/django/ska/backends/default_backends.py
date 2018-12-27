@@ -17,7 +17,7 @@ class SkaAuthenticationBackend(BaseSkaAuthenticationBackend):
     """Authentication backend."""
 
     def get_settings(self):
-        """
+        """Get settings.
 
         :return:
         """

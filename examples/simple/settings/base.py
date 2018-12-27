@@ -254,6 +254,9 @@ INSTALLED_APPS = (
     'constance.backends.database',  # Only if ``DatabaseBackend`` is used
     'django_json_widget',
 
+    # For djangorestframework
+    'rest_framework',
+
     # ska, django-ska and example/testing app
     'ska.contrib.django.ska',
     'foo',  # Our example app

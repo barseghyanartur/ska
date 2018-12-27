@@ -1,6 +1,7 @@
 -r common.txt
 -r testing.txt
 -r constance_django_1_11.txt
+-r rest_framework_django_1_11.txt
 
 Django>=1.11,<2.0
 # django-debug-toolbar==1.5
