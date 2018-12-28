@@ -1172,9 +1172,9 @@ secure connection:
 Django REST Framework integration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 For protecting views without actually being authenticated into the system,
-the following permission classes shall be implemented. They work for both
-plan settings and provider settings, as well as both plain- and
-provider-settings work in combination with `django-constance` package as well.
+specific permission classes are implemented (for both plan settings and
+provider settings, as well as both plain- and provider-settings work in
+combination with `django-constance` package).
 
 Permission classes
 ++++++++++++++++++
