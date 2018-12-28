@@ -56,7 +56,7 @@ Django `ska` module (`ska.contrib.django.ska`)
   authentication.
 - Template tags for signing URLs from within templates.
 - `django-constance` integration (for password-less authentication).
-- Django REST Framework integration (for protecting ViewSets).
+- `Django REST Framework integration`_ (for protecting ViewSets).
 
 Prerequisites
 =============
@@ -1204,6 +1204,34 @@ The following permission classes are implemented:
         permission_classes = (ProviderSignedRequestRequired,)
         queryset = FooItem.objects.all()
         serializer_class = FooItemSerializer
+
+**Signing requests**
+
+Requests are signed the same way. Sample code:
+
+.. code-block:: python
+
+    # Given that we have `auth_user`, `auth_user_email`, `provider_name`
+    # (and the rest), the code would look as follows:
+
+    from ska import sign_url
+    from ska.defaults import DEFAULT_PROVIDER_PARAM
+
+    extra = {
+        'email': auth_user_email,
+        'first_name': first_name,
+        'last_name': last_name,
+    }
+
+    if provider_name:
+        extra.update({DEFAULT_PROVIDER_PARAM: provider_name})
+
+    signed_url = sign_url(
+        auth_user=auth_user,
+        secret_key=secret_key,
+        url=url,
+        extra=extra
+    )
 
 Testing
 =======
