@@ -32,7 +32,7 @@ from ..utils import get_provider_data
 
 logger = logging.getLogger(__file__)
 
-__title__ = 'ska.contrib.django.ska.backends.constance_backend'
+__title__ = 'ska.contrib.django.ska.backends.base'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2018 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'

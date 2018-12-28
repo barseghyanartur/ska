@@ -7,7 +7,7 @@ from nine import versions
 from ska import sign_url
 from ska.contrib.django.ska.decorators import (
     validate_signed_request,
-    m_validate_signed_request
+    m_validate_signed_request,
 )
 from ska.contrib.django.ska.settings import SECRET_KEY, PROVIDERS
 from ska.defaults import DEFAULT_PROVIDER_PARAM
@@ -142,16 +142,21 @@ def drf_permissions(request, template_name='foo/drf_permissions.html'):
     :param template_name:
     :return:
     """
-    drf_remote_ska_viewset_url = reverse('fooitemmodel-list')
+    # *********************************************************
+    # **************** Provider list URLS *********************
+    # *********************************************************
+    drf_remote_ska_provider_list_url = reverse(
+        'fooitemmodel_provider_signed_request_required-list'
+    )
 
     # Login URLs by provider
-    drf_remote_ska_login_urls_by_provider = []
+    drf_remote_ska_list_urls_provider = []
     for uid, data in PROVIDERS.items():
         signed_remote_ska_login_url = sign_url(
             auth_user='test_ska_user_{0}'.format(uid),
             # Using provider-specific secret key
             secret_key=data.get('SECRET_KEY'),
-            url=drf_remote_ska_viewset_url,
+            url=drf_remote_ska_provider_list_url,
             extra={
                 'email': 'test_ska_user_{0}@mail.example.com'.format(uid),
                 'first_name': 'John {0}'.format(uid),
@@ -159,14 +164,45 @@ def drf_permissions(request, template_name='foo/drf_permissions.html'):
                 DEFAULT_PROVIDER_PARAM: uid,
             }
         )
-        drf_remote_ska_login_urls_by_provider.append(
-            (uid, drf_remote_ska_viewset_url, signed_remote_ska_login_url)
+        drf_remote_ska_list_urls_provider.append(
+            (
+                uid,
+                drf_remote_ska_provider_list_url,
+                signed_remote_ska_login_url
+            )
         )
 
-    # Template context
+    # *********************************************************
+    # *********************** List URLS ***********************
+    # *********************************************************
+    drf_remote_ska_list_url = reverse(
+        'fooitemmodel_signed_request_required-list'
+    )
+    signed_remote_ska_login_url = sign_url(
+        auth_user='test_ska_user',
+        # Using global secret key
+        secret_key=SECRET_KEY,
+        url=drf_remote_ska_list_url,
+        extra={
+            'email': 'test_ska_user@mail.example.com',
+            'first_name': 'John',
+            'last_name': 'Doe',
+        }
+    )
+    drf_remote_ska_list_urls = [
+        (
+            'global',
+            drf_remote_ska_list_url,
+            signed_remote_ska_login_url
+        )
+    ]
+
+    # *********************************************************
+    # ****************** Template context *********************
+    # *********************************************************
     context = {
-        'drf_remote_ska_login_urls_by_provider':
-            drf_remote_ska_login_urls_by_provider,
+        'drf_remote_ska_list_urls': drf_remote_ska_list_urls,
+        'drf_remote_ska_provider_list_url': drf_remote_ska_list_urls_provider,
     }
 
     return render(request, template_name, context)

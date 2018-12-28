@@ -1,20 +1,62 @@
 from rest_framework.viewsets import ModelViewSet
 
 from ska.contrib.django.ska.integration.drf.permissions import (
-    ProviderSignedRequestRequired
+    ConstanceProviderSignedRequestRequired,
+    ConstanceSignedRequestRequired,
+    ProviderSignedRequestRequired,
+    SignedRequestRequired,
 )
 
-from .models import FooItem
+from .models import (
+    FooItemConstanceProviderSignedRequestRequired,
+    FooItemConstanceSignedRequestRequired,
+    FooItemProviderSignedRequestRequired,
+    FooItemSignedRequestRequired,
+)
 from .serializers import FooItemSerializer
 
 __all__ = (
-    'FooItemViewSet',
+    'FooItemConstanceSignedRequestRequiredViewSet',
+    'FooItemConstanceProviderSignedRequestRequiredViewSet',
+    'FooItemProviderSignedRequestRequiredViewSet',
+    'FooItemSignedRequestRequiredViewSet',
 )
 
 
-class FooItemViewSet(ModelViewSet):
-    """FooItem model viewset."""
+class BaseFooItemViewSet(ModelViewSet):
+    """FooItem model base ViewSet."""
 
-    permission_classes = (ProviderSignedRequestRequired,)
-    queryset = FooItem.objects.all()
+    lookup_field = 'id'
     serializer_class = FooItemSerializer
+
+
+class FooItemSignedRequestRequiredViewSet(BaseFooItemViewSet):
+    """FooItem model ViewSet protected with `SignedRequestRequired`."""
+
+    queryset = FooItemSignedRequestRequired.objects.all()
+    permission_classes = (SignedRequestRequired,)
+
+
+class FooItemProviderSignedRequestRequiredViewSet(BaseFooItemViewSet):
+    """FooItem model ViewSet protected with `ProviderSignedRequestRequired`."""
+
+    queryset = FooItemProviderSignedRequestRequired.objects.all()
+    permission_classes = (ProviderSignedRequestRequired,)
+
+
+class FooItemConstanceSignedRequestRequiredViewSet(BaseFooItemViewSet):
+    """FooItem model ViewSet protected with
+    `ConstanceSignedRequestRequired`.
+    """
+
+    queryset = FooItemConstanceSignedRequestRequired.objects.all()
+    permission_classes = (ConstanceSignedRequestRequired,)
+
+
+class FooItemConstanceProviderSignedRequestRequiredViewSet(BaseFooItemViewSet):
+    """FooItem model ViewSet protected with
+    `ConstanceProviderSignedRequestRequired`.
+    """
+
+    queryset = FooItemConstanceProviderSignedRequestRequired.objects.all()
+    permission_classes = (ConstanceProviderSignedRequestRequired,)

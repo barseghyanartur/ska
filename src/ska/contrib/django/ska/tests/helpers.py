@@ -6,11 +6,24 @@ import random
 
 import pytest
 
+import factories
+
 __title__ = 'ska.contrib.django.ska.tests.helpers'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2018 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
-
+__all__ = (
+    'change_date',
+    'create_admin_user',
+    'generate_data',
+    'LOG_INFO',
+    'log_info',
+    'NUM_ITEMS',
+    'PROJECT_DIR',
+    'project_dir',
+    'SKA_TEST_USER_PASSWORD',
+    'SKA_TEST_USER_USERNAME',
+)
 
 logger = logging.getLogger(__name__)
 
@@ -23,6 +36,10 @@ def project_dir(base):
 PROJECT_DIR = project_dir
 
 LOG_INFO = True
+
+NUM_ITEMS = 5
+SKA_TEST_USER_USERNAME = factories.TEST_ADMIN_USERNAME
+SKA_TEST_USER_PASSWORD = factories.TEST_PASSWORD
 
 
 def log_info(func):
@@ -52,36 +69,19 @@ def change_date():
     return bool(random.randint(0, 1))
 
 
-NUM_ITEMS = 5
+@pytest.mark.django_db
+def create_admin_user():
+    """Create a user for testing the dashboard.
 
-# *********************************************************************
-# *********************************************************************
-# *********************************************************************
+    TODO: At the moment an admin account is being tested. Automated tests
+    with diverse accounts are to be implemented.
+    """
+    user = factories.TestAdminUsernameSuperAdminUserFactory(
+        email='admin@dev.django-ska.com'
+    )
 
-# Skipping from non-Django tests.
-if os.environ.get("DJANGO_SETTINGS_MODULE", None):
 
-    import factories
-
-    SKA_TEST_USER_USERNAME = factories.TEST_ADMIN_USERNAME
-    SKA_TEST_USER_PASSWORD = factories.TEST_PASSWORD
-
-# *********************************************************************
-# *********************************************************************
-# *********************************************************************
-
-    @pytest.mark.django_db
-    def create_admin_user():
-        """Create a user for testing the dashboard.
-
-        TODO: At the moment an admin account is being tested. Automated tests
-        with diverse accounts are to be implemented.
-        """
-        user = factories.TestAdminUsernameSuperAdminUserFactory(
-            email='admin@dev.django-ska.com'
-        )
-
-    @pytest.mark.django_db
-    def generate_data(num_items=NUM_ITEMS):
-        """Generate data."""
-        return factories.FooItemFactory.create_batch(num_items)
+@pytest.mark.django_db
+def generate_data(num_items=NUM_ITEMS):
+    """Generate data."""
+    return factories.FooItemFactory.create_batch(num_items)

@@ -319,6 +319,10 @@ CONSTANCE_CONFIG = {
         "",  # The default value
         'JSON data',  # Help text in admin
         'JSONField_config',  # Field config
+    ),
+    'SKA_SECRET_KEY': (
+        "",  # The default value
+        "Global secret key",  # Help text in admin
     )
 }
 

@@ -1,8 +1,6 @@
 from __future__ import absolute_import
 import logging
 
-from nine import versions
-
 from ....... import validate_signed_request_data
 from .......defaults import (
     DEFAULT_SIGNATURE_PARAM,
@@ -62,10 +60,7 @@ class AbstractSignedRequestRequired(permissions.BasePermission):
         :param obj:
         :return:
         """
-        if versions.DJANGO_GTE_1_7:
-            request_data = request.GET.dict()
-        else:
-            request_data = request.REQUEST
+        request_data = request.GET.dict()
 
         secret_key = self.get_secret_key(
             request_data,

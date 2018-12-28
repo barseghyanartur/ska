@@ -13,6 +13,15 @@ else:
     from django.core.urlresolvers import reverse
 
 
+__all__ = (
+    'FooItem',
+    'FooItemConstanceProviderSignedRequestRequired',
+    'FooItemConstanceSignedRequestRequired',
+    'FooItemProviderSignedRequestRequired',
+    'FooItemSignedRequestRequired',
+)
+
+
 @python_2_unicode_compatible
 class FooItem(models.Model):
     """Foo item.
@@ -77,3 +86,27 @@ class FooItem(models.Model):
         return reverse('foo.class-based.detail', kwargs={'slug': self.slug})
     get_signed_absolute_url.allow_tags = True
     get_signed_absolute_url.short_description = _('Signed URL')
+
+
+class FooItemSignedRequestRequired(FooItem):
+
+    class Meta:
+        proxy = True
+
+
+class FooItemProviderSignedRequestRequired(FooItem):
+
+    class Meta:
+        proxy = True
+
+
+class FooItemConstanceSignedRequestRequired(FooItem):
+
+    class Meta:
+        proxy = True
+
+
+class FooItemConstanceProviderSignedRequestRequired(FooItem):
+
+    class Meta:
+        proxy = True

@@ -55,6 +55,8 @@ Django `ska` module (`ska.contrib.django.ska`)
   callbacks (possible to customise per provider) for various states of
   authentication.
 - Template tags for signing URLs from within templates.
+- `django-constance` integration (for password-less authentication).
+- Django REST Framework integration (for protecting ViewSets).
 
 Prerequisites
 =============
@@ -62,7 +64,13 @@ Present
 -------
 - Core ``ska`` module requires Python 2.7, 3.5, 3.6 or 3.7.
 - Django ``ska`` module (``ska.contrib.django.ska``) requires the mentioned
-  above plus Django 1.8, 1.9, 1.10, 1.11, 2.0 or 2.1.
+  above plus Django 1.8, 1.9, 1.10, 1.11, 2.0 or 2.1. Additionally, certain
+  versions of `django-constance` and `djangorestframework` are required.
+  Specific version requirement primarily depends on the used Django version.
+  Check the `example requirements
+  <https://github.com/barseghyanartur/ska/tree/master/examples/requirements>`_
+  to find out which versions of `django-constance` and `djangorestframework`
+  have been tested with specific Django versions.
 
 Past
 ----
@@ -572,6 +580,129 @@ project.
 See the working `example project
 <https://github.com/barseghyanartur/ska/tree/stable/example>`_.
 
+Multiple secret keys
+~~~~~~~~~~~~~~~~~~~~
+Imagine, you have a site to which you want to offer a password-less login for
+various clients/senders and you don't want them all to have one shared secret
+key, but rather have their own one. Moreover, you specifically want to execute
+very custom callbacks not only for each separate client/sender, but also for
+different sort of users authenticating.
+
+.. code-block:: text
+
+                              ┌────────────────┐
+                              │ Site providing │
+                              │ authentication │
+                              │ ────────────── │
+                              │ custom secret  │
+                              │    keys per    │
+                              │     client     │
+                              │ ────────────── │
+                              │ Site 1: 'sk-1' │
+                 ┌───────────>│ Site 2: 'sk-2' │<───────────┐
+                 │            │ Site 3: 'sk-3' │            │
+                 │      ┌────>│ Site 4: 'sk-4' │<────┐      │
+                 │      │     └────────────────┘     │      │
+                 │      │                            │      │
+                 │      │                            │      │
+    ┌────────────┴─┐  ┌─┴────────────┐  ┌────────────┴─┐  ┌─┴────────────┐
+    │    Site 1    │  │    Site 2    │  │    Site 3    │  │    Site 4    │
+    │ ──────────── │  │ ──────────── │  │ ──────────── │  │ ──────────── │
+    │  secret key  │  │  secret key  │  │  secret key  │  │  secret key  │
+    │    'sk-1'    │  │    'sk-2'    │  │    'sk-3'    │  │    'sk-4'    │
+    └──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘
+
+In order to make the stated above possible, the concept of providers is
+introduced. You can define a secret key, callbacks or redirect URL. See an
+example below. Note, that keys of the ``SKA_PROVIDERS`` ("client_1",
+"client_2", etc.) are the provider keys.
+
+.. code-block:: python
+
+    SKA_PROVIDERS = {
+        # ********************************************************
+        # ******************** Basic gradation *******************
+        # ********************************************************
+        # Site 1
+        'client_1': {
+            'SECRET_KEY': 'sk-1',
+        },
+
+        # Site 2
+        'client_2': {
+            'SECRET_KEY': 'sk-2',
+        },
+
+        # Site 3
+        'client_3': {
+            'SECRET_KEY': 'sk-3',
+        },
+
+        # Site 4
+        'client_4': {
+            'SECRET_KEY': 'sk-4',
+        },
+
+        # ********************************************************
+        # ******* You make gradation as complex as you wish ******
+        # ********************************************************
+        # Client 1, group users
+        'client_1.users': {
+            'SECRET_KEY': 'client-1-users-secret-key',
+        },
+
+        # Client 1, group power_users
+        'client_1.power_users': {
+            'SECRET_KEY': 'client-1-power-users-secret-key',
+            'USER_CREATE_CALLBACK': 'foo.ska_callbacks.client1_power_users_create',
+        },
+
+        # Client 1, group admins
+        'client_1.admins': {
+            'SECRET_KEY': 'client-1-admins-secret-key',
+            'USER_CREATE_CALLBACK': 'foo.ska_callbacks.client1_admins_create',
+            'REDIRECT_AFTER_LOGIN': '/admin/'
+        },
+    }
+
+See the `Callbacks`_ section for the list of callbacks. Note, that callbacks
+defined in the ``SKA_PROVIDERS`` are overrides. If a certain callback isn't
+defined in the ``SKA_PROVIDERS``, authentication backend falls back to the
+respective default callback function.
+
+Obviously, server would have to have the full list of providers defined. On
+the client side you would only have to store the general secret key and of
+course the provider UID(s).
+
+When making a signed URL on the sender side, you should be providing the
+``provider`` key in the ``extra`` argument. See the example below for how you
+would do it for ``client_1.power_users``.
+
+.. code-block:: python
+
+    from ska import sign_url
+    from ska.defaults import DEFAULT_PROVIDER_PARAM
+
+    server_ska_login_url = 'https://server-url.com/ska/login/'
+
+    signed_remote_ska_login_url = sign_url(
+        auth_user='test_ska_user',
+        # Using provider-specific secret key. This value shall be equal to
+        # the value of SKA_PROVIDERS['client_1.power_users']['SECRET_KEY'],
+        # defined in your projects' Django settings module.
+        secret_key='client-1-power-users-secret-key',
+        url=server_ska_login_url,
+        extra={
+            'email': 'test_ska_user@mail.example.com',
+            'first_name': 'John',
+            'last_name': 'Doe',
+            # Using provider specific string. This value shall be equal to
+            # the key string "client_1.power_users" of SKA_PROVIDERS,
+            # defined in your projcts' Django settings module.
+            DEFAULT_PROVIDER_PARAM: 'client_1.power_users',
+        }
+    )
+
 Django model method decorator ``sign_url``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This is most likely be used in module ``models`` (models.py).
@@ -1038,128 +1169,41 @@ secure connection:
 - The server login page (/ska/login/).
 - The client page containing the authentication links.
 
-Multiple secret keys
-~~~~~~~~~~~~~~~~~~~~
-Imagine, you have a site to which you want to offer a password-less login for
-various clients/senders and you don't want them all to have one shared secret
-key, but rather have their own one. Moreover, you specifically want to execute
-very custom callbacks not only for each separate client/sender, but also for
-different sort of users authenticating.
+Django REST Framework integration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+For protecting views without actually being authenticated into the system,
+the following permission classes shall be implemented. They work for both
+plan settings and provider settings, as well as both plain- and
+provider-settings work in combination with `django-constance` package as well.
 
-.. code-block:: text
+Permission classes
+++++++++++++++++++
+The following permission classes are implemented:
 
-                              ┌────────────────┐
-                              │ Site providing │
-                              │ authentication │
-                              │ ────────────── │
-                              │ custom secret  │
-                              │    keys per    │
-                              │     client     │
-                              │ ────────────── │
-                              │ Site 1: 'sk-1' │
-                 ┌───────────>│ Site 2: 'sk-2' │<───────────┐
-                 │            │ Site 3: 'sk-3' │            │
-                 │      ┌────>│ Site 4: 'sk-4' │<────┐      │
-                 │      │     └────────────────┘     │      │
-                 │      │                            │      │
-                 │      │                            │      │
-    ┌────────────┴─┐  ┌─┴────────────┐  ┌────────────┴─┐  ┌─┴────────────┐
-    │    Site 1    │  │    Site 2    │  │    Site 3    │  │    Site 4    │
-    │ ──────────── │  │ ──────────── │  │ ──────────── │  │ ──────────── │
-    │  secret key  │  │  secret key  │  │  secret key  │  │  secret key  │
-    │    'sk-1'    │  │    'sk-2'    │  │    'sk-3'    │  │    'sk-4'    │
-    └──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘
+- SignedRequestRequired
+- ProviderSignedRequestRequired
+- ConstanceSignedRequestRequired
+- ConstanceProviderSignedRequestRequired
 
-In order to make the stated above possible, the concept of providers is
-introduced. You can define a secret key, callbacks or redirect URL. See an
-example below. Note, that keys of the ``SKA_PROVIDERS`` ("client_1",
-"client_2", etc.) are the provider keys.
+**ProviderSignedRequestRequired example**
 
 .. code-block:: python
 
-    SKA_PROVIDERS = {
-        # ********************************************************
-        # ******************** Basic gradation *******************
-        # ********************************************************
-        # Site 1
-        'client_1': {
-            'SECRET_KEY': 'sk-1',
-        },
+    from rest_framework.viewsets import ModelViewSet
 
-        # Site 2
-        'client_2': {
-            'SECRET_KEY': 'sk-2',
-        },
-
-        # Site 3
-        'client_3': {
-            'SECRET_KEY': 'sk-3',
-        },
-
-        # Site 4
-        'client_4': {
-            'SECRET_KEY': 'sk-4',
-        },
-
-        # ********************************************************
-        # ******* You make gradation as complex as you wish ******
-        # ********************************************************
-        # Client 1, group users
-        'client_1.users': {
-            'SECRET_KEY': 'client-1-users-secret-key',
-        },
-
-        # Client 1, group power_users
-        'client_1.power_users': {
-            'SECRET_KEY': 'client-1-power-users-secret-key',
-            'USER_CREATE_CALLBACK': 'foo.ska_callbacks.client1_power_users_create',
-        },
-
-        # Client 1, group admins
-        'client_1.admins': {
-            'SECRET_KEY': 'client-1-admins-secret-key',
-            'USER_CREATE_CALLBACK': 'foo.ska_callbacks.client1_admins_create',
-            'REDIRECT_AFTER_LOGIN': '/admin/'
-        },
-    }
-
-See the `Callbacks`_ section for the list of callbacks. Note, that callbacks
-defined in the ``SKA_PROVIDERS`` are overrides. If a certain callback isn't
-defined in the ``SKA_PROVIDERS``, authentication backend falls back to the
-respective default callback function.
-
-Obviously, server would have to have the full list of providers defined. On
-the client side you would only have to store the general secret key and of
-course the provider UID(s).
-
-When making a signed URL on the sender side, you should be providing the
-``provider`` key in the ``extra`` argument. See the example below for how you
-would do it for ``client_1.power_users``.
-
-.. code-block:: python
-
-    from ska import sign_url
-    from ska.defaults import DEFAULT_PROVIDER_PARAM
-
-    server_ska_login_url = 'https://server-url.com/ska/login/'
-
-    signed_remote_ska_login_url = sign_url(
-        auth_user='test_ska_user',
-        # Using provider-specific secret key. This value shall be equal to
-        # the value of SKA_PROVIDERS['client_1.power_users']['SECRET_KEY'],
-        # defined in your projects' Django settings module.
-        secret_key='client-1-power-users-secret-key',
-        url=server_ska_login_url,
-        extra={
-            'email': 'test_ska_user@mail.example.com',
-            'first_name': 'John',
-            'last_name': 'Doe',
-            # Using provider specific string. This value shall be equal to
-            # the key string "client_1.power_users" of SKA_PROVIDERS,
-            # defined in your projcts' Django settings module.
-            DEFAULT_PROVIDER_PARAM: 'client_1.power_users',
-        }
+    from ska.contrib.django.ska.integration.drf.permissions import (
+        ProviderSignedRequestRequired
     )
+
+    from .models import FooItem
+    from .serializers import FooItemSerializer
+
+    class FooItemViewSet(ModelViewSet):
+        """FooItem model viewset."""
+
+        permission_classes = (ProviderSignedRequestRequired,)
+        queryset = FooItem.objects.all()
+        serializer_class = FooItemSerializer
 
 Testing
 =======

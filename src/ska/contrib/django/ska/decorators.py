@@ -65,12 +65,13 @@ __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2018 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
 __all__ = (
-    'validate_signed_request',
-    'sign_url',
     'BaseValidateSignedRequest',
-    'ValidateSignedRequest',
+    'm_validate_signed_request',
     'MethodValidateSignedRequest',
+    'sign_url',
     'SignAbsoluteURL',
+    'validate_signed_request',
+    'ValidateSignedRequest',
 )
 
 

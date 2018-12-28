@@ -7,6 +7,7 @@ Subpackages
 .. toctree::
 
     ska.contrib.django.ska.backends
+    ska.contrib.django.ska.integration
     ska.contrib.django.ska.management
     ska.contrib.django.ska.migrations
     ska.contrib.django.ska.templatetags

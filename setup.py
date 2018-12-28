@@ -6,7 +6,7 @@ try:
 except:
     readme = ''
 
-version = '1.6.12'
+version = '1.7'
 
 exec_dirs = [
     'src/ska/bin/',
@@ -58,6 +58,7 @@ setup(
     ],
     extras_require={
         'django-constance': ['django-constance'],
+        'djangorestframework': ['djangorestframework'],
     },
     tests_require=[
         'factory_boy',

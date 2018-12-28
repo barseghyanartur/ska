@@ -9,6 +9,32 @@
 {% block content %}
     <h1>{% trans "Django REST Framework permissions" %}</h1>
 
+    <h2>{% trans "Global (check Django REST Framework permissions)" %}</h2>
+    <p>
+        {% blocktrans %}
+        Below you can see the list of provider specific URLs, divided into 2
+        categories: (1) Fail, (2) success. Fail URLs obviously fail (401
+        Unauthorized). The other two should work (you should get a password-less
+        login into the Django web site).
+        {% endblocktrans %}
+    </p>
+    <table>
+        <thead>
+            <tr>
+                <td><strong>{% trans "Fail" %}</strong></td>
+                <td><strong>{% trans "Success" %}</strong></td>
+            </tr>
+        </thead>
+        <tbody>
+    {% for title, remote_ska_login_url, signed_remote_ska_login_url in drf_remote_ska_list_urls %}
+        <tr>
+            <td><a href="{{ remote_ska_login_url }}" class="login">{% trans "Log in" %} - {{ title }}</a></td>
+            <td><a href="{{ signed_remote_ska_login_url }}" class="login">{% trans "Log in" %} - {{ title }}</a></td>
+        </tr>
+    {% endfor %}
+        </tbody>
+    </table>
+
     <h2>{% trans "By provider (check Django REST Framework permissions)" %}</h2>
     <p>
         {% blocktrans %}
@@ -26,7 +52,7 @@
             </tr>
         </thead>
         <tbody>
-    {% for title, remote_ska_login_url, signed_remote_ska_login_url in drf_remote_ska_login_urls_by_provider %}
+    {% for title, remote_ska_login_url, signed_remote_ska_login_url in drf_remote_ska_provider_list_url %}
         <tr>
             <td><a href="{{ remote_ska_login_url }}" class="login">{% trans "Log in" %} - {{ title }}</a></td>
             <td><a href="{{ signed_remote_ska_login_url }}" class="login">{% trans "Log in" %} - {{ title }}</a></td>
