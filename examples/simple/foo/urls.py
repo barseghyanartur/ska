@@ -4,11 +4,11 @@ from rest_framework.routers import DefaultRouter
 
 from .views import (
     FooDetailView,
-    browse,
-    authenticate,
-    drf_permissions,
-    logged_in,
-    detail,
+    browse_view,
+    authenticate_view,
+    drf_view,
+    logged_in_view,
+    detail_view,
 )
 from .viewsets import (
     FooItemConstanceProviderSignedRequestRequiredViewSet,
@@ -50,20 +50,20 @@ fooitems_constance_signed_request_required = router.register(
 
 urlpatterns = [
     # Listing URL
-    url(r'^$', view=browse, name='foo.browse'),
+    url(r'^$', view=browse_view, name='foo.browse'),
 
     url(r'^api/', include(router.urls)),
 
-    url(r'^authenticate/$', view=authenticate, name='foo.authenticate'),
+    url(r'^authenticate/$', view=authenticate_view, name='foo.authenticate'),
 
-    url(r'^drf/$', view=drf_permissions, name='foo.drf_permissions'),
+    url(r'^drf/$', view=drf_view, name='foo.drf_permissions'),
 
-    url(r'^logged-in/$', view=logged_in, name='foo.logged_in'),
+    url(r'^logged-in/$', view=logged_in_view, name='foo.logged_in'),
 
     # Class based detail view URL
     url(r'^class-based/(?P<slug>[\w\-\_\.\,]+)/$', FooDetailView.as_view(),
         name='foo.class-based.detail'),
 
     # Detail URL
-    url(r'^(?P<slug>[\w\-\_\.\,]+)/$', view=detail, name='foo.detail'),
+    url(r'^(?P<slug>[\w\-\_\.\,]+)/$', view=detail_view, name='foo.detail'),
 ]

@@ -26,6 +26,10 @@ else:
 
 urlpatterns += [
     url(r'^ska/', include('ska.contrib.django.ska.urls.constance_urls')),
+    url(
+        r'^ska-rest/',
+        include('ska.contrib.django.ska.integration.drf.urls.jwt_token')
+    ),
     url(r'^foo/', include('foo.urls')),
     url(r'^$', TemplateView.as_view(template_name='home.html')),
 ]

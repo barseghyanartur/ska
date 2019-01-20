@@ -20,7 +20,7 @@ else:
     from django.core.urlresolvers import reverse
 
 
-def browse(request, template_name='foo/browse.html'):
+def browse_view(request, template_name='foo/browse.html'):
     """Foo items listing.
 
     :param django.http.HttpRequest request:
@@ -34,7 +34,7 @@ def browse(request, template_name='foo/browse.html'):
     return render(request, template_name, context)
 
 
-def authenticate(request, template_name='foo/authenticate.html'):
+def authenticate_view(request, template_name='foo/authenticate.html'):
     """Authenticate.
 
     :param django.http.HttpRequest request:
@@ -135,7 +135,7 @@ def authenticate(request, template_name='foo/authenticate.html'):
     return render(request, template_name, context)
 
 
-def drf_permissions(request, template_name='foo/drf_permissions.html'):
+def drf_view(request, template_name='foo/drf.html'):
     """Django REST Framework permissions view.
 
     :param request:
@@ -148,10 +148,9 @@ def drf_permissions(request, template_name='foo/drf_permissions.html'):
     drf_remote_ska_provider_list_url = reverse(
         'fooitemmodel_provider_signed_request_required-list'
     )
-
-    # Login URLs by provider
     drf_remote_ska_list_urls_provider = []
     for uid, data in PROVIDERS.items():
+        # Provider specific list URLs
         signed_remote_ska_login_url = sign_url(
             auth_user='test_ska_user_{0}'.format(uid),
             # Using provider-specific secret key
@@ -198,18 +197,70 @@ def drf_permissions(request, template_name='foo/drf_permissions.html'):
     ]
 
     # *********************************************************
+    # **************** Provider auth URLS *********************
+    # *********************************************************
+    drf_obtain_jwt_token_url = reverse('ska.obtain_jwt_token')
+    drf_remote_ska_jwt_token_urls_provider = []
+    for uid, data in PROVIDERS.items():
+        # Provider specific list URLs
+        _drf_signed_obtain_jwt_token_url = sign_url(
+            auth_user='test_ska_user_{0}'.format(uid),
+            # Using provider-specific secret key
+            secret_key=data.get('SECRET_KEY'),
+            url=drf_obtain_jwt_token_url,
+            extra={
+                'email': 'test_ska_user_{0}@mail.example.com'.format(uid),
+                'first_name': 'John {0}'.format(uid),
+                'last_name': 'Doe {0}'.format(uid),
+                DEFAULT_PROVIDER_PARAM: uid,
+            }
+        )
+        drf_remote_ska_jwt_token_urls_provider.append(
+            (
+                uid,
+                drf_obtain_jwt_token_url,
+                _drf_signed_obtain_jwt_token_url,
+            )
+        )
+
+    # *********************************************************
+    # ***************** Global auth URLS **********************
+    # *********************************************************
+    drf_signed_obtain_jwt_token_url = sign_url(
+        auth_user='test_ska_user',
+        # Using global secret key
+        secret_key=SECRET_KEY,
+        url=drf_obtain_jwt_token_url,
+        extra={
+            'email': 'test_ska_user@mail.example.com',
+            'first_name': 'John',
+            'last_name': 'Doe',
+        }
+    )
+    drf_remote_ska_jwt_token_urls = [
+        (
+            'global',
+            drf_obtain_jwt_token_url,
+            drf_signed_obtain_jwt_token_url
+        )
+    ]
+
+    # *********************************************************
     # ****************** Template context *********************
     # *********************************************************
     context = {
         'drf_remote_ska_list_urls': drf_remote_ska_list_urls,
         'drf_remote_ska_provider_list_url': drf_remote_ska_list_urls_provider,
+        'drf_remote_ska_jwt_token_urls_provider':
+            drf_remote_ska_jwt_token_urls_provider,
+        'drf_remote_ska_jwt_token_urls': drf_remote_ska_jwt_token_urls,
     }
 
     return render(request, template_name, context)
 
 
 @validate_signed_request()
-def detail(request, slug, template_name='foo/detail.html'):
+def detail_view(request, slug, template_name='foo/detail.html'):
     """Foo item detail.
 
     :param django.http.HttpRequest request:
@@ -243,7 +294,7 @@ class FooDetailView(View):
         return render(request, template_name, context)
 
 
-def logged_in(request, template_name='foo/logged_in.html'):
+def logged_in_view(request, template_name='foo/logged_in.html'):
     """Logged in landing page.
 
     :param django.http.HttpRequest request:

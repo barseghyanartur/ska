@@ -256,6 +256,7 @@ INSTALLED_APPS = (
 
     # For djangorestframework
     'rest_framework',
+    'rest_framework_jwt',
 
     # ska, django-ska and example/testing app
     'ska.contrib.django.ska',
@@ -324,6 +325,20 @@ CONSTANCE_CONFIG = {
         "",  # The default value
         "Global secret key",  # Help text in admin
     )
+}
+
+# ***************************************************************************
+# ************************ djangorestframework config ***********************
+# ***************************************************************************
+REST_FRAMEWORK = {
+    # 'DEFAULT_PERMISSION_CLASSES': (
+    #     'rest_framework.permissions.IsAuthenticated',
+    # ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
 }
 
 # ***************************************************************************

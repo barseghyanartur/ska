@@ -15,6 +15,13 @@ are used for versioning (schema follows below):
   0.3.4 to 0.4).
 - All backwards incompatible changes are mentioned in this document.
 
+1.7.1
+-----
+2019-01-19
+
+- Additions to the Django contrib app. Added Django REST framework
+  JWT token obtain view (for authentication).
+
 1.7
 ---
 2018-12-28

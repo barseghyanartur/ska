@@ -1,5 +1,5 @@
 """
-Base tests.
+Testing Django REST Framework permissions for ska.
 """
 
 import logging
@@ -24,11 +24,14 @@ if versions.DJANGO_GTE_1_10:
 else:
     from django.core.urlresolvers import reverse
 
-__title__ = 'ska.contrib.django.ska.backends.constance_backend'
+__title__ = 'ska.contrib.django.ska.tests.test_drf_integration_permissions'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
-__copyright__ = '2013-2018 Artur Barseghyan'
+__copyright__ = '2013-2019 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
-__all__ = ('DRFIntegrationPermissionsTestCase',)
+__all__ = (
+    'DRFIntegrationPermissionsTestCase',
+    'DRFIntegrationPermissionsConstanceTestCase',
+)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -107,7 +110,13 @@ class BaseDRFIntegrationPermissionsTestCase(TransactionTestCase):
         """
         data = {}
         response = self.client.get(url, data)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertIn(
+            response.status_code,
+            (
+                status.HTTP_401_UNAUTHORIZED,
+                status.HTTP_403_FORBIDDEN,
+            )
+        )
 
     def _test_permissions_request_signed(self,
                                          secret_key,
@@ -143,8 +152,10 @@ class BaseDRFIntegrationPermissionsTestCase(TransactionTestCase):
         )
 
         data = {}
+        if not isinstance(expected_response_code, (tuple, list)):
+            expected_response_code = [expected_response_code]
         response = self.client.get(signed_list_url_url, data)
-        self.assertEqual(response.status_code, expected_response_code)
+        self.assertIn(response.status_code, expected_response_code)
 
 
 @pytest.mark.django_db
@@ -233,7 +244,10 @@ class DRFIntegrationPermissionsTestCase(BaseDRFIntegrationPermissionsTestCase):
         secret_key = PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
         self._test_permissions_request_signed(
             "{}w".format(secret_key),
-            status.HTTP_403_FORBIDDEN,
+            (
+                status.HTTP_401_UNAUTHORIZED,
+                status.HTTP_403_FORBIDDEN,
+            ),
             self.provider_list_url,
             auth_user=self.AUTH_USER,
             auth_user_email=self.AUTH_USER_EMAIL,
@@ -250,7 +264,10 @@ class DRFIntegrationPermissionsTestCase(BaseDRFIntegrationPermissionsTestCase):
         secret_key = PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
         self._test_permissions_request_signed(
             "{}w".format(secret_key),
-            status.HTTP_403_FORBIDDEN,
+            (
+                status.HTTP_401_UNAUTHORIZED,
+                status.HTTP_403_FORBIDDEN,
+            ),
             self.provider_detail_url,
             auth_user=self.AUTH_USER,
             auth_user_email=self.AUTH_USER_EMAIL,
@@ -293,7 +310,10 @@ class DRFIntegrationPermissionsTestCase(BaseDRFIntegrationPermissionsTestCase):
         secret_key = SECRET_KEY
         self._test_permissions_request_signed(
             "{}w".format(secret_key),
-            status.HTTP_403_FORBIDDEN,
+            (
+                status.HTTP_401_UNAUTHORIZED,
+                status.HTTP_403_FORBIDDEN,
+            ),
             self.list_url,
             auth_user=self.AUTH_USER,
             auth_user_email=self.AUTH_USER_EMAIL
@@ -307,7 +327,10 @@ class DRFIntegrationPermissionsTestCase(BaseDRFIntegrationPermissionsTestCase):
         secret_key = SECRET_KEY
         self._test_permissions_request_signed(
             "{}w".format(secret_key),
-            status.HTTP_403_FORBIDDEN,
+            (
+                status.HTTP_401_UNAUTHORIZED,
+                status.HTTP_403_FORBIDDEN,
+            ),
             self.detail_url,
             auth_user=self.AUTH_USER,
             auth_user_email=self.AUTH_USER_EMAIL
@@ -409,7 +432,10 @@ class DRFIntegrationPermissionsConstanceTestCase(
         secret_key = config.SKA_PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
         self._test_permissions_request_signed(
             "{}w".format(secret_key),
-            status.HTTP_403_FORBIDDEN,
+            (
+                status.HTTP_401_UNAUTHORIZED,
+                status.HTTP_403_FORBIDDEN,
+            ),
             self.constance_provider_list_url,
             auth_user=self.AUTH_USER,
             auth_user_email=self.AUTH_USER_EMAIL,
@@ -427,7 +453,10 @@ class DRFIntegrationPermissionsConstanceTestCase(
         secret_key = config.SKA_PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
         self._test_permissions_request_signed(
             "{}w".format(secret_key),
-            status.HTTP_403_FORBIDDEN,
+            (
+                status.HTTP_401_UNAUTHORIZED,
+                status.HTTP_403_FORBIDDEN,
+            ),
             self.constance_provider_detail_url,
             auth_user=self.AUTH_USER,
             auth_user_email=self.AUTH_USER_EMAIL,
@@ -473,7 +502,10 @@ class DRFIntegrationPermissionsConstanceTestCase(
         secret_key = config.SKA_SECRET_KEY
         self._test_permissions_request_signed(
             "{}w".format(secret_key),
-            status.HTTP_403_FORBIDDEN,
+            (
+                status.HTTP_401_UNAUTHORIZED,
+                status.HTTP_403_FORBIDDEN,
+            ),
             self.constance_list_url,
             auth_user=self.AUTH_USER,
             auth_user_email=self.AUTH_USER_EMAIL
@@ -488,7 +520,10 @@ class DRFIntegrationPermissionsConstanceTestCase(
         secret_key = config.SKA_SECRET_KEY
         self._test_permissions_request_signed(
             "{}w".format(secret_key),
-            status.HTTP_403_FORBIDDEN,
+            (
+                status.HTTP_401_UNAUTHORIZED,
+                status.HTTP_403_FORBIDDEN,
+            ),
             self.constance_detail_url,
             auth_user=self.AUTH_USER,
             auth_user_email=self.AUTH_USER_EMAIL
