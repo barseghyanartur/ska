@@ -22,3 +22,9 @@ class SkaAuthenticationBackend(BaseSkaAuthenticationBackend):
         :return:
         """
         return {}
+
+    def get_secret_key(self):
+        """Get secret key.
+
+        :return:
+        """

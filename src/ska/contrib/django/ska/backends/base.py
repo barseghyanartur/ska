@@ -51,6 +51,15 @@ class BaseSkaAuthenticationBackend(object):
             "You should implement this method in your authentication backend"
         )
 
+    def get_secret_key(self):
+        """Get secret key.
+
+        :return:
+        """
+        raise NotImplementedError(
+            "You should implement this method in your authentication backend"
+        )
+
     def authenticate(self, request, **kwargs):
         """Authenticate.
 
@@ -69,7 +78,9 @@ class BaseSkaAuthenticationBackend(object):
         if provider_data:
             secret_key = provider_data['SECRET_KEY']
         else:
-            secret_key = SECRET_KEY
+            secret_key = self.get_secret_key()
+            if not secret_key:
+                secret_key = SECRET_KEY
 
         try:
             # If authentication/data validation failed.

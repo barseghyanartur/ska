@@ -23,3 +23,10 @@ class SkaAuthenticationConstanceBackend(BaseSkaAuthenticationBackend):
         :return:
         """
         return config.SKA_PROVIDERS
+
+    def get_secret_key(self):
+        """Get secret key.
+
+        :return:
+        """
+        return config.SKA_SECRET_KEY

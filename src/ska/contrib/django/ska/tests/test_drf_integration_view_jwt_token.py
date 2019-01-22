@@ -91,7 +91,8 @@ class BaseDRFIntegrationViewJwtTokenTestCase(TransactionTestCase):
                                               auth_user=None,
                                               auth_user_email=None,
                                               provider_name=None,
-                                              check_token=True):
+                                              check_token=True,
+                                              debug_info=""):
         """Test obtain JWT token signed requests.
 
         :return:
@@ -118,12 +119,16 @@ class BaseDRFIntegrationViewJwtTokenTestCase(TransactionTestCase):
             extra=extra
         )
 
+        # if debug_info:
+        #     signed_url = '{}&debug_info={}'.format(signed_url, debug_info)
+
         data = {}
+
         if not isinstance(expected_response_code, (tuple, list)):
             expected_response_code = [expected_response_code]
+
         response = self.client.get(signed_url, data)
-        # if response.status_code not in expected_response_code:
-        #     import pytest; pytest.set_trace()
+
         self.assertIn(response.status_code, expected_response_code)
         if check_token:
             self.assertIn('token', response.data)

@@ -12,15 +12,14 @@ from django.core import mail
 from django.core.management import call_command
 from django.test import Client, TransactionTestCase, override_settings
 
+import mock
+
 import pytest
 
 from ska import sign_url
 from ska.contrib.django.ska.models import Signature
-from ska.contrib.django.ska.settings import (
-    DB_PERFORM_SIGNATURE_CHECK,
-    DB_STORE_SIGNATURES,
-    SECRET_KEY,
-)
+from ska.contrib.django.ska import settings as ska_settings
+
 from ska.defaults import DEFAULT_PROVIDER_PARAM
 
 import factories
@@ -79,6 +78,11 @@ OVERRIDE_SETTINGS_KWARGS = {
         'django.contrib.auth.backends.ModelBackend',
     ),
     'ROOT_URLCONF': 'constance_urls',
+}
+
+OVERRIDE_SETTINGS_DB_STORE_SIGNATURES_KWARGS = {
+    'SKA_DB_STORE_SIGNATURES': True,
+    'SKA_DB_PERFORM_SIGNATURE_CHECK': True,
 }
 
 
@@ -175,8 +179,8 @@ class SkaAuthenticationConstanceBackendTest(TransactionTestCase):
 
         # If both `DB_STORE_SIGNATURES` and `DB_PERFORM_SIGNATURE_CHECK`
         # are set to True, second login attempt shall not be successful.
-        if DB_STORE_SIGNATURES \
-                and DB_PERFORM_SIGNATURE_CHECK \
+        if ska_settings.DB_STORE_SIGNATURES \
+                and ska_settings.DB_PERFORM_SIGNATURE_CHECK \
                 and do_signature_check:
             # Testing again with signed URL and this time, it should fail
 
@@ -207,7 +211,7 @@ class SkaAuthenticationConstanceBackendTest(TransactionTestCase):
     def test_01_login(self):
         """Test auth using general ``SECRET_KEY``."""
         return self.__test_login(
-            SECRET_KEY,
+            ska_settings.SECRET_KEY,
             [302, 403],
             logout=True,
             debug_info="test_01_login"
@@ -269,7 +273,7 @@ class SkaAuthenticationConstanceBackendTest(TransactionTestCase):
         secret key.
         """
         return self.__test_login(
-            SECRET_KEY + 'wrong',
+            ska_settings.SECRET_KEY + 'wrong',
             [403, 403],
             logout=True,
             debug_info="test_03_login_fail_wrong_secret_key"
@@ -312,7 +316,16 @@ class SkaAuthenticationConstanceBackendTest(TransactionTestCase):
 
     @log_info
     @override_settings(**OVERRIDE_SETTINGS_KWARGS)
+    @override_settings(**OVERRIDE_SETTINGS_DB_STORE_SIGNATURES_KWARGS)
     @override_config(**OVERRIDE_CONSTANCE_KWARGS)
+    @mock.patch(
+        'ska.contrib.django.ska.settings.DB_STORE_SIGNATURES',
+        True
+    )
+    @mock.patch(
+        'ska.contrib.django.ska.settings.DB_PERFORM_SIGNATURE_CHECK',
+        True
+    )
     def test_06_purge_stored_signatures_data(self):
         """Test purge stored signature data."""
         secret_key = config.SKA_PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
