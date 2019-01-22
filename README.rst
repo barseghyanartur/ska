@@ -56,7 +56,8 @@ Django `ska` module (`ska.contrib.django.ska`)
   authentication.
 - Template tags for signing URLs from within templates.
 - `django-constance` integration (for password-less authentication).
-- `Django REST Framework integration`_ (for protecting ViewSets).
+- `Django REST Framework integration`_ (for protecting ViewSets, obtaining
+  JWT tokens for authentication).
 
 Prerequisites
 =============
@@ -1171,13 +1172,14 @@ secure connection:
 
 Django REST Framework integration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Permission classes
+++++++++++++++++++
 For protecting views without actually being authenticated into the system,
 specific permission classes are implemented (for both plan settings and
 provider settings, as well as both plain- and provider-settings work in
 combination with `django-constance` package).
 
-Permission classes
-++++++++++++++++++
 The following permission classes are implemented:
 
 - SignedRequestRequired
@@ -1232,6 +1234,63 @@ Requests are signed the same way. Sample code:
         url=url,
         extra=extra
     )
+
+JWT tokens for authentication
++++++++++++++++++++++++++++++
+For obtaining JWT tokens for authentication. Also works with
+`django-constance`.
+
+**settings example**
+
+.. code-block:: python
+
+    REST_FRAMEWORK = {
+        'DEFAULT_AUTHENTICATION_CLASSES': (
+            'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+            'rest_framework.authentication.SessionAuthentication',
+            'rest_framework.authentication.BasicAuthentication',
+        ),
+    }
+
+**urls example**
+
+.. code-block:: python
+
+    urlpatterns = [
+        # ...
+        url(
+            r'^ska-rest/',
+            include('ska.contrib.django.ska.integration.drf.urls.jwt_token')
+        ),
+    ]
+
+**Sample request**
+
+.. code-block:: text
+
+    http://localhost:8008/ska-rest/obtain-jwt-token/
+        ?signature=P92KWDDe0U84Alvu0tvmYoi8e8s%3D
+        &auth_user=test_ska_user
+        &valid_until=1548195246.0
+        &extra=email%2Cfirst_name%2Clast_name
+        &email=test_ska_user%40mail.example.com
+        &first_name=John
+        &last_name=Doe
+
+**Sample response**
+
+.. code-block:: text
+
+    HTTP 200 OK
+    Allow: GET, HEAD, OPTIONS
+    Content-Type: application/json
+    Vary: Accept
+
+.. code-block:: javascript
+
+    {
+        "token": "eyJ0eXAiO.eyJ1c2VyX2lkIjo.m_saOvyKBO3"
+    }
 
 Testing
 =======

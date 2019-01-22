@@ -44,6 +44,14 @@ ska.contrib.django.ska.tests.test\_drf\_integration\_permissions module
     :undoc-members:
     :show-inheritance:
 
+ska.contrib.django.ska.tests.test\_drf\_integration\_view\_jwt\_token module
+----------------------------------------------------------------------------
+
+.. automodule:: ska.contrib.django.ska.tests.test_drf_integration_view_jwt_token
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
