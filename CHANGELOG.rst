@@ -17,7 +17,7 @@ are used for versioning (schema follows below):
 
 1.7.1
 -----
-2019-01-21
+2019-01-22
 
 *Additions to the Django contrib app*
 
