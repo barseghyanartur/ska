@@ -17,40 +17,47 @@ are used for versioning (schema follows below):
 
 1.7.1
 -----
-2019-01-19
+2019-01-21
 
-- Additions to the Django contrib app. Added Django REST framework
-  JWT token obtain view (for authentication).
+*Additions to the Django contrib app*
+
+- Added Django REST framework JWT token obtain view (for authentication).
+- Fixes in the authentication backend `SkaAuthenticationConstanceBackend`.
 
 1.7
 ---
 2018-12-28
 
-- Additions to the Django contrib app. Added Django REST framework
-  integration (for signing ViewSets).
+*Additions to the Django contrib app*
+
+- Added Django REST framework integration (for signing ViewSets).
 
 1.6.12
 ------
 2018-12-25
 
-- Additions to the Django contrib app. Added additional callback
-  ``USER_VALIDATE_CALLBACK`` to the authentication backends which is fired
-  right after the signature validation to allow custom validation logic for
-  the incoming authentication requests.
+*Additions to the Django contrib app*
+
+- Added additional callback ``USER_VALIDATE_CALLBACK`` to the authentication
+  backends which is fired right after the signature validation to allow custom
+  validation logic for the incoming authentication requests.
 
 1.6.11
 ------
 2018-12-20
 
-- Additions to the Django contrib app mainly. Authentication backend has
-  been made customisable. Most of the code is moved to the
-  ``BaseSkaAuthenticationBackend``. Introduced new authentication backend
-  ``SkaAuthenticationConstanceBackend`` to be used in combination with
+*Additions to the Django contrib app*
+
+- Authentication backend has been made customisable. Most of the code is
+  moved to the ``BaseSkaAuthenticationBackend``. Introduced new authentication
+  backend ``SkaAuthenticationConstanceBackend`` to be used in combination with
   ``django-constance``.
 
 1.6.10
 ------
 2018-12-16
+
+*Additions to the Django contrib app*
 
 - Fixes in the callbacks import of the Django contrib app.
 - Testing shell commands; minor fixes in tests.
@@ -68,7 +75,7 @@ are used for versioning (schema follows below):
 
 .. note::
 
-    Release dedicated to Charles Aznavour.
+    Release dedicated to Charles Aznavour. Rest in peace, maestro.
 
 - Django 2.0 and 2.1 compatibility.
 - Upgrade test suite.

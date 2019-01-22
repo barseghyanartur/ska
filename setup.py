@@ -59,6 +59,7 @@ setup(
     extras_require={
         'django-constance': ['django-constance'],
         'djangorestframework': ['djangorestframework'],
+        'djangorestframework-jwt': ['djangorestframework-jwt'],
     },
     tests_require=[
         'factory_boy',
@@ -66,5 +67,6 @@ setup(
         'pytest',
         'pytest-django',
         'radar',
+        'mock',
     ]
 )
