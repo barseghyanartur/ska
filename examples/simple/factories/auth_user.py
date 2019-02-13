@@ -13,6 +13,7 @@ from faker import Faker as OriginalFaker
 from factory import SubFactory
 
 from .factory_faker import Faker
+from .auth_group import LimitedGroupFactory
 
 __all__ = (
     'AbstractUserFactory',
@@ -42,8 +43,10 @@ class AbstractUserFactory(DjangoModelFactory):
 
     password = PostGenerationMethodCall('set_password', TEST_PASSWORD)
     username = Sequence(lambda n: 'user%d' % n)
-    first_name = Faker('first_name_max_length_30')
-    last_name = Faker('last_name_max_length_30')
+    first_name = Faker('first_name')
+    last_name = Faker('last_name')
+    # first_name = Faker('first_name_max_length_30')
+    # last_name = Faker('last_name_max_length_30')
     email = Faker('ascii_safe_email')
 
     is_active = False
@@ -56,6 +59,15 @@ class AbstractUserFactory(DjangoModelFactory):
         model = settings.AUTH_USER_MODEL
         django_get_or_create = ('username',)
         abstract = True
+
+    @post_generation
+    def groups(obj, created, extracted, **kwargs):
+        """Create Group objects for the created User instance."""
+        if created:
+            # Create from 1 to 7 ``Group`` objects.
+            amount = random.randint(1, 5)
+            groups = LimitedGroupFactory.create_batch(amount)
+            obj.groups.add(*groups)
 
 
 class InactiveUserFactory(AbstractUserFactory):
