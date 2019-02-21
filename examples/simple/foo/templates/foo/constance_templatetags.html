@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% load i18n ska_constance_tags %}
+
+{% block content %}
+    <h1>{% trans "Template tags" %}</h1>
+
+    {% if request.user.is_authenticated %}
+    <p>
+        {% blocktrans with request.user.username as username %}
+            You are logged in as `{{ username }}`!
+        {% endblocktrans %}
+        <a href="{% url 'admin:logout' %}?next={{request.path}}" class="logged-in">{% trans "Log out" %}</a>
+    </p>
+    {% endif %}
+
+    {% url 'ska.login' as ska_login_url %}
+
+    {% if request.user.is_authenticated %}
+        <p><a href="{% sign_url url=ska_login_url %}&next={{request.path}}">{% trans "Signed URL" %}</a></p>
+    {% else %}
+        <p><a href="{% sign_url url=ska_login_url auth_user='admin' %}&next={{request.path}}">{% trans "Signed URL" %}</a></p>
+    {% endif %}
+
+    {% if request.user.is_authenticated %}
+        <p><a href="{% provider_sign_url url=ska_login_url provider='client_1.users' %}&next={{request.path}}">{% trans "Signed URL (providers)" %}</a></p>
+    {% else %}
+        <p><a href="{% provider_sign_url url=ska_login_url auth_user='admin' provider='client_1.users' %}&next={{request.path}}">{% trans "Signed URL (providers)" %}</a></p>
+    {% endif %}
+
+{% endblock content %}

@@ -31,6 +31,8 @@ urlpatterns += [
         include('ska.contrib.django.ska.integration.drf.urls.jwt_token')
     ),
     url(r'^foo/', include('foo.urls')),
+    url(r'^templatetags$',
+        TemplateView.as_view(template_name='foo/constance_templatetags.html')),
     url(r'^$', TemplateView.as_view(template_name='home.html')),
 ]
 

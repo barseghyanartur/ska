@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.auth.decorators import login_required
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic import TemplateView
 
@@ -31,6 +32,8 @@ urlpatterns += [
         include('ska.contrib.django.ska.integration.drf.urls.jwt_token')
     ),
     url(r'^foo/', include('foo.urls')),
+    url(r'^templatetags$',
+        TemplateView.as_view(template_name='foo/templatetags.html')),
     url(r'^$', TemplateView.as_view(template_name='home.html')),
 ]
 

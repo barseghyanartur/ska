@@ -23,5 +23,5 @@ class ImproperlyConfigured(BaseSkaException):
 class InvalidData(BaseSkaException):
     """Invalid data exception.
 
-    Raised when invalid data (tumpered) is detected.
+    Raised when invalid data (tampered) is detected.
     """

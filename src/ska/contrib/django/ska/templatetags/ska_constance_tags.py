@@ -3,6 +3,8 @@ from __future__ import absolute_import
 from django import template
 from django.core.exceptions import ImproperlyConfigured
 
+from constance import config
+
 from ..... import sign_url as ska_sign_url
 from .....defaults import (
     DEFAULT_AUTH_USER_PARAM,
@@ -14,9 +16,8 @@ from .....defaults import (
     SIGNATURE_LIFETIME,
 )
 from .....signatures import Signature
-from ..settings import SECRET_KEY, PROVIDERS
 
-__title__ = 'ska.contrib.django.ska.templatetags.ska_tags'
+__title__ = 'ska.contrib.django.ska.templatetags.ska_constance_tags'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2019 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
@@ -33,7 +34,6 @@ register = template.Library()
 def sign_url(context,
              url='',
              auth_user=None,
-             secret_key=SECRET_KEY,
              valid_until=None,
              lifetime=SIGNATURE_LIFETIME,
              suffix=DEFAULT_URL_SUFFIX,
@@ -47,6 +47,8 @@ def sign_url(context,
     # The `extra` and `extra_param` are not used at the moment.
     if not auth_user:
         auth_user = context['request'].user.get_username()
+
+    secret_key = config.SKA_SECRET_KEY
 
     return ska_sign_url(
         auth_user=auth_user,
@@ -84,14 +86,14 @@ def provider_sign_url(context,
     if not auth_user:
         auth_user = context['request'].user.get_username()
 
-    if provider not in PROVIDERS:
+    if provider not in config.SKA_PROVIDERS:
         if fail_silently:
             return None
         else:
             raise ImproperlyConfigured(
                 "Provider {} does not exist".format(provider)
             )
-    secret_key = PROVIDERS.get(provider, {}).get('SECRET_KEY', None)
+    secret_key = config.SKA_PROVIDERS.get(provider, {}).get('SECRET_KEY', None)
 
     if extra is None:
         extra = {}
