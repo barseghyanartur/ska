@@ -792,6 +792,25 @@ decorator instead of ``validate_signed_request``.
 
 Template tags
 ~~~~~~~~~~~~~
+There are two template tags modules: ``ska_tags`` and ``ska_constance_tags``.
+They are functionally identical, although ``ska_constance_tags`` is tied to
+``django-constance``.
+
+For standard settings configurations, template tags shall be loaded as follows:
+
+.. code-block:: html
+
+    {% load ska_tags %}
+
+For ``django-constance`` based settings configurations, template tags shall be
+loaded as follows:
+
+.. code-block:: html
+
+    {% load ska_constance_tags %}
+
+sign_url
+++++++++
 The ``sign_url`` template tag accepts template context and the following
 params:
 
@@ -815,6 +834,36 @@ Usage example:
     {% for item in items%}
 
         {% sign_url item.get_absolute_url as item_signed_absolute_url %}
+        <a href="{{ item_signed_absolute_url }}">{{ item }}</a>
+
+    {% endfor %}
+
+provider_sign_url
++++++++++++++++++
+The ``provider_sign_url`` template tag accepts template context and the
+following params:
+
+- url
+- provider: Provider name.
+- auth_user: If not given, request.user.get_username() is used.
+- secret_key: If not given, the secret key from settings is used.
+- valid_until: If not given, calculated from ``lifetime``.
+- lifetime: Defaults to ``ska.defaults.SIGNATURE_LIFETIME``.
+- suffix: Defaults to ``ska.defaults.DEFAULT_URL_SUFFIX``.
+- signature_param: Defaults to ``ska.defaultsDEFAULT_SIGNATURE_PARAM``.
+- auth_user_param: Defaults to ``ska.defaults.DEFAULT_AUTH_USER_PARAM``.
+- valid_until_param: Defaults to ``ska.defaults.DEFAULT_VALID_UNTIL_PARAM``.
+- signature_cls: Defaults to ``ska.signatures.Signature``.
+
+Usage example:
+
+.. code-block:: html
+
+    {% load ska_tags %}
+
+    {% for item in items%}
+
+        {% provider_sign_url url=item.get_absolute_url provider='client_1.users' as item_signed_absolute_url %}
         <a href="{{ item_signed_absolute_url }}">{{ item }}</a>
 
     {% endfor %}

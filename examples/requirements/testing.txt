@@ -1,10 +1,12 @@
+beautifulsoup4==4.7.1
 factory_boy==2.11.1
 Faker==1.0.2
+mock
 py==1.5.4
 pytest-cov==2.5.1
 pytest-django==3.3.3
 pytest-ordering==0.5
 pytest==3.7.1
-tox==3.1.2
 radar
-mock
+soupsieve==1.8
+tox==3.1.2

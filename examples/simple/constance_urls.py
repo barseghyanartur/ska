@@ -32,7 +32,8 @@ urlpatterns += [
     ),
     url(r'^foo/', include('foo.urls')),
     url(r'^templatetags$',
-        TemplateView.as_view(template_name='foo/constance_templatetags.html')),
+        TemplateView.as_view(template_name='foo/constance_templatetags.html'),
+        name='foo.templatetags'),
     url(r'^$', TemplateView.as_view(template_name='home.html')),
 ]
 

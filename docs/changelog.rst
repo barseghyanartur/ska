@@ -15,6 +15,17 @@ are used for versioning (schema follows below):
   0.3.4 to 0.4).
 - All backwards incompatible changes are mentioned in this document.
 
+1.7.2
+-----
+2019-02-23
+
+*Additions to the Django contrib app*
+
+- Added `provider_sign_url` template tag to the existing `ska_tags` template
+  tags module.
+- Added a new `ska_constance_tags` template tags module (to be used in
+  combination with `django-constance`).
+
 1.7.1
 -----
 2019-01-22
