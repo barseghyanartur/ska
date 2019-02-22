@@ -6,7 +6,7 @@ try:
 except:
     readme = ''
 
-version = '1.7.1'
+version = '1.7.2'
 
 exec_dirs = [
     'src/ska/bin/',
@@ -68,5 +68,7 @@ setup(
         'pytest-django',
         'radar',
         'mock',
+        'beautifulsoup4',
+        'soupsieve',
     ]
 )
