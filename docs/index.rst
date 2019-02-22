@@ -846,7 +846,6 @@ following params:
 - url
 - provider: Provider name.
 - auth_user: If not given, request.user.get_username() is used.
-- secret_key: If not given, the secret key from settings is used.
 - valid_until: If not given, calculated from ``lifetime``.
 - lifetime: Defaults to ``ska.defaults.SIGNATURE_LIFETIME``.
 - suffix: Defaults to ``ska.defaults.DEFAULT_URL_SUFFIX``.
@@ -854,6 +853,7 @@ following params:
 - auth_user_param: Defaults to ``ska.defaults.DEFAULT_AUTH_USER_PARAM``.
 - valid_until_param: Defaults to ``ska.defaults.DEFAULT_VALID_UNTIL_PARAM``.
 - signature_cls: Defaults to ``ska.signatures.Signature``.
+- fail_silently: Defaults to False.
 
 Usage example:
 
