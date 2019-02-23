@@ -70,5 +70,6 @@ setup(
         'mock',
         'beautifulsoup4',
         'soupsieve',
+        'coverage',
     ]
 )
