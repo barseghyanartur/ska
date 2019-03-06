@@ -1054,7 +1054,7 @@ settings.py
 
     CONSTANCE_CONFIG = {
         'SKA_PROVIDERS': (
-            "",  # The default value
+            {},  # The default value
             'JSON data',  # Help text in admin
             'JSONField_config',  # Field config
         )
