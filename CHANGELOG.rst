@@ -15,6 +15,14 @@ are used for versioning (schema follows below):
   0.3.4 to 0.4).
 - All backwards incompatible changes are mentioned in this document.
 
+1.7.3
+-----
+2019-03-13
+
+*Fixes in the Django contrib app*
+
+- Handle cases when `request` is not passed to the authentication backend.
+
 1.7.2
 -----
 2019-02-23

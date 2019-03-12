@@ -66,6 +66,10 @@ class BaseSkaAuthenticationBackend(object):
         :param django.http.HttpRequest request:
         :return django.contrib.auth.models.User: Instance or None on failure.
         """
+        if request is None:
+            logger.debug("Request is None, skipping")
+            return None
+
         if versions.DJANGO_GTE_1_7:
             request_data = request.GET.dict()
         else:
