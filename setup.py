@@ -51,6 +51,7 @@ setup(
     package_data={
         'ska': execs,
     },
+    license='GPL 2.0/LGPL 2.1',
     scripts=['src/ska/bin/ska-sign-url'],
     install_requires=[
         'six>=1.9',
