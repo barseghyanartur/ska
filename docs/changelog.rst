@@ -22,7 +22,7 @@ are used for versioning (schema follows below):
 *Minor additions to the Django contrib app*
 
 - Introduce ``SKA_CONSTANCE_SETTINGS_PARSE_FROM_JSON`` directive for
-  parsing the data stored in ``django-constance`` (instead of teating it
+  parsing the data stored in ``django-constance`` (instead of treating it
   as ``dict``). Default value is ``False``.
 
 1.7.3
