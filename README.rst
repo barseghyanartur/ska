@@ -1097,6 +1097,12 @@ settings.py
     `documentation <https://django-constance.readthedocs.io/en/latest/backends.html>`_
     for more.
 
+.. note::
+
+    If your `SKA_PROVIDERS` settings are stored in the constance as ``str``
+    instead of ``dict``, set the setting
+    ``SKA_CONSTANCE_SETTINGS_PARSE_FROM_JSON`` to ``True``.
+
 With ``DatabaseBackend`` it would look as follows:
 
 .. code-block:: python

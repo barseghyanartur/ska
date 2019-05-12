@@ -15,6 +15,16 @@ are used for versioning (schema follows below):
   0.3.4 to 0.4).
 - All backwards incompatible changes are mentioned in this document.
 
+1.7.4
+-----
+2019-05-12
+
+*Minor additions to the Django contrib app*
+
+- Introduce ``SKA_CONSTANCE_SETTINGS_PARSE_FROM_JSON`` directive for
+  parsing the data stored in ``django-constance`` (instead of teating it
+  as ``dict``). Default value is ``False``.
+
 1.7.3
 -----
 2019-03-13

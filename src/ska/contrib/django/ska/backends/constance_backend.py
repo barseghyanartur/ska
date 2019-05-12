@@ -1,7 +1,10 @@
 from __future__ import absolute_import
+import json
 import logging
 
 from constance import config
+
+from django.conf import settings
 
 from .base import BaseSkaAuthenticationBackend
 
@@ -22,6 +25,17 @@ class SkaAuthenticationConstanceBackend(BaseSkaAuthenticationBackend):
 
         :return:
         """
+        parse_from_json = getattr(
+            settings,
+            'SKA_CONSTANCE_SETTINGS_PARSE_FROM_JSON',
+            False
+        )
+        if parse_from_json:
+            try:
+                _settings = json.loads(config.SKA_PROVIDERS)
+                return _settings
+            except ValueError as err:
+                pass
         return config.SKA_PROVIDERS
 
     def get_secret_key(self):
