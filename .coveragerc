@@ -6,3 +6,4 @@ omit =
     src/ska/tests/*
     example/example/settings/*
     example/example/wsgi.py
+    .tox/
