@@ -2,10 +2,13 @@ import unittest
 
 import shlex
 import subprocess
+import sys
 
 from six.moves.urllib import parse
 
 from ..shortcuts import validate_signed_request_data
+
+PY35 = (sys.version_info.major == 3 and sys.version_info.minor == 5)
 
 __title__ = 'ska.tests.test_commands'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
@@ -44,6 +47,9 @@ class GenerateSignedUrlTest(unittest.TestCase):
         ).strip()
         # It's necessary to `strip` the value, since in Python 2 there might
         # be a \n added at the end of the string.
+
+        if PY35:
+            signed_url = signed_url.decode()
 
         parsed_url = parse.urlparse(str(signed_url))
         parsed_query_params = parse.parse_qs(parsed_url.query)

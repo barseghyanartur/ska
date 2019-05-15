@@ -7,6 +7,18 @@ sha-(1, 224, 256, 385 and 512)/hmac for signature encryption. Allows to use
 custom hash algorithms. Comes with shortcut functions for signing (and
 validating) dictionaries and URLs.
 
+.. image:: https://img.shields.io/pypi/v/ska.svg
+   :target: https://pypi.python.org/pypi/ska
+   :alt: PyPI Version
+
+.. image:: https://img.shields.io/travis/barseghyanartur/ska/master.svg
+   :target: http://travis-ci.org/barseghyanartur/ska
+   :alt: Build Status
+
+.. image:: https://img.shields.io/badge/license-GPL--2.0--only%20OR%20LGPL--2.1--or--later-blue.svg
+   :target: https://github.com/barseghyanartur/ska/#License
+   :alt: GPL-2.0-only OR LGPL-2.1-or-later
+
 Key concepts
 ============
 Hosts, that communicate with each other, share the Secret Key, which is used
@@ -1403,7 +1415,7 @@ Keep the following hierarchy.
 
 License
 =======
-GPL 2.0/LGPL 2.1
+GPL-2.0-only OR LGPL-2.1-or-later
 
 Support
 =======

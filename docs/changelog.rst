@@ -15,6 +15,12 @@ are used for versioning (schema follows below):
   0.3.4 to 0.4).
 - All backwards incompatible changes are mentioned in this document.
 
+1.7.5
+-----
+2019-05-15
+
+- Fixes in ska-sign-url on Python 3.5.
+
 1.7.4
 -----
 2019-05-12

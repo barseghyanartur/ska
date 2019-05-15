@@ -6,7 +6,7 @@ try:
 except:
     readme = ''
 
-version = '1.7.4'
+version = '1.7.5'
 
 exec_dirs = [
     'src/ska/bin/',
@@ -51,7 +51,7 @@ setup(
     package_data={
         'ska': execs,
     },
-    license='GPL 2.0/LGPL 2.1',
+    license='GPL-2.0-only OR LGPL-2.1-or-later',
     scripts=['src/ska/bin/ska-sign-url'],
     install_requires=[
         'six>=1.9',
