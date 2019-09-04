@@ -11,6 +11,10 @@ validating) dictionaries and URLs.
    :target: https://pypi.python.org/pypi/ska
    :alt: PyPI Version
 
+.. image:: https://img.shields.io/pypi/pyversions/ska.svg
+    :target: https://pypi.python.org/pypi/ska/
+    :alt: Supported Python versions
+
 .. image:: https://img.shields.io/travis/barseghyanartur/ska/master.svg
    :target: http://travis-ci.org/barseghyanartur/ska
    :alt: Build Status
@@ -18,6 +22,10 @@ validating) dictionaries and URLs.
 .. image:: https://img.shields.io/badge/license-GPL--2.0--only%20OR%20LGPL--2.1--or--later-blue.svg
    :target: https://github.com/barseghyanartur/ska/#License
    :alt: GPL-2.0-only OR LGPL-2.1-or-later
+
+.. image:: https://coveralls.io/repos/github/barseghyanartur/ska/badge.svg?branch=master
+    :target: https://coveralls.io/github/barseghyanartur/ska?branch=master
+    :alt: Coverage
 
 Key concepts
 ============
