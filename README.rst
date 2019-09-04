@@ -23,7 +23,7 @@ validating) dictionaries and URLs.
    :target: https://github.com/barseghyanartur/ska/#License
    :alt: GPL-2.0-only OR LGPL-2.1-or-later
 
-.. image:: https://coveralls.io/repos/github/barseghyanartur/ska/badge.svg?branch=master
+.. image:: https://coveralls.io/repos/github/barseghyanartur/ska/badge.svg?branch=master&service=github
     :target: https://coveralls.io/github/barseghyanartur/ska?branch=master
     :alt: Coverage
 
