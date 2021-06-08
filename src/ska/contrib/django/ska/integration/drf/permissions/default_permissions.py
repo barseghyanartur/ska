@@ -22,7 +22,7 @@ __all__ = (
 class SignedRequestRequired(BaseSignedRequestRequired):
     """Signed request required permission."""
 
-    def get_settings(self):
+    def get_settings(self, request_data, request=None, view=None, obj=None):
         return {
             'SECRET_KEY': SECRET_KEY,
         }
@@ -31,5 +31,5 @@ class SignedRequestRequired(BaseSignedRequestRequired):
 class ProviderSignedRequestRequired(BaseProviderSignedRequestRequired):
     """Provider signed request required permission."""
 
-    def get_settings(self):
+    def get_settings(self, request_data, request=None, view=None, obj=None):
         return PROVIDERS

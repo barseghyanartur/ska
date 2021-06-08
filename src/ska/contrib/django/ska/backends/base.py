@@ -32,17 +32,17 @@ from ..utils import get_provider_data
 
 logger = logging.getLogger(__file__)
 
-__title__ = 'ska.contrib.django.ska.backends.base'
-__author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
-__copyright__ = '2013-2019 Artur Barseghyan'
-__license__ = 'GPL 2.0/LGPL 2.1'
-__all__ = ('BaseSkaAuthenticationBackend',)
+__title__ = "ska.contrib.django.ska.backends.base"
+__author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
+__copyright__ = "2013-2019 Artur Barseghyan"
+__license__ = "GPL 2.0/LGPL 2.1"
+__all__ = ("BaseSkaAuthenticationBackend",)
 
 
 class BaseSkaAuthenticationBackend(object):
     """Base authentication backend."""
 
-    def get_settings(self):
+    def get_settings(self, request_data=None, request=None, **kwargs):
         """Get settings.
 
         :return:
@@ -51,7 +51,7 @@ class BaseSkaAuthenticationBackend(object):
             "You should implement this method in your authentication backend"
         )
 
-    def get_secret_key(self):
+    def get_secret_key(self, request_data=None, request=None, **kwargs):
         """Get secret key.
 
         :return:
@@ -59,6 +59,13 @@ class BaseSkaAuthenticationBackend(object):
         raise NotImplementedError(
             "You should implement this method in your authentication backend"
         )
+
+    def get_request_data(self, request, **kwargs):
+        if versions.DJANGO_GTE_1_7:
+            request_data = request.GET.dict()
+        else:
+            request_data = request.REQUEST
+        return request_data
 
     def authenticate(self, request, **kwargs):
         """Authenticate.
@@ -70,19 +77,16 @@ class BaseSkaAuthenticationBackend(object):
             logger.debug("Request is None, skipping")
             return None
 
-        if versions.DJANGO_GTE_1_7:
-            request_data = request.GET.dict()
-        else:
-            request_data = request.REQUEST
+        request_data = self.get_request_data(request, **kwargs)
 
-        provider_settings = self.get_settings()
+        provider_settings = self.get_settings(request_data, request, **kwargs)
 
         provider_data = get_provider_data(request_data, provider_settings)
 
         if provider_data:
-            secret_key = provider_data['SECRET_KEY']
+            secret_key = provider_data["SECRET_KEY"]
         else:
-            secret_key = self.get_secret_key()
+            secret_key = self.get_secret_key(request_data, request, **kwargs)
             if not secret_key:
                 secret_key = SECRET_KEY
 
@@ -96,7 +100,7 @@ class BaseSkaAuthenticationBackend(object):
                 valid_until_param=DEFAULT_VALID_UNTIL_PARAM,
                 extra_param=DEFAULT_EXTRA_PARAM,
                 validate=True,
-                fail_silently=False
+                fail_silently=False,
             )
         except (ImproperlyConfigured, InvalidData) as err:
             logger.debug(str(err))
@@ -108,9 +112,9 @@ class BaseSkaAuthenticationBackend(object):
         valid_until = request_data.get(DEFAULT_VALID_UNTIL_PARAM)
 
         # All other specific data is taken from signed request data
-        email = signed_request_data.get('email', '')
-        first_name = signed_request_data.get('first_name', '')
-        last_name = signed_request_data.get('last_name', '')
+        email = signed_request_data.get("email", "")
+        first_name = signed_request_data.get("first_name", "")
+        last_name = signed_request_data.get("last_name", "")
 
         # Validate request callback. Created to allow adding custom logic to
         # the incoming authentication requests. The main purpose is to provide
@@ -123,8 +127,7 @@ class BaseSkaAuthenticationBackend(object):
         # other exceptions would simply be ignored (but logged) and if no
         # exception raised, the normal flow would be continued.
         user_validate_callback = provider_data.get(
-            'USER_VALIDATE_CALLBACK',
-            USER_VALIDATE_CALLBACK
+            "USER_VALIDATE_CALLBACK", USER_VALIDATE_CALLBACK
         )
         if user_validate_callback is not None:
             callback_func = get_callback_func(user_validate_callback)
@@ -132,7 +135,7 @@ class BaseSkaAuthenticationBackend(object):
                 try:
                     user_validate_callback_resp = callback_func(
                         request=request,
-                        signed_request_data=signed_request_data
+                        signed_request_data=signed_request_data,
                     )
                 except PermissionDenied as err:
                     logger.debug(str(err))
@@ -145,7 +148,7 @@ class BaseSkaAuthenticationBackend(object):
             token = SignatureModel(
                 auth_user=auth_user,
                 signature=signature,
-                valid_until=Signature.unix_timestamp_to_date(valid_until)
+                valid_until=Signature.unix_timestamp_to_date(valid_until),
             )
             try:
                 token.save()
@@ -160,8 +163,7 @@ class BaseSkaAuthenticationBackend(object):
 
             # User get callback
             user_get_callback = provider_data.get(
-                'USER_GET_CALLBACK',
-                USER_GET_CALLBACK
+                "USER_GET_CALLBACK", USER_GET_CALLBACK
             )
             if user_get_callback is not None:
                 callback_func = get_callback_func(user_get_callback)
@@ -170,7 +172,7 @@ class BaseSkaAuthenticationBackend(object):
                         user_get_callback_resp = callback_func(
                             user,
                             request=request,
-                            signed_request_data=signed_request_data
+                            signed_request_data=signed_request_data,
                         )
                     except Exception as err:
                         logger.debug(str(err))
@@ -181,14 +183,13 @@ class BaseSkaAuthenticationBackend(object):
                 email=email,
                 password=make_password(password=None),
                 first_name=first_name,
-                last_name=last_name
+                last_name=last_name,
             )
             user.save()
 
             # User create callback
             user_create_callback = provider_data.get(
-                'USER_CREATE_CALLBACK',
-                USER_CREATE_CALLBACK
+                "USER_CREATE_CALLBACK", USER_CREATE_CALLBACK
             )
             if user_create_callback is not None:
                 callback_func = get_callback_func(user_create_callback)
@@ -197,15 +198,14 @@ class BaseSkaAuthenticationBackend(object):
                         user_create_callback_resp = callback_func(
                             user,
                             request=request,
-                            signed_request_data=signed_request_data
+                            signed_request_data=signed_request_data,
                         )
                     except Exception as err:
                         logger.debug(str(err))
 
         # User info callback
         user_info_callback = provider_data.get(
-            'USER_INFO_CALLBACK',
-            USER_INFO_CALLBACK
+            "USER_INFO_CALLBACK", USER_INFO_CALLBACK
         )
         if user_info_callback is not None:
             callback_func = get_callback_func(user_info_callback)
@@ -214,7 +214,7 @@ class BaseSkaAuthenticationBackend(object):
                     callback_func(
                         user,
                         request=request,
-                        signed_request_data=signed_request_data
+                        signed_request_data=signed_request_data,
                     )
                 except Exception as err:
                     logger.debug(str(err))

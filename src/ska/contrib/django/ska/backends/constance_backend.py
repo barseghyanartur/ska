@@ -10,25 +10,23 @@ from .base import BaseSkaAuthenticationBackend
 
 logger = logging.getLogger(__file__)
 
-__title__ = 'ska.contrib.django.ska.backends.constance_backend'
-__author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
-__copyright__ = '2013-2019 Artur Barseghyan'
-__license__ = 'GPL 2.0/LGPL 2.1'
-__all__ = ('SkaAuthenticationConstanceBackend',)
+__title__ = "ska.contrib.django.ska.backends.constance_backend"
+__author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
+__copyright__ = "2013-2019 Artur Barseghyan"
+__license__ = "GPL 2.0/LGPL 2.1"
+__all__ = ("SkaAuthenticationConstanceBackend",)
 
 
 class SkaAuthenticationConstanceBackend(BaseSkaAuthenticationBackend):
     """Authentication backend."""
 
-    def get_settings(self):
+    def get_settings(self, request_data=None, request=None, **kwargs):
         """Get settings.
 
         :return:
         """
         parse_from_json = getattr(
-            settings,
-            'SKA_CONSTANCE_SETTINGS_PARSE_FROM_JSON',
-            False
+            settings, "SKA_CONSTANCE_SETTINGS_PARSE_FROM_JSON", False
         )
         if parse_from_json:
             try:
@@ -38,7 +36,7 @@ class SkaAuthenticationConstanceBackend(BaseSkaAuthenticationBackend):
                 pass
         return config.SKA_PROVIDERS
 
-    def get_secret_key(self):
+    def get_secret_key(self, request_data=None, request=None, **kwargs):
         """Get secret key.
 
         :return:

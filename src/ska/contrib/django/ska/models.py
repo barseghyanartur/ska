@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+from django.utils import timezone
 
 import logging
 
@@ -29,7 +29,7 @@ class Signature(models.Model):
     signature = models.CharField(_("Signature"), max_length=255)
     auth_user = models.CharField(_("Auth user"), max_length=255)
     valid_until = models.DateTimeField(_("Valid until"))
-    created = models.DateTimeField(_("Date created"), auto_now_add=True)
+    created = models.DateTimeField(_("Date created"), default=timezone.now)
 
     class Meta(object):
         """Meta class."""

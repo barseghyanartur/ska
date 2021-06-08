@@ -60,35 +60,45 @@ from .settings import (
     UNAUTHORISED_REQUEST_ERROR_TEMPLATE,
 )
 
-__title__ = 'ska.contrib.django.ska.decorators'
-__author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
-__copyright__ = '2013-2019 Artur Barseghyan'
-__license__ = 'GPL 2.0/LGPL 2.1'
+__title__ = "ska.contrib.django.ska.decorators"
+__author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
+__copyright__ = "2013-2019 Artur Barseghyan"
+__license__ = "GPL 2.0/LGPL 2.1"
 __all__ = (
-    'BaseValidateSignedRequest',
-    'm_validate_signed_request',
-    'MethodValidateSignedRequest',
-    'sign_url',
-    'SignAbsoluteURL',
-    'validate_signed_request',
-    'ValidateSignedRequest',
+    "BaseValidateSignedRequest",
+    "m_validate_signed_request",
+    "MethodValidateSignedRequest",
+    "sign_url",
+    "SignAbsoluteURL",
+    "validate_signed_request",
+    "ValidateSignedRequest",
 )
 
 
 class BaseValidateSignedRequest(object):
     """BaseValidateSignedRequest."""
 
-    def __init__(self, secret_key=SECRET_KEY,
-                 signature_param=DEFAULT_SIGNATURE_PARAM,
-                 auth_user_param=DEFAULT_AUTH_USER_PARAM,
-                 valid_until_param=DEFAULT_VALID_UNTIL_PARAM,
-                 extra_param=DEFAULT_EXTRA_PARAM):
+    def __init__(
+        self,
+        secret_key=SECRET_KEY,
+        signature_param=DEFAULT_SIGNATURE_PARAM,
+        auth_user_param=DEFAULT_AUTH_USER_PARAM,
+        valid_until_param=DEFAULT_VALID_UNTIL_PARAM,
+        extra_param=DEFAULT_EXTRA_PARAM,
+    ):
         """Constructor."""
         self.secret_key = secret_key
         self.signature_param = signature_param
         self.auth_user_param = auth_user_param
         self.valid_until_param = valid_until_param
         self.extra_param = extra_param
+
+    def get_request_data(self, request, *args, **kwargs):
+        if versions.DJANGO_GTE_1_7:
+            request_data = request.GET.dict()
+        else:
+            request_data = request.REQUEST
+        return request_data
 
 
 class ValidateSignedRequest(BaseValidateSignedRequest):
@@ -122,20 +132,19 @@ class ValidateSignedRequest(BaseValidateSignedRequest):
 
     def __call__(self, func):
         """Call."""
+
         def inner(request, *args, **kwargs):
             """Inner."""
+            request_data = self.get_request_data(request, *args, **kwargs)
+
             # Validating the request.
-            if versions.DJANGO_GTE_1_7:
-                request_data = request.GET.dict()
-            else:
-                request_data = request.REQUEST
             validation_result = validate_signed_request_data(
                 data=request_data,
                 secret_key=self.secret_key,
                 signature_param=self.signature_param,
                 auth_user_param=self.auth_user_param,
                 valid_until_param=self.valid_until_param,
-                extra_param=self.extra_param
+                extra_param=self.extra_param,
             )
             if validation_result.result is True:
                 # If validated, just return the func as is.
@@ -150,7 +159,7 @@ class ValidateSignedRequest(BaseValidateSignedRequest):
                     response_content = render(
                         request,
                         UNAUTHORISED_REQUEST_ERROR_TEMPLATE,
-                        {'reason': '; '.join(validation_result.reason)}
+                        {"reason": "; ".join(validation_result.reason)},
                     )
                     return HttpResponseUnauthorized(response_content)
                 else:
@@ -158,9 +167,10 @@ class ValidateSignedRequest(BaseValidateSignedRequest):
                     # error.
                     return HttpResponseUnauthorized(
                         ugettext(UNAUTHORISED_REQUEST_ERROR_MESSAGE).format(
-                            '; '.join(validation_result.reason)
+                            "; ".join(validation_result.reason)
                         )
                     )
+
         return inner
 
 
@@ -199,12 +209,11 @@ class MethodValidateSignedRequest(BaseValidateSignedRequest):
 
     def __call__(self, func):
         """Call."""
+
         def inner(this, request, *args, **kwargs):
             """Inner."""
-            if versions.DJANGO_GTE_1_7:
-                request_data = request.GET.dict()
-            else:
-                request_data = request.REQUEST
+            request_data = self.get_request_data(request, *args, **kwargs)
+
             # Validating the request.
             validation_result = validate_signed_request_data(
                 data=request_data,
@@ -212,7 +221,7 @@ class MethodValidateSignedRequest(BaseValidateSignedRequest):
                 signature_param=self.signature_param,
                 auth_user_param=self.auth_user_param,
                 valid_until_param=self.valid_until_param,
-                extra_param=self.extra_param
+                extra_param=self.extra_param,
             )
             if validation_result.result is True:
                 # If validated, just return the func as is.
@@ -227,7 +236,7 @@ class MethodValidateSignedRequest(BaseValidateSignedRequest):
                     response_content = render(
                         request,
                         UNAUTHORISED_REQUEST_ERROR_TEMPLATE,
-                        {'reason': '; '.join(validation_result.reason)}
+                        {"reason": "; ".join(validation_result.reason)},
                     )
                     return HttpResponseUnauthorized(response_content)
                 else:
@@ -235,9 +244,10 @@ class MethodValidateSignedRequest(BaseValidateSignedRequest):
                     # error.
                     return HttpResponseUnauthorized(
                         ugettext(UNAUTHORISED_REQUEST_ERROR_MESSAGE).format(
-                            '; '.join(validation_result.reason)
+                            "; ".join(validation_result.reason)
                         )
                     )
+
         return inner
 
 
@@ -282,13 +292,19 @@ class SignAbsoluteURL(object):
     >>>         return reverse('foo.detail', kwargs={'slug': self.slug})
     """
 
-    def __init__(self, auth_user=AUTH_USER, secret_key=SECRET_KEY,
-                 valid_until=None, lifetime=SIGNATURE_LIFETIME,
-                 suffix=DEFAULT_URL_SUFFIX,
-                 signature_param=DEFAULT_SIGNATURE_PARAM,
-                 auth_user_param=DEFAULT_AUTH_USER_PARAM,
-                 valid_until_param=DEFAULT_VALID_UNTIL_PARAM,
-                 extra=None, extra_param=DEFAULT_EXTRA_PARAM):
+    def __init__(
+        self,
+        auth_user=AUTH_USER,
+        secret_key=SECRET_KEY,
+        valid_until=None,
+        lifetime=SIGNATURE_LIFETIME,
+        suffix=DEFAULT_URL_SUFFIX,
+        signature_param=DEFAULT_SIGNATURE_PARAM,
+        auth_user_param=DEFAULT_AUTH_USER_PARAM,
+        valid_until_param=DEFAULT_VALID_UNTIL_PARAM,
+        extra=None,
+        extra_param=DEFAULT_EXTRA_PARAM,
+    ):
         """Constructor."""
         self.auth_user = auth_user
         self.secret_key = secret_key
@@ -303,6 +319,7 @@ class SignAbsoluteURL(object):
 
     def __call__(self, func):
         """Call."""
+
         def inner(this, *args, **kwargs):
             """Inner."""
             if not PY3:
@@ -321,8 +338,9 @@ class SignAbsoluteURL(object):
                 auth_user_param=self.auth_user_param,
                 valid_until_param=self.valid_until_param,
                 extra=self.extra,
-                extra_param=self.extra_param
+                extra_param=self.extra_param,
             )
+
         return inner
 
 
