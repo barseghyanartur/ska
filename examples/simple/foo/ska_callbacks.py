@@ -65,10 +65,7 @@ class Client1Validate(BaseClientAction):
     @staticmethod
     def admins(request, signed_request_data):
         """Custom callback for admins."""
-        if versions.DJANGO_GTE_1_7:
-            request_data = request.GET.dict()
-        else:
-            request_data = request.REQUEST
+        request_data = request.GET.dict()
         email = signed_request_data.get('email', '')
         auth_user = request_data.get(DEFAULT_AUTH_USER_PARAM)
         if auth_user == 'forbidden_username':

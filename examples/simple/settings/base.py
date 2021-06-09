@@ -260,6 +260,7 @@ INSTALLED_APPS = (
 
     # ska, django-ska and example/testing app
     'ska.contrib.django.ska',
+    'ska.contrib.django.ska.integration.constance_integration',
     'foo',  # Our example app
 )
 

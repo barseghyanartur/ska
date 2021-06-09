@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-
 from django_nine import versions
 
 from ..views import login

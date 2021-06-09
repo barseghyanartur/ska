@@ -1,4 +1,4 @@
-from django_nine import versions
+from django.urls import include, re_path as url
 
 from rest_framework.routers import DefaultRouter
 
@@ -16,11 +16,6 @@ from .viewsets import (
     FooItemProviderSignedRequestRequiredViewSet,
     FooItemSignedRequestRequiredViewSet,
 )
-
-if versions.DJANGO_GTE_2_1:
-    from django.urls import include, re_path as url
-else:
-    from django.conf.urls import include, url
 
 router = DefaultRouter()
 

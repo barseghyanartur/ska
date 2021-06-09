@@ -1,5 +1,3 @@
-from __future__ import absolute_import, print_function
-
 import logging
 import os
 import random
@@ -25,7 +23,7 @@ __all__ = (
     'SKA_TEST_USER_USERNAME',
 )
 
-logger = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 
 def project_dir(base):
@@ -51,14 +49,14 @@ def log_info(func):
         """Inner."""
         result = func(self, *args, **kwargs)
 
-        logger.debug('\n\n%s', func.__name__)
-        logger.debug('============================')
+        LOGGER.debug('\n\n%s', func.__name__)
+        LOGGER.debug('============================')
         if func.__doc__:
-            logger.debug('""" %s """', func.__doc__.strip())
-        logger.debug('----------------------------')
+            LOGGER.debug('""" %s """', func.__doc__.strip())
+        LOGGER.debug('----------------------------')
         if result is not None:
-            logger.debug(result)
-        logger.debug('\n++++++++++++++++++++++++++++')
+            LOGGER.debug(result)
+        LOGGER.debug('\n++++++++++++++++++++++++++++')
 
         return result
     return inner

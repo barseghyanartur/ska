@@ -1,8 +1,3 @@
-from __future__ import absolute_import, print_function
-
-import logging
-import unittest
-
 from django.test import Client, TransactionTestCase
 
 import pytest
@@ -22,8 +17,6 @@ __license__ = 'GPL 2.0/LGPL 2.1'
 __all__ = (
     'SkaDecoratorsTest',
 )
-
-logger = logging.getLogger(__name__)
 
 
 # *********************************************************************
@@ -162,8 +155,3 @@ class SkaDecoratorsTest(TransactionTestCase):
         )
 
         return flow
-
-
-if __name__ == "__main__":
-    # Tests
-    unittest.main()

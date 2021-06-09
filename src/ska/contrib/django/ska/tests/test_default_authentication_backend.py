@@ -1,9 +1,6 @@
-from __future__ import absolute_import, print_function
-
 import datetime
 import logging
 import time
-import unittest
 
 from django.core import mail
 from django.core.management import call_command
@@ -358,8 +355,3 @@ class SkaAuthenticationBackendTest(TransactionTestCase):
             auth_user='forbidden_username',
             debug_info="test_08_provider_login_forbidden_username"
         )
-
-
-if __name__ == "__main__":
-    # Tests
-    unittest.main()

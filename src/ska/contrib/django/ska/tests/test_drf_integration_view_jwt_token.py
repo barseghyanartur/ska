@@ -6,12 +6,12 @@ import logging
 import unittest
 
 from constance import config
+from django.urls import reverse
 from django.test import TransactionTestCase, override_settings
+
 import pytest
 from rest_framework import status
 from rest_framework.test import APIClient
-
-from django_nine import versions
 
 from ska import sign_url
 from ska.contrib.django.ska.settings import SECRET_KEY, PROVIDERS
@@ -19,12 +19,6 @@ from ska.defaults import DEFAULT_PROVIDER_PARAM
 
 import factories
 
-if versions.DJANGO_GTE_1_10:
-    from django.urls import reverse
-else:
-    from django.core.urlresolvers import reverse
-
-__title__ = 'ska.contrib.django.ska.tests.test_drf_integration_view_jwt_token'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2019 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
@@ -317,8 +311,3 @@ class DRFIntegrationViewJwtTokenConstanceTestCase(
             auth_user_email=self.AUTH_USER_EMAIL,
             check_token=False
         )
-
-
-if __name__ == "__main__":
-    # Tests
-    unittest.main()

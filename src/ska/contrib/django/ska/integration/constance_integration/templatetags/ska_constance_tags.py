@@ -1,12 +1,10 @@
-from __future__ import absolute_import
-
 from django import template
 from django.core.exceptions import ImproperlyConfigured
 
 from constance import config
 
-from ..... import sign_url as ska_sign_url
-from .....defaults import (
+from ....... import sign_url as ska_sign_url
+from .......defaults import (
     DEFAULT_AUTH_USER_PARAM,
     DEFAULT_EXTRA_PARAM,
     DEFAULT_PROVIDER_PARAM,
@@ -15,9 +13,8 @@ from .....defaults import (
     DEFAULT_VALID_UNTIL_PARAM,
     SIGNATURE_LIFETIME,
 )
-from .....signatures import Signature
+from .......signatures import Signature
 
-__title__ = 'ska.contrib.django.ska.templatetags.ska_constance_tags'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2019 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'

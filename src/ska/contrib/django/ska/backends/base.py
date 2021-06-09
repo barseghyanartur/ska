@@ -1,12 +1,9 @@
-from __future__ import absolute_import
 import logging
 
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 from django.db import IntegrityError
-
-from django_nine import versions
 
 from ..... import Signature, extract_signed_request_data
 from .....helpers import get_callback_func
@@ -30,9 +27,8 @@ from ..settings import (
 )
 from ..utils import get_provider_data
 
-logger = logging.getLogger(__file__)
+LOGGER = logging.getLogger(__file__)
 
-__title__ = "ska.contrib.django.ska.backends.base"
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2013-2019 Artur Barseghyan"
 __license__ = "GPL 2.0/LGPL 2.1"
@@ -61,11 +57,7 @@ class BaseSkaAuthenticationBackend(object):
         )
 
     def get_request_data(self, request, **kwargs):
-        if versions.DJANGO_GTE_1_7:
-            request_data = request.GET.dict()
-        else:
-            request_data = request.REQUEST
-        return request_data
+        return request.GET.dict()
 
     def authenticate(self, request, **kwargs):
         """Authenticate.
@@ -74,7 +66,7 @@ class BaseSkaAuthenticationBackend(object):
         :return django.contrib.auth.models.User: Instance or None on failure.
         """
         if request is None:
-            logger.debug("Request is None, skipping")
+            LOGGER.debug("Request is None, skipping")
             return None
 
         request_data = self.get_request_data(request, **kwargs)
@@ -103,7 +95,7 @@ class BaseSkaAuthenticationBackend(object):
                 fail_silently=False,
             )
         except (ImproperlyConfigured, InvalidData) as err:
-            logger.debug(str(err))
+            LOGGER.debug(str(err))
             return None
 
         # Get the username from request.
@@ -138,10 +130,10 @@ class BaseSkaAuthenticationBackend(object):
                         signed_request_data=signed_request_data,
                     )
                 except PermissionDenied as err:
-                    logger.debug(str(err))
+                    LOGGER.debug(str(err))
                     raise err
                 except Exception as err:
-                    logger.debug(str(err))
+                    LOGGER.debug(str(err))
 
         # Storing the signatures to database if set to be so.
         if DB_STORE_SIGNATURES:
@@ -175,7 +167,7 @@ class BaseSkaAuthenticationBackend(object):
                             signed_request_data=signed_request_data,
                         )
                     except Exception as err:
-                        logger.debug(str(err))
+                        LOGGER.debug(str(err))
 
         except User.DoesNotExist:
             user = User._default_manager.create_user(
@@ -201,7 +193,7 @@ class BaseSkaAuthenticationBackend(object):
                             signed_request_data=signed_request_data,
                         )
                     except Exception as err:
-                        logger.debug(str(err))
+                        LOGGER.debug(str(err))
 
         # User info callback
         user_info_callback = provider_data.get(
@@ -217,7 +209,7 @@ class BaseSkaAuthenticationBackend(object):
                         signed_request_data=signed_request_data,
                     )
                 except Exception as err:
-                    logger.debug(str(err))
+                    LOGGER.debug(str(err))
 
         return user
 

@@ -33,14 +33,8 @@
       the ``valid_until`` value.
 """
 
-from __future__ import absolute_import
-
 from django.shortcuts import render
 from django.utils.translation import gettext, gettext_lazy as _
-
-from django_nine import versions
-
-from six import PY3, text_type
 
 from .... import validate_signed_request_data, sign_url as ska_sign_url
 from ....defaults import (
@@ -60,7 +54,6 @@ from .settings import (
     UNAUTHORISED_REQUEST_ERROR_TEMPLATE,
 )
 
-__title__ = "ska.contrib.django.ska.decorators"
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2013-2019 Artur Barseghyan"
 __license__ = "GPL 2.0/LGPL 2.1"
@@ -75,7 +68,7 @@ __all__ = (
 )
 
 
-class BaseValidateSignedRequest(object):
+class BaseValidateSignedRequest:
     """BaseValidateSignedRequest."""
 
     def __init__(
@@ -94,11 +87,7 @@ class BaseValidateSignedRequest(object):
         self.extra_param = extra_param
 
     def get_request_data(self, request, *args, **kwargs):
-        if versions.DJANGO_GTE_1_7:
-            request_data = request.GET.dict()
-        else:
-            request_data = request.REQUEST
-        return request_data
+        return request.GET.dict()
 
 
 class ValidateSignedRequest(BaseValidateSignedRequest):
@@ -254,7 +243,7 @@ class MethodValidateSignedRequest(BaseValidateSignedRequest):
 m_validate_signed_request = MethodValidateSignedRequest
 
 
-class SignAbsoluteURL(object):
+class SignAbsoluteURL:
     """SignAbsoluteURL.
 
     Method decorator (to be used in models). Signs the URL.
@@ -322,10 +311,7 @@ class SignAbsoluteURL(object):
 
         def inner(this, *args, **kwargs):
             """Inner."""
-            if not PY3:
-                url = text_type(func(this, *args, **kwargs))
-            else:
-                url = func(this, *args, **kwargs)
+            url = func(this, *args, **kwargs)
 
             return ska_sign_url(
                 auth_user=self.auth_user,

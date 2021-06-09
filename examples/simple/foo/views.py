@@ -1,8 +1,7 @@
 from django.http import Http404
 from django.shortcuts import render
 from django.views.generic.base import View
-
-from django_nine import versions
+from django.urls import reverse
 
 from ska import sign_url
 from ska.contrib.django.ska.decorators import (
@@ -13,11 +12,6 @@ from ska.contrib.django.ska.settings import SECRET_KEY, PROVIDERS
 from ska.defaults import DEFAULT_PROVIDER_PARAM
 
 from foo.models import FooItem
-
-if versions.DJANGO_GTE_1_10:
-    from django.urls import reverse
-else:
-    from django.core.urlresolvers import reverse
 
 
 def browse_view(request, template_name='foo/browse.html'):

@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-
 from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login
 from django.http import HttpResponseForbidden, HttpResponseRedirect
@@ -47,7 +45,7 @@ def login(request):
         auth_login(request, user)
         name = user.first_name or user.username
         messages.info(
-            request, gettext("Login succeeded. Welcome, {0}.").format(name)
+            request, gettext(f"Login succeeded. Welcome, {name}.")
         )
         return HttpResponseRedirect(next_url)
     else:

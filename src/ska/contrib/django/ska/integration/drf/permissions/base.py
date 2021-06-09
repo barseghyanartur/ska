@@ -1,5 +1,5 @@
-from __future__ import absolute_import
 import logging
+from rest_framework import permissions
 
 from ....... import validate_signed_request_data
 from .......defaults import (
@@ -12,9 +12,6 @@ from .......exceptions import ImproperlyConfigured, InvalidData
 
 from ....utils import get_provider_data
 
-from rest_framework import permissions
-
-__title__ = 'ska.contrib.django.ska.integration.drf.permissions.base'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2019 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
@@ -24,7 +21,7 @@ __all__ = (
     'BaseProviderSignedRequestRequired',
 )
 
-logger = logging.getLogger(__file__)
+LOGGER = logging.getLogger(__file__)
 
 
 class AbstractSignedRequestRequired(permissions.BasePermission):
@@ -87,7 +84,7 @@ class AbstractSignedRequestRequired(permissions.BasePermission):
             )
             return validation_result.result
         except (ImproperlyConfigured, InvalidData) as err:
-            logger.debug(str(err))
+            LOGGER.debug(str(err))
             return False
 
     def has_permission(self, request, view):

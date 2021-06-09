@@ -1,12 +1,9 @@
-from __future__ import absolute_import
-
-import datetime
+from datetime import datetime
 
 from ....defaults import DEFAULT_PROVIDER_PARAM
 from .models import Signature
 from .settings import PROVIDERS, SECRET_KEY
 
-__title__ = 'ska.contrib.django.ska.utils'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2019 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
@@ -19,9 +16,7 @@ __all__ = (
 
 def purge_signature_data():
     """Purge old signature data (valid_until < now)."""
-    Signature._default_manager \
-             .filter(valid_until__lt=datetime.datetime.now()) \
-             .delete()
+    Signature._default_manager.filter(valid_until__lt=datetime.now()).delete()
 
 
 def get_secret_key(data, default=SECRET_KEY):

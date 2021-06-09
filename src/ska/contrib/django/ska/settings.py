@@ -29,15 +29,12 @@
   respectively the values of ``ska.contrib.django.ska.settings``.
 """
 
-from __future__ import absolute_import
-
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
 from ....exceptions import ImproperlyConfigured
 from .conf import get_setting
 
-__title__ = 'ska.contrib.django.ska.settings'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2019 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'

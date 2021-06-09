@@ -1,17 +1,10 @@
 from django.db import models
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-
-from django_nine import versions
 
 from six import python_2_unicode_compatible
 
 from ska.contrib.django.ska.decorators import sign_url
-
-if versions.DJANGO_GTE_1_10:
-    from django.urls import reverse
-else:
-    from django.core.urlresolvers import reverse
-
 
 __all__ = (
     'FooItem',
