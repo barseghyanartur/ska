@@ -10,7 +10,6 @@ from .helpers import (
     NUM_ITEMS,
 )
 
-__title__ = 'ska.contrib.django.ska.tests.test_decorators'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2019 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'

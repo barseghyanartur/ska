@@ -18,32 +18,32 @@ __all__ = (
 
 
 OVERRIDE_SETTINGS_KWARGS = {
-    'INSTALLED_APPS': (
-        'django.contrib.auth',
-        'django.contrib.contenttypes',
-        'django.contrib.sessions',
-        'django.contrib.sites',
-        'django.contrib.messages',
-        'django.contrib.staticfiles',
-        # Uncomment the next line to enable the admin:
-        'django.contrib.admin',
-        # Uncomment the next line to enable admin documentation:
-        # 'django.contrib.admindocs',
-
-        # For django-constance
-        'constance',
-        'constance.backends.database',  # Only if ``DatabaseBackend`` is used
-        'django_json_widget',
-
-        # For djangorestframework
-        'rest_framework',
-        'rest_framework_jwt',
-
-        # ska, django-ska and example/testing app
-        'ska.contrib.django.ska',
-        'ska.contrib.django.ska.integration.constance_integration',
-        'foo',  # Our example app
-    ),
+    # 'INSTALLED_APPS': (
+    #     'django.contrib.auth',
+    #     'django.contrib.contenttypes',
+    #     'django.contrib.sessions',
+    #     'django.contrib.sites',
+    #     'django.contrib.messages',
+    #     'django.contrib.staticfiles',
+    #     # Uncomment the next line to enable the admin:
+    #     'django.contrib.admin',
+    #     # Uncomment the next line to enable admin documentation:
+    #     # 'django.contrib.admindocs',
+    #
+    #     # For django-constance
+    #     'constance',
+    #     'constance.backends.database',  # Only if ``DatabaseBackend`` is used
+    #     'django_json_widget',
+    #
+    #     # For djangorestframework
+    #     'rest_framework',
+    #     'rest_framework_jwt',
+    #
+    #     # ska, django-ska and example/testing app
+    #     'ska.contrib.django.ska',
+    #     'ska.contrib.django.ska.integration.constance_integration',
+    #     'foo',  # Our example app
+    # ),
     'AUTHENTICATION_BACKENDS': (
         'ska.contrib.django.ska.backends.constance_backend.SkaAuthenticationConstanceBackend',
         'django.contrib.auth.backends.ModelBackend',
