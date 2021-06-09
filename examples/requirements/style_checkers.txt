@@ -35,6 +35,10 @@ importlib-metadata==4.5.0
     #   pep517
     #   pre-commit
     #   virtualenv
+importlib-resources==5.1.4
+    # via
+    #   pre-commit
+    #   virtualenv
 isort==5.8.0
     # via
     #   -r style_checkers.in
@@ -102,6 +106,7 @@ wrapt==1.12.1
 zipp==3.4.1
     # via
     #   importlib-metadata
+    #   importlib-resources
     #   pep517
 
 # The following packages are considered to be unsafe in a requirements file:

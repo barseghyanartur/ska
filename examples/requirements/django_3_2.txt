@@ -6,6 +6,10 @@
 #
 asgiref==3.3.4
     # via django
+cffi==1.14.5
+    # via cryptography
+cryptography==3.4.7
+    # via pyjwt
 django-constance==2.8.0
     # via -r constance_django_3_2.in
 django-json-widget==1.1.1
@@ -17,17 +21,19 @@ django==3.2.4
     #   -r django_3_2.in
     #   django-picklefield
     #   djangorestframework
-    #   djangorestframework-simplejwt
-djangorestframework-simplejwt==4.7.1
-    # via -r rest_framework_django_3_2.in
+    #   drf-jwt
 djangorestframework==3.12.4
     # via
     #   -r rest_framework_django_3_2.in
-    #   djangorestframework-simplejwt
+    #   drf-jwt
+drf-jwt==1.19.1
+    # via -r rest_framework_django_3_2.in
 future==0.18.2
     # via django-json-widget
-pyjwt==2.1.0
-    # via djangorestframework-simplejwt
+pycparser==2.20
+    # via cffi
+pyjwt[crypto]==2.1.0
+    # via drf-jwt
 pytz==2021.1
     # via django
 redis==3.0.1

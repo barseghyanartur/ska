@@ -19,7 +19,9 @@ click==8.0.1
 colorama==0.4.4
     # via twine
 cryptography==3.4.7
-    # via secretstorage
+    # via
+    #   pyjwt
+    #   secretstorage
 django-constance==2.8.0
     # via -r constance_django_3_2.in
 django-json-widget==1.1.1
@@ -31,15 +33,15 @@ django==3.2.4
     #   -r django_3_2.in
     #   django-picklefield
     #   djangorestframework
-    #   djangorestframework-simplejwt
-djangorestframework-simplejwt==4.7.1
-    # via -r rest_framework_django_3_2.in
+    #   drf-jwt
 djangorestframework==3.12.4
     # via
     #   -r rest_framework_django_3_2.in
-    #   djangorestframework-simplejwt
+    #   drf-jwt
 docutils==0.17.1
     # via readme-renderer
+drf-jwt==1.19.1
+    # via -r rest_framework_django_3_2.in
 future==0.18.2
     # via django-json-widget
 idna==2.10
@@ -68,8 +70,8 @@ pycparser==2.20
     # via cffi
 pygments==2.9.0
     # via readme-renderer
-pyjwt==2.1.0
-    # via djangorestframework-simplejwt
+pyjwt[crypto]==2.1.0
+    # via drf-jwt
 pyparsing==2.4.7
     # via packaging
 pytz==2021.1
