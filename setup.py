@@ -55,7 +55,7 @@ setup(
     scripts=['src/ska/bin/ska-sign-url'],
     install_requires=[
         'six>=1.9',
-        'django-nine>=0.1.10',
+        'django-nine>=0.2.4',
     ],
     extras_require={
         'django-constance': ['django-constance'],

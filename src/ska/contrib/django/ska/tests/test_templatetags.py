@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 
 from django.test import Client, TransactionTestCase, override_settings
 
-from nine import versions
+from django_nine import versions
 
 from .helpers import log_info
 

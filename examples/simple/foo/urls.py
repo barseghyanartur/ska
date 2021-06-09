@@ -1,4 +1,4 @@
-from nine import versions
+from django_nine import versions
 
 from rest_framework.routers import DefaultRouter
 

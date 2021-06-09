@@ -11,7 +11,7 @@ import pytest
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from nine import versions
+from django_nine import versions
 
 from ska import sign_url
 from ska.contrib.django.ska.settings import SECRET_KEY, PROVIDERS

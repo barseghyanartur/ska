@@ -36,9 +36,9 @@
 from __future__ import absolute_import
 
 from django.shortcuts import render
-from django.utils.translation import ugettext, ugettext_lazy as _
+from django.utils.translation import gettext, gettext_lazy as _
 
-from nine import versions
+from django_nine import versions
 
 from six import PY3, text_type
 
@@ -166,7 +166,7 @@ class ValidateSignedRequest(BaseValidateSignedRequest):
                     # Otherwise, return plain text message with describing the
                     # error.
                     return HttpResponseUnauthorized(
-                        ugettext(UNAUTHORISED_REQUEST_ERROR_MESSAGE).format(
+                        gettext(UNAUTHORISED_REQUEST_ERROR_MESSAGE).format(
                             "; ".join(validation_result.reason)
                         )
                     )
@@ -243,7 +243,7 @@ class MethodValidateSignedRequest(BaseValidateSignedRequest):
                     # Otherwise, return plain text message with describing the
                     # error.
                     return HttpResponseUnauthorized(
-                        ugettext(UNAUTHORISED_REQUEST_ERROR_MESSAGE).format(
+                        gettext(UNAUTHORISED_REQUEST_ERROR_MESSAGE).format(
                             "; ".join(validation_result.reason)
                         )
                     )

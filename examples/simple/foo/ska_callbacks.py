@@ -3,9 +3,9 @@ Examples of how you could implement custom callbacks for each provider.
 """
 from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
-from nine import versions
+from django_nine import versions
 
 from ska.defaults import DEFAULT_AUTH_USER_PARAM
 

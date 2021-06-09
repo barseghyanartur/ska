@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic import TemplateView
 
-from nine import versions
+from django_nine import versions
 
 if versions.DJANGO_GTE_2_1:
     from django.urls import include, re_path as url

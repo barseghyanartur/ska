@@ -6,7 +6,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 
-from nine import versions
+from django_nine import versions
 
 from ..... import Signature, extract_signed_request_data
 from .....helpers import get_callback_func

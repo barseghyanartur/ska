@@ -5,7 +5,7 @@ Taken from https://github.com/rpkilby/jsonfield2/blob/master/jsonfield/forms.py
 import json
 
 from django.forms import ValidationError, fields
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 import six
 
 

@@ -2,7 +2,7 @@ from django.http import Http404
 from django.shortcuts import render
 from django.views.generic.base import View
 
-from nine import versions
+from django_nine import versions
 
 from ska import sign_url
 from ska.contrib.django.ska.decorators import (
