@@ -1,5 +1,5 @@
 -r common.in
--r testing.in
+-r test.in
 -r constance_django_3_0.in
 -r rest_framework_django_3_0.in
 
