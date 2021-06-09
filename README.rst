@@ -829,6 +829,18 @@ loaded as follows:
 
     {% load ska_constance_tags %}
 
+Note, that if you want to use ``ska_constance_tags``, add
+the ``ska.contrib.django.ska.integration.constance_integration`` line to
+your``INSTALLED_APPS``:
+
+.. code-block:: python
+
+    INSTALLED_APPS = (
+        # ...
+        'ska.contrib.django.ska.integration.constance_integration',
+        # ...
+    )
+
 sign_url
 ++++++++
 The ``sign_url`` template tag accepts template context and the following
@@ -1060,7 +1072,7 @@ settings.py
 .. code-block:: python
 
     AUTHENTICATION_BACKENDS = (
-        'ska.contrib.django.ska.backends.SkaAuthenticationConstanceBackend',
+        'ska.contrib.django.ska.backends.constance_backend.SkaAuthenticationConstanceBackend',
         'django.contrib.auth.backends.ModelBackend',
     )
 
