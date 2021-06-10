@@ -15,6 +15,13 @@ are used for versioning (schema follows below):
   0.3.4 to 0.4).
 - All backwards incompatible changes are mentioned in this document.
 
+1.8.1
+-----
+2021-06-10
+
+- Wipe out old flavour from code.
+- Blackify.
+
 1.8
 ---
 2021-06-10
