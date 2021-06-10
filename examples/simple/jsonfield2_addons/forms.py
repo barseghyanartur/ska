@@ -11,7 +11,7 @@ import six
 
 class JSONFieldMixin(object):
     def __init__(self, *args, **kwargs):
-        self.load_kwargs = kwargs.pop('load_kwargs', {})
+        self.load_kwargs = kwargs.pop("load_kwargs", {})
         super(JSONFieldMixin, self).__init__(*args, **kwargs)
 
     def to_python(self, value):

@@ -7,14 +7,12 @@ from .models import FooItem
 class FooItemAdmin(admin.ModelAdmin):
     """Foo item admin."""
 
-    list_display = ('title',)
+    list_display = ("title",)
 
-    prepopulated_fields = {'slug': ('title',)}
+    prepopulated_fields = {"slug": ("title",)}
 
     fieldsets = (
-        (None, {
-            'fields': ('title', 'slug', 'body')
-        }),
+        (None, {"fields": ("title", "slug", "body")}),
         # (_("Additional"), {
         #    'classes': ('collapse',),
         #    'fields': ('date_created', 'date_updated')
@@ -24,7 +22,7 @@ class FooItemAdmin(admin.ModelAdmin):
     class Meta:
         """Meta."""
 
-        app_label = _('Foo item')
+        app_label = _("Foo item")
 
 
 admin.site.register(FooItem, FooItemAdmin)

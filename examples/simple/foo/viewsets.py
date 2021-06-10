@@ -18,17 +18,17 @@ from .models import (
 from .serializers import FooItemSerializer
 
 __all__ = (
-    'FooItemConstanceSignedRequestRequiredViewSet',
-    'FooItemConstanceProviderSignedRequestRequiredViewSet',
-    'FooItemProviderSignedRequestRequiredViewSet',
-    'FooItemSignedRequestRequiredViewSet',
+    "FooItemConstanceSignedRequestRequiredViewSet",
+    "FooItemConstanceProviderSignedRequestRequiredViewSet",
+    "FooItemProviderSignedRequestRequiredViewSet",
+    "FooItemSignedRequestRequiredViewSet",
 )
 
 
 class BaseFooItemViewSet(ModelViewSet):
     """FooItem model base ViewSet."""
 
-    lookup_field = 'id'
+    lookup_field = "id"
     serializer_class = FooItemSerializer
 
 

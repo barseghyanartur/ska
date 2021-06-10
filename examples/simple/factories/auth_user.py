@@ -16,24 +16,24 @@ from .factory_faker import Faker
 from .auth_group import LimitedGroupFactory
 
 __all__ = (
-    'AbstractUserFactory',
-    'InactiveUserFactory',
-    'LimitedUserFactory',
-    'StaffUserFactory',
-    'SuperAdminUserFactory',
-    'SuperuserUserFactory',
-    'TEST_PASSWORD',
-    'TEST_USERNAME',
-    'TEST_ADMIN_USERNAME',
-    'TestAdminUsernameSuperAdminUserFactory',
-    'TestUsernameUserFactory',
-    'UserFactory',
+    "AbstractUserFactory",
+    "InactiveUserFactory",
+    "LimitedUserFactory",
+    "StaffUserFactory",
+    "SuperAdminUserFactory",
+    "SuperuserUserFactory",
+    "TEST_PASSWORD",
+    "TEST_USERNAME",
+    "TEST_ADMIN_USERNAME",
+    "TestAdminUsernameSuperAdminUserFactory",
+    "TestUsernameUserFactory",
+    "UserFactory",
 )
 
 # Simple admin roles, nothing to do with workflow
-TEST_USERNAME = 'test_user'
-TEST_ADMIN_USERNAME = 'test_admin'
-TEST_PASSWORD = 'test_password'
+TEST_USERNAME = "test_user"
+TEST_ADMIN_USERNAME = "test_admin"
+TEST_PASSWORD = "test_password"
 
 FAKER = OriginalFaker()
 
@@ -41,13 +41,13 @@ FAKER = OriginalFaker()
 class AbstractUserFactory(DjangoModelFactory):
     """Abstract factory for creating users."""
 
-    password = PostGenerationMethodCall('set_password', TEST_PASSWORD)
-    username = Sequence(lambda n: 'user%d' % n)
-    first_name = Faker('first_name')
-    last_name = Faker('last_name')
+    password = PostGenerationMethodCall("set_password", TEST_PASSWORD)
+    username = Sequence(lambda n: "user%d" % n)
+    first_name = Faker("first_name")
+    last_name = Faker("last_name")
     # first_name = Faker('first_name_max_length_30')
     # last_name = Faker('last_name_max_length_30')
-    email = Faker('ascii_safe_email')
+    email = Faker("ascii_safe_email")
 
     is_active = False
     is_staff = False
@@ -57,7 +57,7 @@ class AbstractUserFactory(DjangoModelFactory):
         """Meta options."""
 
         model = settings.AUTH_USER_MODEL
-        django_get_or_create = ('username',)
+        django_get_or_create = ("username",)
         abstract = True
 
     @post_generation
@@ -116,11 +116,9 @@ class TestUsernameUserFactory(UserFactory):
 class LimitedUserFactory(UserFactory):
     """User factory, but limited to 20 users."""
 
-    id = LazyAttribute(
-        lambda __x: random.randint(1, 20)
-    )
+    id = LazyAttribute(lambda __x: random.randint(1, 20))
 
     class Meta(object):
         """Meta class."""
 
-        django_get_or_create = ('id',)
+        django_get_or_create = ("id",)

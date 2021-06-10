@@ -12,27 +12,25 @@ from faker.providers.company import Provider as CompanyProvider
 localized = True
 
 __all__ = (
-    'ASCIIInternetProvider',
-    'Faker',
-    'MaxLengthPersonProvider',
-    'NLPhoneNumberProvider',
-    'UniqueCompanyProvider',
+    "ASCIIInternetProvider",
+    "Faker",
+    "MaxLengthPersonProvider",
+    "NLPhoneNumberProvider",
+    "UniqueCompanyProvider",
 )
 
 
 class Faker(OriginalFaker):
     """Override to change the default locale."""
 
-    _DEFAULT_LOCALE = 'nl_NL'
+    _DEFAULT_LOCALE = "nl_NL"
 
 
 class NLPhoneNumberProvider(PhoneNumberProvider):
     """Phone number provider `compatible django.contrib.localflavor.nl`."""
+
     # NLPhoneNumberField validates with max=12
-    formats = ('### ### ####',
-               '##########',
-               '###-#######',
-               '+31#########')
+    formats = ("### ### ####", "##########", "###-#######", "+31#########")
 
     @classmethod
     def dutch_phone_number(cls):
@@ -49,7 +47,7 @@ class ASCIIInternetProvider(InternetProvider):
         for search, replace in self.replacements:
             val = val.replace(search, replace)
 
-        return val.encode('ascii', 'ignore').decode('utf8')
+        return val.encode("ascii", "ignore").decode("utf8")
 
     def ascii_email(self):
         pattern = self.random_element(self.email_formats)
@@ -59,24 +57,24 @@ class ASCIIInternetProvider(InternetProvider):
 
     def ascii_safe_email(self):
         return self._convert_to_ascii(
-            self.user_name() +
-            '@example.' +
-            self.random_element(self.safe_email_tlds)
+            self.user_name()
+            + "@example."
+            + self.random_element(self.safe_email_tlds)
         )
 
     def ascii_free_email(self):
         return self._convert_to_ascii(
-            self.user_name() + '@' + self.free_email_domain()
+            self.user_name() + "@" + self.free_email_domain()
         )
 
     def ascii_company_email(self):
         return self._convert_to_ascii(
-            self.user_name() + '@' + self.domain_name()
+            self.user_name() + "@" + self.domain_name()
         )
 
     def ascii_uuid4_email(self):
         return self._convert_to_ascii(
-            str(uuid.uuid4()) + '@' + self.domain_name()
+            str(uuid.uuid4()) + "@" + self.domain_name()
         )
 
 
@@ -93,15 +91,11 @@ class MaxLengthPersonProvider(PersonProvider):
 
     @classmethod
     def first_name_max_length_30(cls):
-        return cls._max_length(
-            cls.random_element(cls.first_names)
-        )
+        return cls._max_length(cls.random_element(cls.first_names))
 
     @classmethod
     def last_name_max_length_30(cls):
-        return cls._max_length(
-            cls.random_element(cls.last_names)
-        )
+        return cls._max_length(cls.random_element(cls.last_names))
 
 
 Faker.add_provider(MaxLengthPersonProvider)

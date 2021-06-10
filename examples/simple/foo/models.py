@@ -7,11 +7,11 @@ from six import python_2_unicode_compatible
 from ska.contrib.django.ska.decorators import sign_url
 
 __all__ = (
-    'FooItem',
-    'FooItemConstanceProviderSignedRequestRequired',
-    'FooItemConstanceSignedRequestRequired',
-    'FooItemProviderSignedRequestRequired',
-    'FooItemSignedRequestRequired',
+    "FooItem",
+    "FooItemConstanceProviderSignedRequestRequired",
+    "FooItemConstanceSignedRequestRequired",
+    "FooItemProviderSignedRequestRequired",
+    "FooItemSignedRequestRequired",
 )
 
 
@@ -42,14 +42,14 @@ class FooItem(models.Model):
 
         :return str:
         """
-        return reverse('foo.detail', kwargs={'slug': self.slug})
+        return reverse("foo.detail", kwargs={"slug": self.slug})
 
     def get_cbv_absolute_url(self):
         """Absolute URL, which goes to the foo item detail page.
 
         :return str:
         """
-        return reverse('foo.class-based.detail', kwargs={'slug': self.slug})
+        return reverse("foo.class-based.detail", kwargs={"slug": self.slug})
 
     @sign_url()
     def get_signed_absolute_url(self):
@@ -57,14 +57,19 @@ class FooItem(models.Model):
 
         :return str:
         """
-        return reverse('foo.detail', kwargs={'slug': self.slug})
-    get_signed_absolute_url.allow_tags = True
-    get_signed_absolute_url.short_description = _('Signed URL')
+        return reverse("foo.detail", kwargs={"slug": self.slug})
 
-    @sign_url(extra={'email': 'john.doe@mail.example.com',
-                     'first_name': 'John',
-                     'last_name': 'Doe',
-                     'age': 64})
+    get_signed_absolute_url.allow_tags = True
+    get_signed_absolute_url.short_description = _("Signed URL")
+
+    @sign_url(
+        extra={
+            "email": "john.doe@mail.example.com",
+            "first_name": "John",
+            "last_name": "Doe",
+            "age": 64,
+        }
+    )
     def get_signed_class_based_absolute_url(self):
         """Absolute URL, which goes to the foo item detail page.
 
@@ -76,30 +81,27 @@ class FooItem(models.Model):
 
         :return str:
         """
-        return reverse('foo.class-based.detail', kwargs={'slug': self.slug})
+        return reverse("foo.class-based.detail", kwargs={"slug": self.slug})
+
     get_signed_absolute_url.allow_tags = True
-    get_signed_absolute_url.short_description = _('Signed URL')
+    get_signed_absolute_url.short_description = _("Signed URL")
 
 
 class FooItemSignedRequestRequired(FooItem):
-
     class Meta:
         proxy = True
 
 
 class FooItemProviderSignedRequestRequired(FooItem):
-
     class Meta:
         proxy = True
 
 
 class FooItemConstanceSignedRequestRequired(FooItem):
-
     class Meta:
         proxy = True
 
 
 class FooItemConstanceProviderSignedRequestRequired(FooItem):
-
     class Meta:
         proxy = True

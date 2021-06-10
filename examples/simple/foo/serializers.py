@@ -3,7 +3,7 @@ from rest_framework import serializers
 from .models import FooItem
 
 __all__ = (
-    'FooItemSerializer',
+    "FooItemSerializer",
     # 'FooItemProxySerializer',
 )
 
@@ -15,9 +15,9 @@ class FooItemSerializer(serializers.ModelSerializer):
 
         model = FooItem
         fields = (
-            'title',
-            'slug',
-            'body',
+            "title",
+            "slug",
+            "body",
         )
 
 

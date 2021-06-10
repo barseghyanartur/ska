@@ -1,15 +1,15 @@
 import os
 
 __all__ = (
-    'project_dir',
-    'gettext',
-    'PROJECT_DIR',
+    "project_dir",
+    "gettext",
+    "PROJECT_DIR",
 )
 
 
 def project_dir(base):
     return os.path.abspath(
-        os.path.join(os.path.dirname(__file__), base).replace('\\', '/')
+        os.path.join(os.path.dirname(__file__), base).replace("\\", "/")
     )
 
 
