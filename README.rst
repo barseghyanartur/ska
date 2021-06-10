@@ -83,9 +83,9 @@ Prerequisites
 =============
 Present
 -------
-- Core ``ska`` module requires Python 2.7, 3.5, 3.6 or 3.7.
+- Core ``ska`` module requires Python 3.6, 3.7, 3.8 or 3.9.
 - Django ``ska`` module (``ska.contrib.django.ska``) requires the mentioned
-  above plus Django 1.8, 1.9, 1.10, 1.11, 2.0 or 2.1. Additionally, certain
+  above plus Django 2.2, 3.0, 3.1 or 3.2. Additionally, certain
   versions of `django-constance` and `djangorestframework` are required.
   Specific version requirement primarily depends on the used Django version.
   Check the `example requirements
@@ -100,6 +100,8 @@ Past
     In future releases (any time) compatibility with no-longer-supported
     versions might/will be wiped out.
 
+- Dropping support of Python 2.7 and 3.5 has been announced in version 1.8.
+  As of 1.7.5 everything still worked.
 - Dropping support of Python 3.4 has been announced in version 1.6.8. As of
   1.6.8 everything still worked.
 - Dropping support of Django 1.5, 1.6 and 1.7 has been announced in version
