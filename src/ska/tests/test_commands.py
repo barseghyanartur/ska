@@ -2,14 +2,12 @@ import unittest
 
 import shlex
 import subprocess
-
-from six.moves.urllib import parse
+from urllib import parse
 
 from ..shortcuts import validate_signed_request_data
 
-__title__ = "ska.tests.test_commands"
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
-__copyright__ = "2013-2019 Artur Barseghyan"
+__copyright__ = "2013-2021 Artur Barseghyan"
 __license__ = "GPL 2.0/LGPL 2.1"
 __all__ = ("GenerateSignedUrlTest",)
 

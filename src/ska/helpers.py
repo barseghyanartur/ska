@@ -1,14 +1,12 @@
 from datetime import datetime, timedelta
 from importlib import import_module
 import time
-
-from six.moves.urllib.parse import quote
+from urllib.parse import quote
 
 from .defaults import SIGNATURE_LIFETIME
 
-__title__ = "ska.helpers"
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
-__copyright__ = "2013-2019 Artur Barseghyan"
+__copyright__ = "2013-2021 Artur Barseghyan"
 __license__ = "GPL 2.0/LGPL 2.1"
 __all__ = (
     "get_callback_func",
@@ -37,7 +35,7 @@ def get_callback_func(func, fail_silently=True):
             module_path, class_name = func.rsplit(".", 1)
         except ValueError as err:
             if not fail_silently:
-                raise ImportError("%s doesn't look like a module path" % func)
+                raise ImportError(f"{func} doesn't look like a module path")
 
         module = import_module(module_path)
 
@@ -46,8 +44,8 @@ def get_callback_func(func, fail_silently=True):
         except AttributeError as err:
             if not fail_silently:
                 raise ImportError(
-                    'Module "%s" does not define a "%s" attribute/class'
-                    % (module_path, class_name)
+                    f'Module "{module_path}" does not define a "{class_name}" '
+                    f'attribute/class'
                 )
 
 

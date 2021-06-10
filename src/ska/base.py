@@ -1,16 +1,14 @@
-import datetime
+from datetime import datetime, timedelta
 import time
 
 from base64 import b64encode
-
-from six import text_type, python_2_unicode_compatible
 
 from . import error_codes
 from .defaults import SIGNATURE_LIFETIME, TIMESTAMP_FORMAT
 from .helpers import sorted_urlencode
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
-__copyright__ = "2013-2019 Artur Barseghyan"
+__copyright__ = "2013-2021 Artur Barseghyan"
 __license__ = "GPL 2.0/LGPL 2.1"
 __all__ = (
     "SignatureValidationResult",
@@ -24,7 +22,6 @@ __all__ = (
 # ****************************************************************************
 
 
-@python_2_unicode_compatible
 class SignatureValidationResult(object):
     """
     Signature validation result container.
@@ -65,7 +62,7 @@ class SignatureValidationResult(object):
 
         :return string:
         """
-        return " ".join(map(text_type, self.errors))
+        return " ".join(map(str, self.errors))
 
     @property
     def reason(self):
@@ -75,10 +72,9 @@ class SignatureValidationResult(object):
 
         :return list:
         """
-        return map(text_type, self.errors)
+        return map(str, self.errors)
 
 
-@python_2_unicode_compatible
 class AbstractSignature(object):
     """Abstract class for signature generation and validation.
 
@@ -178,7 +174,7 @@ class AbstractSignature(object):
         >>> sig.is_expired()
         False
         """
-        now = datetime.datetime.now()
+        now = datetime.now()
         valid_util = self.__class__.unix_timestamp_to_date(self.valid_until)
 
         # Expires > now is a valid condition here.
@@ -264,8 +260,7 @@ class AbstractSignature(object):
         if not valid_until:
             valid_until = time.mktime(
                 (
-                    datetime.datetime.now()
-                    + datetime.timedelta(seconds=lifetime)
+                    datetime.now() + timedelta(seconds=lifetime)
                 ).timetuple()
             )
         else:
@@ -324,7 +319,7 @@ class AbstractSignature(object):
         :return str:
         """
         try:
-            return datetime.datetime.strptime(timestamp, TIMESTAMP_FORMAT)
+            return datetime.strptime(timestamp, TIMESTAMP_FORMAT)
         except Exception as err:
             if fail_silently is not True:
                 raise err
@@ -342,7 +337,7 @@ class AbstractSignature(object):
         :return str:
         """
         try:
-            return datetime.datetime.fromtimestamp(float(timestamp))
+            return datetime.fromtimestamp(float(timestamp))
         except Exception as err:
             if fail_silently is not True:
                 raise err

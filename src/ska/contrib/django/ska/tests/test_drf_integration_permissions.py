@@ -18,7 +18,7 @@ from ska.defaults import DEFAULT_PROVIDER_PARAM
 import factories
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
-__copyright__ = "2013-2019 Artur Barseghyan"
+__copyright__ = "2013-2021 Artur Barseghyan"
 __license__ = "GPL 2.0/LGPL 2.1"
 __all__ = (
     "DRFIntegrationPermissionsTestCase",
@@ -225,7 +225,7 @@ class DRFIntegrationPermissionsTestCase(BaseDRFIntegrationPermissionsTestCase):
         """
         secret_key = PROVIDERS[self.PROVIDER_NAME]["SECRET_KEY"]
         self._test_permissions_request_signed(
-            "{}w".format(secret_key),
+            f"{secret_key}w",
             (
                 status.HTTP_401_UNAUTHORIZED,
                 status.HTTP_403_FORBIDDEN,
@@ -245,7 +245,7 @@ class DRFIntegrationPermissionsTestCase(BaseDRFIntegrationPermissionsTestCase):
         """
         secret_key = PROVIDERS[self.PROVIDER_NAME]["SECRET_KEY"]
         self._test_permissions_request_signed(
-            "{}w".format(secret_key),
+            f"{secret_key}w",
             (
                 status.HTTP_401_UNAUTHORIZED,
                 status.HTTP_403_FORBIDDEN,
@@ -291,7 +291,7 @@ class DRFIntegrationPermissionsTestCase(BaseDRFIntegrationPermissionsTestCase):
         """
         secret_key = SECRET_KEY
         self._test_permissions_request_signed(
-            "{}w".format(secret_key),
+            f"{secret_key}w",
             (
                 status.HTTP_401_UNAUTHORIZED,
                 status.HTTP_403_FORBIDDEN,
@@ -308,7 +308,7 @@ class DRFIntegrationPermissionsTestCase(BaseDRFIntegrationPermissionsTestCase):
         """
         secret_key = SECRET_KEY
         self._test_permissions_request_signed(
-            "{}w".format(secret_key),
+            f"{secret_key}w",
             (
                 status.HTTP_401_UNAUTHORIZED,
                 status.HTTP_403_FORBIDDEN,
@@ -411,7 +411,7 @@ class DRFIntegrationPermissionsConstanceTestCase(
         """
         secret_key = config.SKA_PROVIDERS[self.PROVIDER_NAME]["SECRET_KEY"]
         self._test_permissions_request_signed(
-            "{}w".format(secret_key),
+            f"{secret_key}w",
             (
                 status.HTTP_401_UNAUTHORIZED,
                 status.HTTP_403_FORBIDDEN,
@@ -432,7 +432,7 @@ class DRFIntegrationPermissionsConstanceTestCase(
         """
         secret_key = config.SKA_PROVIDERS[self.PROVIDER_NAME]["SECRET_KEY"]
         self._test_permissions_request_signed(
-            "{}w".format(secret_key),
+            f"{secret_key}w",
             (
                 status.HTTP_401_UNAUTHORIZED,
                 status.HTTP_403_FORBIDDEN,
@@ -481,7 +481,7 @@ class DRFIntegrationPermissionsConstanceTestCase(
         """
         secret_key = config.SKA_SECRET_KEY
         self._test_permissions_request_signed(
-            "{}w".format(secret_key),
+            f"{secret_key}w",
             (
                 status.HTTP_401_UNAUTHORIZED,
                 status.HTTP_403_FORBIDDEN,
@@ -499,7 +499,7 @@ class DRFIntegrationPermissionsConstanceTestCase(
         """
         secret_key = config.SKA_SECRET_KEY
         self._test_permissions_request_signed(
-            "{}w".format(secret_key),
+            f"{secret_key}w",
             (
                 status.HTTP_401_UNAUTHORIZED,
                 status.HTTP_403_FORBIDDEN,

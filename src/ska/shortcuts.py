@@ -1,16 +1,16 @@
 from .defaults import (
-    SIGNATURE_LIFETIME,
-    DEFAULT_URL_SUFFIX,
-    DEFAULT_SIGNATURE_PARAM,
     DEFAULT_AUTH_USER_PARAM,
-    DEFAULT_VALID_UNTIL_PARAM,
     DEFAULT_EXTRA_PARAM,
+    DEFAULT_SIGNATURE_PARAM,
+    DEFAULT_URL_SUFFIX,
+    DEFAULT_VALID_UNTIL_PARAM,
+    SIGNATURE_LIFETIME,
 )
 from .signatures import Signature
 from .utils import RequestHelper
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
-__copyright__ = "2013-2019 Artur Barseghyan"
+__copyright__ = "2013-2021 Artur Barseghyan"
 __license__ = "GPL 2.0/LGPL 2.1"
 __all__ = (
     "extract_signed_request_data",

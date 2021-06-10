@@ -5,7 +5,7 @@ from urllib.parse import urlparse, parse_qs
 from .. import TIMESTAMP_FORMAT
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
-__copyright__ = "2013-2019 Artur Barseghyan"
+__copyright__ = "2013-2021 Artur Barseghyan"
 __license__ = "GPL 2.0/LGPL 2.1"
 __all__ = (
     "LOG_INFO",
@@ -28,10 +28,10 @@ def log_info(func):
         """Inner"""
         result = func(self, *args, **kwargs)
 
-        logger.debug("\n\n%s", func.__name__)
+        logger.debug(f"\n\n{func.__name__}")
         logger.debug("============================")
         if func.__doc__:
-            logger.debug('""" %s """', func.__doc__.strip())
+            logger.debug(f'""" {func.__doc__.strip()} """')
         logger.debug("----------------------------")
         if result is not None:
             logger.debug(result)
@@ -45,7 +45,7 @@ def log_info(func):
 def timestamp_to_human_readable(timestamp):
     """Convert Unix timestamp to human readable string.
 
-    :param float:
+    :param timestamp:
     :return str:
     """
     val = datetime.datetime.fromtimestamp(float(timestamp))

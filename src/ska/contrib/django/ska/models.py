@@ -3,7 +3,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
-__copyright__ = "2013-2019 Artur Barseghyan"
+__copyright__ = "2013-2021 Artur Barseghyan"
 __license__ = "GPL 2.0/LGPL 2.1"
 __all__ = ("Signature",)
 
@@ -31,6 +31,4 @@ class Signature(models.Model):
         unique_together = (("signature", "auth_user", "valid_until"),)
 
     def __str__(self):
-        return "{0}{1}{2}".format(
-            self.signature, self.auth_user, self.valid_until
-        )
+        return f"{self.signature}{self.auth_user}{self.valid_until}"

@@ -1,8 +1,6 @@
-import unittest
-import datetime
 from copy import copy
-
-from six import PY3, text_type
+import datetime
+import unittest
 
 from .. import (
     Signature,
@@ -14,8 +12,12 @@ from .. import (
     HMACSHA384Signature,
     HMACSHA512Signature,
 )
-from .. import sign_url, validate_signed_request_data, signature_to_dict
-from .. import error_codes
+from .. import (
+    sign_url,
+    validate_signed_request_data,
+    signature_to_dict,
+    error_codes,
+)
 from .base import log_info, timestamp_to_human_readable, parse_url_params
 
 __title__ = "ska.tests.test_core"
@@ -292,15 +294,13 @@ class SignatureTest(unittest.TestCase):
             return_object=True,
         )
 
-        if PY3:
-            self.assertIsInstance(validation_result.reason, map)
-        else:
-            self.assertIsInstance(validation_result.reason, list)
+        self.assertIsInstance(validation_result.reason, map)
+
         self.assertIsInstance(validation_result.errors, list)
-        self.assertIsInstance(validation_result.message, text_type)
-        self.assertIsInstance(" ".join(validation_result.reason), text_type)
+        self.assertIsInstance(validation_result.message, str)
+        self.assertIsInstance(" ".join(validation_result.reason), str)
         self.assertIsInstance(
-            " ".join(map(text_type, validation_result.errors)), text_type
+            " ".join(map(str, validation_result.errors)), str
         )
 
         flow.append(validation_result.message)
