@@ -6,7 +6,7 @@ try:
 except:
     readme = ''
 
-version = '1.7.5'
+version = '1.8'
 
 exec_dirs = [
     'src/ska/bin/',
@@ -24,12 +24,11 @@ setup(
     long_description=readme,
     classifiers=[
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2",
-        "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
         "Topic :: Security :: Cryptography",
         "Environment :: Web Environment",
         "Intended Audience :: Developers",
@@ -51,20 +50,27 @@ setup(
     package_data={
         'ska': execs,
     },
+    project_urls={
+        "Bug Tracker": "https://github.com/barseghyanartur/ska/issues",
+        "Documentation": "https://ska.readthedocs.io/",
+        "Source Code": "https://github.com/barseghyanartur/ska",
+        "Changelog": "https://ska.readthedocs.io/"
+                     "en/latest/changelog.html",
+    },
     license='GPL-2.0-only OR LGPL-2.1-or-later',
     scripts=['src/ska/bin/ska-sign-url'],
     install_requires=[
         'six>=1.9',
-        'django-nine>=0.1.10',
+        'django-nine>=0.2.4',
     ],
     extras_require={
         'django-constance': ['django-constance'],
         'djangorestframework': ['djangorestframework'],
-        'djangorestframework-jwt': ['djangorestframework-jwt'],
+        'drf-jwt': ['drf-jwt'],
     },
     tests_require=[
         'factory_boy',
-        'fake-factory',
+        'faker',
         'pytest',
         'pytest-django',
         'radar',

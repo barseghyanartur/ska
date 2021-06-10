@@ -1,5 +1,5 @@
-from __future__ import absolute_import
 import logging
+from rest_framework import permissions
 
 from ....... import validate_signed_request_data
 from .......defaults import (
@@ -12,9 +12,6 @@ from .......exceptions import ImproperlyConfigured, InvalidData
 
 from ....utils import get_provider_data
 
-from rest_framework import permissions
-
-__title__ = 'ska.contrib.django.ska.integration.drf.permissions.base'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2019 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
@@ -24,13 +21,13 @@ __all__ = (
     'BaseProviderSignedRequestRequired',
 )
 
-logger = logging.getLogger(__file__)
+LOGGER = logging.getLogger(__file__)
 
 
 class AbstractSignedRequestRequired(permissions.BasePermission):
     """Signed request required permission."""
 
-    def get_settings(self):
+    def get_settings(self, request_data, request=None, view=None, obj=None):
         """Get settings.
 
         :return:
@@ -52,6 +49,9 @@ class AbstractSignedRequestRequired(permissions.BasePermission):
             "You should implement this method in your permission class"
         )
 
+    def get_request_data(self, request, view, obj=None):
+        return request.GET.dict()
+
     def validate_signed_request(self, request, view, obj=None):
         """Validate signed request.
 
@@ -60,7 +60,7 @@ class AbstractSignedRequestRequired(permissions.BasePermission):
         :param obj:
         :return:
         """
-        request_data = request.GET.dict()
+        request_data = self.get_request_data(request, view, obj)
 
         secret_key = self.get_secret_key(
             request_data,
@@ -84,7 +84,7 @@ class AbstractSignedRequestRequired(permissions.BasePermission):
             )
             return validation_result.result
         except (ImproperlyConfigured, InvalidData) as err:
-            logger.debug(str(err))
+            LOGGER.debug(str(err))
             return False
 
     def has_permission(self, request, view):
@@ -106,7 +106,7 @@ class BaseSignedRequestRequired(AbstractSignedRequestRequired):
         :param obj:
         :return:
         """
-        settings = self.get_settings()
+        settings = self.get_settings(request_data, request=None, view=None, obj=None)
         return settings.get('SECRET_KEY', None)
 
 
@@ -122,7 +122,7 @@ class BaseProviderSignedRequestRequired(AbstractSignedRequestRequired):
         :param obj:
         :return:
         """
-        provider_settings = self.get_settings()
+        provider_settings = self.get_settings(request_data, request=None, view=None, obj=None)
         provider_data = get_provider_data(request_data, provider_settings)
         if provider_data:
             secret_key = provider_data['SECRET_KEY']

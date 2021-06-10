@@ -2,7 +2,7 @@
 import os
 import sys
 
-from nine import versions
+from django_nine import versions
 
 from .core import PROJECT_DIR, gettext
 
@@ -260,6 +260,7 @@ INSTALLED_APPS = (
 
     # ska, django-ska and example/testing app
     'ska.contrib.django.ska',
+    'ska.contrib.django.ska.integration.constance_integration',
     'foo',  # Our example app
 )
 

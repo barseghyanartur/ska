@@ -1,14 +1,6 @@
-from __future__ import absolute_import
-
-from nine import versions
+from django.urls import re_path as url
 
 from ..views import login
-
-if versions.DJANGO_GTE_2_1:
-    from django.urls import re_path as url
-else:
-    from django.conf.urls import url
-
 
 __title__ = 'ska.contrib.django.ska.urls.default_urls'
 __author__ = 'Artur Barseghyan'

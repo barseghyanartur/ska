@@ -3,9 +3,9 @@ Examples of how you could implement custom callbacks for each provider.
 """
 from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
-from nine import versions
+from django_nine import versions
 
 from ska.defaults import DEFAULT_AUTH_USER_PARAM
 
@@ -65,10 +65,7 @@ class Client1Validate(BaseClientAction):
     @staticmethod
     def admins(request, signed_request_data):
         """Custom callback for admins."""
-        if versions.DJANGO_GTE_1_7:
-            request_data = request.GET.dict()
-        else:
-            request_data = request.REQUEST
+        request_data = request.GET.dict()
         email = signed_request_data.get('email', '')
         auth_user = request_data.get(DEFAULT_AUTH_USER_PARAM)
         if auth_user == 'forbidden_username':

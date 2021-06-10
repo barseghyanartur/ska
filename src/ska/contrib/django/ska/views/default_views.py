@@ -1,11 +1,7 @@
-from __future__ import absolute_import
-
 from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login
 from django.http import HttpResponseForbidden, HttpResponseRedirect
-from django.utils.translation import ugettext, ugettext_lazy as _
-
-from nine import versions
+from django.utils.translation import gettext, gettext_lazy as _
 
 from ..settings import REDIRECT_AFTER_LOGIN
 from ..utils import get_provider_data
@@ -29,10 +25,7 @@ def login(request):
     next_url = request.GET.get('next', None)
 
     if not next_url:
-        if versions.DJANGO_GTE_1_7:
-            request_data = request.GET.dict()
-        else:
-            request_data = request.REQUEST
+        request_data = request.GET.dict()
         provider_data = get_provider_data(request_data)
         if provider_data:
             next_url = provider_data.get(
@@ -47,7 +40,7 @@ def login(request):
         auth_login(request, user)
         name = user.first_name or user.username
         messages.info(
-            request, ugettext("Login succeeded. Welcome, {0}.").format(name)
+            request, gettext(f"Login succeeded. Welcome, {name}.")
         )
         return HttpResponseRedirect(next_url)
     else:

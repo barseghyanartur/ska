@@ -1,0 +1,5 @@
+django-constance==2.8.0
+django-json-widget==1.1.1
+django-picklefield==3.0.1
+#jsonfield2==3.0.1
+redis==3.0.1

@@ -1,21 +1,12 @@
-import unittest
-
 from bs4 import BeautifulSoup
 
 from django.test import Client, TransactionTestCase, override_settings
-
-from nine import versions
-
-from .helpers import log_info
+from django.urls import reverse
 
 import factories
 
-if versions.DJANGO_GTE_1_10:
-    from django.urls import reverse
-else:
-    from django.core.urlresolvers import reverse
+from .helpers import log_info
 
-__title__ = 'ska.contrib.django.ska.tests.test_templatetags'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2019 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
@@ -26,9 +17,34 @@ __all__ = (
 
 
 OVERRIDE_SETTINGS_KWARGS = {
+    # 'INSTALLED_APPS': (
+    #     'django.contrib.auth',
+    #     'django.contrib.contenttypes',
+    #     'django.contrib.sessions',
+    #     'django.contrib.sites',
+    #     'django.contrib.messages',
+    #     'django.contrib.staticfiles',
+    #     # Uncomment the next line to enable the admin:
+    #     'django.contrib.admin',
+    #     # Uncomment the next line to enable admin documentation:
+    #     # 'django.contrib.admindocs',
+    #
+    #     # For django-constance
+    #     'constance',
+    #     'constance.backends.database',  # Only if ``DatabaseBackend`` is used
+    #     'django_json_widget',
+    #
+    #     # For djangorestframework
+    #     'rest_framework',
+    #     'rest_framework_jwt',
+    #
+    #     # ska, django-ska and example/testing app
+    #     'ska.contrib.django.ska',
+    #     'ska.contrib.django.ska.integration.constance_integration',
+    #     'foo',  # Our example app
+    # ),
     'AUTHENTICATION_BACKENDS': (
-        'ska.contrib.django.ska.backends.constance_backend.'
-        'SkaAuthenticationConstanceBackend',
+        'ska.contrib.django.ska.backends.constance_backend.SkaAuthenticationConstanceBackend',
         'django.contrib.auth.backends.ModelBackend',
     ),
     'ROOT_URLCONF': 'constance_urls',
@@ -41,11 +57,6 @@ class BaseSkaTagsTest(TransactionTestCase):
     @classmethod
     def setUpClass(cls):
         cls.templatetags_url = reverse('foo.templatetags')
-
-    def setUp(self):
-        """Set up."""
-        factories.SkaSecretKeyConstanceFactory()
-        factories.SkaProvidersConstanceFactory()
 
     def _test_sign_url(self, sign_in_link_class):
         """Test `sign_url` or `provider_sign_url` template tag."""
@@ -101,6 +112,11 @@ class SkaTagsTest(BaseSkaTagsTest):
 class SkaConstanceTagsTest(BaseSkaTagsTest):
     """Testing `ska_constance_tags` functionality."""
 
+    def setUp(self):
+        """Set up."""
+        factories.SkaSecretKeyConstanceFactory()
+        factories.SkaProvidersConstanceFactory()
+
     @log_info
     @override_settings(**OVERRIDE_SETTINGS_KWARGS)
     def test_01_sign_url(self):
@@ -116,7 +132,3 @@ class SkaConstanceTagsTest(BaseSkaTagsTest):
         return self._test_sign_url(
             sign_in_link_class='provider-signed-url'
         )
-
-
-if __name__ == '__main__':
-    unittest.main()

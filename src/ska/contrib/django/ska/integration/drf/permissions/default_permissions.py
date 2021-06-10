@@ -8,8 +8,6 @@ from .base import (
     BaseSignedRequestRequired,
 )
 
-__title__ = 'ska.contrib.django.ska.integration.drf.permissions.' \
-            'default_permissions'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2019 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
@@ -22,7 +20,7 @@ __all__ = (
 class SignedRequestRequired(BaseSignedRequestRequired):
     """Signed request required permission."""
 
-    def get_settings(self):
+    def get_settings(self, request_data, request=None, view=None, obj=None):
         return {
             'SECRET_KEY': SECRET_KEY,
         }
@@ -31,5 +29,5 @@ class SignedRequestRequired(BaseSignedRequestRequired):
 class ProviderSignedRequestRequired(BaseProviderSignedRequestRequired):
     """Provider signed request required permission."""
 
-    def get_settings(self):
+    def get_settings(self, request_data, request=None, view=None, obj=None):
         return PROVIDERS

@@ -1,8 +1,3 @@
-from __future__ import absolute_import, print_function
-
-import logging
-import unittest
-
 from django.test import Client, TransactionTestCase
 
 import pytest
@@ -15,15 +10,12 @@ from .helpers import (
     NUM_ITEMS,
 )
 
-__title__ = 'ska.contrib.django.ska.tests.test_decorators'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2019 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
 __all__ = (
     'SkaDecoratorsTest',
 )
-
-logger = logging.getLogger(__name__)
 
 
 # *********************************************************************
@@ -162,8 +154,3 @@ class SkaDecoratorsTest(TransactionTestCase):
         )
 
         return flow
-
-
-if __name__ == "__main__":
-    # Tests
-    unittest.main()

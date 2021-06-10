@@ -1,0 +1,6 @@
+-r common.in
+-r test.in
+-r constance_django_2_2.in
+-r rest_framework_django_2_2.in
+
+Django>=2.2,<3.0

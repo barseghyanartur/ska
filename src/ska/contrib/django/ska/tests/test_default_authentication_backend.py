@@ -1,9 +1,6 @@
-from __future__ import absolute_import, print_function
-
 import datetime
 import logging
 import time
-import unittest
 
 from django.core import mail
 from django.core.management import call_command
@@ -22,7 +19,6 @@ import factories
 
 from .helpers import log_info
 
-__title__ = 'ska.contrib.django.ska.tests.test_default_authentication_backend'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2019 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
@@ -358,8 +354,3 @@ class SkaAuthenticationBackendTest(TransactionTestCase):
             auth_user='forbidden_username',
             debug_info="test_08_provider_login_forbidden_username"
         )
-
-
-if __name__ == "__main__":
-    # Tests
-    unittest.main()

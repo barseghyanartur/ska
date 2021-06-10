@@ -1,4 +1,4 @@
-from nine import versions
+from django.urls import include, re_path as url
 
 from rest_framework.routers import DefaultRouter
 
@@ -17,35 +17,30 @@ from .viewsets import (
     FooItemSignedRequestRequiredViewSet,
 )
 
-if versions.DJANGO_GTE_2_1:
-    from django.urls import include, re_path as url
-else:
-    from django.conf.urls import include, url
-
 router = DefaultRouter()
 
 fooitems_provider_signed_request_required = router.register(
     r'fooitem-provider-signed-request-required',
     FooItemProviderSignedRequestRequiredViewSet,
-    base_name='fooitemmodel_provider_signed_request_required'
+    basename='fooitemmodel_provider_signed_request_required'
 )
 
 fooitems_signed_request_required = router.register(
     r'fooitem-signed-request-required',
     FooItemSignedRequestRequiredViewSet,
-    base_name='fooitemmodel_signed_request_required'
+    basename='fooitemmodel_signed_request_required'
 )
 
 fooitems_constance_provider_signed_request_required = router.register(
     r'fooitem-constance-provider-signed-request-required',
     FooItemConstanceProviderSignedRequestRequiredViewSet,
-    base_name='fooitemmodel_constance_provider_signed_request_required'
+    basename='fooitemmodel_constance_provider_signed_request_required'
 )
 
 fooitems_constance_signed_request_required = router.register(
     r'fooitem-constance-signed-request-required',
     FooItemConstanceSignedRequestRequiredViewSet,
-    base_name='fooitemmodel_constance_signed_request_required'
+    basename='fooitemmodel_constance_signed_request_required'
 )
 
 urlpatterns = [

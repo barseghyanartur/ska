@@ -1,2 +1,0 @@
-djangorestframework==3.9.0
-djangorestframework-jwt==1.11.0

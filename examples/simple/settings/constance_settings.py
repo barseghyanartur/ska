@@ -1,11 +1,12 @@
 import json
 from .base import *
 
-# INSTALLED_APPS += (
-#     'constance',
-#     'constance.backends.database',  # Only if ``DatabaseBackend`` is used
-#     'django_json_widget',
-# )
+INSTALLED_APPS += (
+    'constance',
+    'constance.backends.database',  # Only if ``DatabaseBackend`` is used
+    'django_json_widget',
+    'ska.contrib.django.ska.integration.constance_integration',
+)
 
 # CONSTANCE_CONFIG = {
 #     'SKA_PROVIDERS': (

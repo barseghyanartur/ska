@@ -1,8 +1,0 @@
--r common.txt
--r testing.txt
--r constance_django_1_10.txt
--r rest_framework_django_1_10.txt
-
-Django>=1.10,<1.11
-# django-debug-toolbar==1.5
-sqlparse==0.2.2

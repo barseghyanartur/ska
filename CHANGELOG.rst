@@ -15,6 +15,27 @@ are used for versioning (schema follows below):
   0.3.4 to 0.4).
 - All backwards incompatible changes are mentioned in this document.
 
+1.8
+---
+2021-06-10
+
+*Additions to the Django contrib app*
+
+- Drop Python 2.7 and 3.5 support.
+- Tested against Django 2.2, 3.0, 3.1 and 3.2.
+- Tested against Python 3.8 and 3.9.
+- ``django-constance`` specific template tags have been moved to
+  ``ska.contrib.django.ska.integration.constance_integration``. Update your
+  Django settings accordingly.
+- ``django-constance`` specific authentication backend has been moved to
+  ``'ska.contrib.django.ska.backends.constance_backend.SkaAuthenticationConstanceBackend``.
+  Update your Django settings accordingly.
+- ``django-constance`` specific DRF permission
+  classes (``ConstanceSignedRequestRequired``
+  and ``ConstanceProviderSignedRequestRequired``) have been moved to
+  ``ska.contrib.django.ska.integration.drf.permissions.constance_permissions``.
+  Update your Django settings accordingly.
+
 1.7.5
 -----
 2019-05-15

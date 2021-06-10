@@ -1,9 +1,5 @@
-from __future__ import absolute_import, print_function
-
 import datetime
-import logging
 import time
-import unittest
 
 from constance import config
 from constance.test import override_config
@@ -26,16 +22,12 @@ import factories
 
 from .helpers import log_info
 
-__title__ = 'ska.contrib.django.ska.tests.test_constance_authentication_backend'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2019 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
 __all__ = (
     'SkaAuthenticationConstanceBackendTest',
 )
-
-logger = logging.getLogger(__name__)
-
 
 # *********************************************************************
 # *********************************************************************
@@ -72,9 +64,34 @@ OVERRIDE_CONSTANCE_KWARGS = {
     # }
 }
 OVERRIDE_SETTINGS_KWARGS = {
+    # 'INSTALLED_APPS': (
+    #     'django.contrib.auth',
+    #     'django.contrib.contenttypes',
+    #     'django.contrib.sessions',
+    #     'django.contrib.sites',
+    #     'django.contrib.messages',
+    #     'django.contrib.staticfiles',
+    #     # Uncomment the next line to enable the admin:
+    #     'django.contrib.admin',
+    #     # Uncomment the next line to enable admin documentation:
+    #     # 'django.contrib.admindocs',
+    #
+    #     # For django-constance
+    #     'constance',
+    #     'constance.backends.database',  # Only if ``DatabaseBackend`` is used
+    #     'django_json_widget',
+    #
+    #     # For djangorestframework
+    #     'rest_framework',
+    #     'rest_framework_jwt',
+    #
+    #     # ska, django-ska and example/testing app
+    #     'ska.contrib.django.ska',
+    #     'ska.contrib.django.ska.integration.constance_integration',
+    #     'foo',  # Our example app
+    # ),
     'AUTHENTICATION_BACKENDS': (
-        'ska.contrib.django.ska.backends.constance_backend.'
-        'SkaAuthenticationConstanceBackend',
+        'ska.contrib.django.ska.backends.constance_backend.SkaAuthenticationConstanceBackend',
         'django.contrib.auth.backends.ModelBackend',
     ),
     'ROOT_URLCONF': 'constance_urls',
@@ -100,7 +117,6 @@ class SkaAuthenticationConstanceBackendTest(TransactionTestCase):
         self.AUTH_USER_LAST_NAME = 'Doe'
         self.PROVIDER_NAME = 'client_1.admins'
         self.LOGIN_URL = '/ska/login/'
-
         factories.SkaProvidersConstanceFactory()
 
     @override_settings(**OVERRIDE_SETTINGS_KWARGS)
@@ -362,8 +378,3 @@ class SkaAuthenticationConstanceBackendTest(TransactionTestCase):
         call_command('ska_purge_stored_signature_data')
         # All old records shall be gone
         self.assertEqual(Signature.objects.all().count(), 0)
-
-
-if __name__ == "__main__":
-    # Tests
-    unittest.main()

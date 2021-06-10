@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-
 from django import template
 from django.core.exceptions import ImproperlyConfigured
 
@@ -16,7 +14,6 @@ from .....defaults import (
 from .....signatures import Signature
 from ..settings import SECRET_KEY, PROVIDERS
 
-__title__ = 'ska.contrib.django.ska.templatetags.ska_tags'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2019 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'

@@ -1,22 +1,13 @@
-from __future__ import absolute_import
-
-import logging
-
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
-from six import python_2_unicode_compatible
-
-logger = logging.getLogger(__name__)
-
-__title__ = 'ska.contrib.django.ska.models'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2019 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
 __all__ = ('Signature',)
 
 
-@python_2_unicode_compatible
 class Signature(models.Model):
     """Signature.
 
@@ -29,9 +20,9 @@ class Signature(models.Model):
     signature = models.CharField(_("Signature"), max_length=255)
     auth_user = models.CharField(_("Auth user"), max_length=255)
     valid_until = models.DateTimeField(_("Valid until"))
-    created = models.DateTimeField(_("Date created"), auto_now_add=True)
+    created = models.DateTimeField(_("Date created"), default=timezone.now)
 
-    class Meta(object):
+    class Meta:
         """Meta class."""
 
         verbose_name = _("Token")
