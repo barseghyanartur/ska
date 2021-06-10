@@ -259,9 +259,7 @@ class AbstractSignature(object):
 
         if not valid_until:
             valid_until = time.mktime(
-                (
-                    datetime.now() + timedelta(seconds=lifetime)
-                ).timetuple()
+                (datetime.now() + timedelta(seconds=lifetime)).timetuple()
             )
         else:
             try:

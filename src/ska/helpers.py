@@ -45,7 +45,7 @@ def get_callback_func(func, fail_silently=True):
             if not fail_silently:
                 raise ImportError(
                     f'Module "{module_path}" does not define a "{class_name}" '
-                    f'attribute/class'
+                    f"attribute/class"
                 )
 
 
