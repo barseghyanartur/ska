@@ -41,9 +41,9 @@ on the sender side using the shared Secret Key and as an outcome produces the
 triple (``signature``, ``auth_user``, ``valid_until``) which are used to sign
 the requests.
 
-- ``signature`` (str): Signature generated.
-- ``auth_user`` (str): User making the request. Can be anything.
-- ``valid_until`` (float|str): Signature expiration time (Unix timestamp).
+- ``signature`` (``str``): Signature generated.
+- ``auth_user`` (``str``): User making the request. Can be anything.
+- ``valid_until`` (``float`` or ``str``): Signature expiration time (Unix timestamp).
 
 On the recipient side, (HTTP request) data is validated using the shared
 Secret Key. It's being checked whether signature is valid and not expired.
@@ -123,17 +123,11 @@ Latest stable version from PyPI:
 
     pip install ska
 
-or latest stable version from BitBucket:
+or latest development version from GitHub.
 
 .. code-block:: sh
 
-    pip install https://bitbucket.org/barseghyanartur/ska/get/stable.tar.gz
-
-or latest stable version from GitHub.
-
-.. code-block:: sh
-
-    pip install https://github.com/barseghyanartur/ska/archive/stable.tar.gz
+    pip install https://github.com/barseghyanartur/ska/archive/master.tar.gz
 
 Usage examples
 ==============
@@ -311,11 +305,11 @@ vary from what's used in your framework (unless you use Django).
 The ``validate_signed_request_data`` produces a
 ``ska.SignatureValidationResult`` object, which holds the following data.
 
-- ``result`` (bool): True if data is valid. False otherwise.
-- ``reason`` (list): List of strings, indicating validation errors. Empty list
+- ``result`` (``bool``): True if data is valid. False otherwise.
+- ``reason`` (``list``): List of strings, indicating validation errors. Empty list
   in case if ``result`` is True.
 
-Default name of the (GET) param holding the signature value is `signature`.
+Default name of the (GET) param holding the signature value is ``signature``.
 If you want it to be different, provide a ``signature_param`` argument to
 ``validate_signed_request_data`` function.
 
@@ -415,7 +409,7 @@ method.
     signature = Signature.generate_signature(
         auth_user='user',
         secret_key='your-secret-key',
-        lifetime=120  # Signatre lifetime set to 120 seconds.
+        lifetime=120  # Signature lifetime set to 120 seconds.
     )
 
 Adding of additional data to the signature works in the same way as in
@@ -553,7 +547,7 @@ Django integration
 ------------------
 ``ska`` comes with Django model- and view-decorators for producing signed URLs
 and and validating the endpoints, as well as with authentication backend,
-which allows password-less login into Django web site using `ska` generated
+which allows password-less login into Django web site using ``ska`` generated
 signature tokens. There's also a template tag for signing URLs.
 
 Demo
@@ -587,7 +581,7 @@ Django admin interface:
 
 Configuration
 ~~~~~~~~~~~~~
-Secret key (str) must be defined in `settings` module of your project.
+Secret key (``str``) must be defined in ``settings`` module of your project.
 
 .. code-block:: python
 
@@ -596,12 +590,12 @@ Secret key (str) must be defined in `settings` module of your project.
 The following variables can be overridden in ``settings`` module of your
 project.
 
-- ``SKA_UNAUTHORISED_REQUEST_ERROR_MESSAGE`` (str): Plain text error message.
+- ``SKA_UNAUTHORISED_REQUEST_ERROR_MESSAGE`` (``str``): Plain text error message.
   Defaults to "Unauthorised request. {0}".
-- ``SKA_UNAUTHORISED_REQUEST_ERROR_TEMPLATE`` (str): Path to 401 template that
+- ``SKA_UNAUTHORISED_REQUEST_ERROR_TEMPLATE`` (``str``): Path to 401 template that
   should be rendered in case of 401
   responses. Defaults to empty string (not provided).
-- ``SKA_AUTH_USER`` (str): The ``auth_user`` argument for ``ska.sign_url``
+- ``SKA_AUTH_USER`` (``str``): The ``auth_user`` argument for ``ska.sign_url``
   function. Defaults to "ska-auth-user".
 
 See the working `example project
@@ -764,20 +758,20 @@ be viewed by authorised parties only. You would then use
 
 Note, that ``sign_url`` decorator accepts the following optional arguments.
 
-- ``auth_user`` (str): Username of the user making the request.
+- ``auth_user`` (``str``): Username of the user making the request.
 - ``secret_key``: The shared secret key. If set, overrides
-  the ``SKA_SECRET_KEY`` variable set in the `settings` module of your
+  the ``SKA_SECRET_KEY`` variable set in the ``settings`` module of your
   project.
-- ``valid_until`` (float or str ): Unix timestamp. If not given, generated
+- ``valid_until`` (``float`` or ``str``): Unix timestamp. If not given, generated
   automatically (now + lifetime).
-- ``lifetime`` (int): Signature lifetime in seconds.
-- ``suffix`` (str): Suffix to add after the ``endpoint_url`` and before the
+- ``lifetime`` (``int``): Signature lifetime in seconds.
+- ``suffix`` (``str``): Suffix to add after the ``endpoint_url`` and before the
   appended signature params.
-- ``signature_param`` (str): Name of the GET param name which would hold the
+- ``signature_param`` (``str``): Name of the GET param name which would hold the
   generated signature value.
-- `auth_user_param` (str): Name of the GET param name which would hold
+- `auth_user_param` (``str``): Name of the GET param name which would hold
   the ``auth_user`` value.
-- ``valid_until_param`` (str): Name of the GET param name which would hold
+- ``valid_until_param`` (``str``): Name of the GET param name which would hold
   the ``valid_until`` value.
 
 Django view decorator ``validate_signed_request``
@@ -787,7 +781,7 @@ views (endpoints) that require signed requests. If checks are not successful,
 a ``ska.contrib.django.ska.http.HttpResponseUnauthorized`` is returned, which
 is a subclass of Django's ``django.http.HttpResponse``. You can provide your
 own template for 401 error. Simply point the
-``SKA_UNAUTHORISED_REQUEST_ERROR_TEMPLATE`` in `settings` module to the right
+``SKA_UNAUTHORISED_REQUEST_ERROR_TEMPLATE`` in ``settings`` module to the right
 template. See ``ska/contrib/django/ska/templates/ska/401.html`` as a template
 example.
 
@@ -803,14 +797,14 @@ example.
 Note, that ``validate_signed_request`` decorator accepts the following optional
 arguments.
 
-- ``secret_key`` (str) : The shared secret key. If set, overrides
+- ``secret_key`` (``str``) : The shared secret key. If set, overrides
   the ``SKA_SECRET_KEY`` variable  set in the ``settings`` module of your
   project.
-- ``signature_param`` (str): Name of the (for example GET or POST) param name
+- ``signature_param`` (``str``): Name of the (for example GET or POST) param name
   which holds the ``signature`` value.
-- ``auth_user_param`` (str): Name of the (for example GET or POST) param name
+- ``auth_user_param`` (``str``): Name of the (for example GET or POST) param name
   which holds the ``auth_user`` value.
-- ``valid_until_param`` (str): Name of the (foe example GET or POST) param
+- ``valid_until_param`` (``str``): Name of the (foe example GET or POST) param
   name which holds the ``valid_until`` value.
 
 If you're using class based views, use the ``m_validate_signed_request``
@@ -852,16 +846,16 @@ sign_url
 The ``sign_url`` template tag accepts template context and the following
 params:
 
-- url
-- auth_user: If not given, request.user.get_username() is used.
-- secret_key: If not given, the secret key from settings is used.
-- valid_until: If not given, calculated from ``lifetime``.
-- lifetime: Defaults to ``ska.defaults.SIGNATURE_LIFETIME``.
-- suffix: Defaults to ``ska.defaults.DEFAULT_URL_SUFFIX``.
-- signature_param: Defaults to ``ska.defaultsDEFAULT_SIGNATURE_PARAM``.
-- auth_user_param: Defaults to ``ska.defaults.DEFAULT_AUTH_USER_PARAM``.
-- valid_until_param: Defaults to ``ska.defaults.DEFAULT_VALID_UNTIL_PARAM``.
-- signature_cls: Defaults to ``ska.signatures.Signature``.
+- ``url``
+- ``auth_user``: If not given, ``request.user.get_username()`` is used.
+- ``secret_key``: If not given, the secret key from settings is used.
+- ``valid_until``: If not given, calculated from ``lifetime``.
+- ``lifetime``: Defaults to ``ska.defaults.SIGNATURE_LIFETIME``.
+- ``suffix``: Defaults to ``ska.defaults.DEFAULT_URL_SUFFIX``.
+- ``signature_param``: Defaults to ``ska.defaultsDEFAULT_SIGNATURE_PARAM``.
+- ``auth_user_param``: Defaults to ``ska.defaults.DEFAULT_AUTH_USER_PARAM``.
+- ``valid_until_param``: Defaults to ``ska.defaults.DEFAULT_VALID_UNTIL_PARAM``.
+- ``signature_cls``: Defaults to ``ska.signatures.Signature``.
 
 Usage example:
 
@@ -881,17 +875,17 @@ provider_sign_url
 The ``provider_sign_url`` template tag accepts template context and the
 following params:
 
-- url
-- provider: Provider name.
-- auth_user: If not given, request.user.get_username() is used.
-- valid_until: If not given, calculated from ``lifetime``.
-- lifetime: Defaults to ``ska.defaults.SIGNATURE_LIFETIME``.
-- suffix: Defaults to ``ska.defaults.DEFAULT_URL_SUFFIX``.
-- signature_param: Defaults to ``ska.defaultsDEFAULT_SIGNATURE_PARAM``.
-- auth_user_param: Defaults to ``ska.defaults.DEFAULT_AUTH_USER_PARAM``.
-- valid_until_param: Defaults to ``ska.defaults.DEFAULT_VALID_UNTIL_PARAM``.
-- signature_cls: Defaults to ``ska.signatures.Signature``.
-- fail_silently: Defaults to False.
+- ``url``
+- ``provider``: Provider name.
+- ``auth_user``: If not given, ``request.user.get_username()`` is used.
+- ``valid_until``: If not given, calculated from ``lifetime``.
+- ``lifetime``: Defaults to ``ska.defaults.SIGNATURE_LIFETIME``.
+- ``suffix``: Defaults to ``ska.defaults.DEFAULT_URL_SUFFIX``.
+- ``signature_param``: Defaults to ``ska.defaultsDEFAULT_SIGNATURE_PARAM``.
+- ``auth_user_param``: Defaults to ``ska.defaults.DEFAULT_AUTH_USER_PARAM``.
+- ``valid_until_param``: Defaults to ``ska.defaults.DEFAULT_VALID_UNTIL_PARAM``.
+- ``signature_cls``: Defaults to ``ska.signatures.Signature``.
+- ``fail_silently``: Defaults to False.
 
 Usage example:
 
@@ -914,7 +908,7 @@ At the moment there are two backends implemented:
 
 - `SkaAuthenticationBackend`_: Uses standard Django settings.
 - `SkaAuthenticationConstanceBackend`_: Relies on dynamic settings
-  functionality provided by `django-constance`.
+  functionality provided by ``django-constance``.
 
 By default, number of logins using the same token is not limited. If you wish
 that single tokens become invalid after first use, set the following variables
@@ -966,20 +960,20 @@ Callbacks
 *********
 There are several callbacks implemented for authentication backend.
 
-- ``USER_VALIDATE_CALLBACK`` (string): Validate request callback. Created to
+- ``USER_VALIDATE_CALLBACK`` (``str``): Validate request callback. Created to
   allow adding custom logic to the incoming authentication requests. The main
   purpose is to provide a flexible way of raising exceptions if the incoming
   authentication request shall be blocked (for instance, email or username is
   in black-list or right the opposite - not in the white list). The only aim of
-  the `USER_VALIDATE_CALLBACK` is to raise a ``django.core.PermissionDenied``
+  the ``USER_VALIDATE_CALLBACK`` is to raise a ``django.core.PermissionDenied``
   exception if request data is invalid. In that case authentication flow will
   halt. All other exceptions would simply be ignored (but logged) and if no
   exception raised, the normal flow would be continued.
-- ``USER_GET_CALLBACK`` (string): Fired if user was successfully fetched from
+- ``USER_GET_CALLBACK`` (``str``): Fired if user was successfully fetched from
   database (existing user).
-- ``USER_CREATE_CALLBACK`` (string): Fired right after user has been
+- ``USER_CREATE_CALLBACK`` (``str``): Fired right after user has been
   created (user didn't exist).
-- ``USER_INFO_CALLBACK`` (string): Fired upon successful authentication.
+- ``USER_INFO_CALLBACK`` (``str``): Fired upon successful authentication.
 
 Example of a callback function (let's say, it resides in module
 ``my_app.ska_callbacks``):
@@ -1002,7 +996,7 @@ and based on that, add the user to the group in the callback.
 The callback is a path qualifier of the callback function. Considering the
 example above, it would be ``my_app.ska_callbacks.my_callback``.
 
-Prefix names of each callback variable with `SKA_` in your projects' settings
+Prefix names of each callback variable with ``SKA_`` in your projects' settings
 module.
 
 Example:
@@ -1271,14 +1265,14 @@ Permission classes
 For protecting views without actually being authenticated into the system,
 specific permission classes are implemented (for both plan settings and
 provider settings, as well as both plain- and provider-settings work in
-combination with `django-constance` package).
+combination with ``django-constance`` package).
 
 The following permission classes are implemented:
 
-- SignedRequestRequired
-- ProviderSignedRequestRequired
-- ConstanceSignedRequestRequired
-- ConstanceProviderSignedRequestRequired
+- ``SignedRequestRequired``
+- ``ProviderSignedRequestRequired``
+- ``ConstanceSignedRequestRequired``
+- ``ConstanceProviderSignedRequestRequired``
 
 **ProviderSignedRequestRequired example**
 
@@ -1331,7 +1325,7 @@ Requests are signed the same way. Sample code:
 JWT tokens for authentication
 +++++++++++++++++++++++++++++
 For obtaining JWT tokens for authentication. Also works with
-`django-constance`.
+``django-constance``.
 
 **settings example**
 
@@ -1403,7 +1397,7 @@ Or use tox to check specific env:
 
 .. code-block:: sh
 
-    tox -e py35
+    tox -e py39
 
 Or run Django tests:
 
