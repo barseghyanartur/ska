@@ -92,7 +92,7 @@ def provider_sign_url(
             return None
         else:
             raise ImproperlyConfigured(
-                "Provider {} does not exist".format(provider)
+                f"Provider {provider} does not exist"
             )
     secret_key = config.SKA_PROVIDERS.get(provider, {}).get("SECRET_KEY", None)
 
