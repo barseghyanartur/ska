@@ -769,7 +769,7 @@ Note, that ``sign_url`` decorator accepts the following optional arguments.
   appended signature params.
 - ``signature_param`` (``str``): Name of the GET param name which would hold the
   generated signature value.
-- `auth_user_param` (``str``): Name of the GET param name which would hold
+- ``auth_user_param`` (``str``): Name of the GET param name which would hold
   the ``auth_user`` value.
 - ``valid_until_param`` (``str``): Name of the GET param name which would hold
   the ``valid_until`` value.
