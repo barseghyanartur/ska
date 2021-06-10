@@ -2,13 +2,13 @@ from six import python_2_unicode_compatible
 
 from .gettext import _
 
-__author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
-__copyright__ = '2013-2019 Artur Barseghyan'
-__license__ = 'GPL 2.0/LGPL 2.1'
+__author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
+__copyright__ = "2013-2019 Artur Barseghyan"
+__license__ = "GPL 2.0/LGPL 2.1"
 __all__ = (
-    'ErrorCode',
-    'INVALID_SIGNATURE',
-    'SIGNATURE_TIMESTAMP_EXPIRED',
+    "ErrorCode",
+    "INVALID_SIGNATURE",
+    "SIGNATURE_TIMESTAMP_EXPIRED",
 )
 
 
@@ -28,7 +28,8 @@ class ErrorCode(object):
     :property string message: Human readable represantation of the error
         message.
     """
-    __slots__ = ('code', 'message')
+
+    __slots__ = ("code", "message")
 
     def __init__(self, code, message):
         self.code = code
@@ -36,6 +37,7 @@ class ErrorCode(object):
 
     def __str__(self):
         return self.message
+
     __repr__ = __str__
 
     def __int__(self):

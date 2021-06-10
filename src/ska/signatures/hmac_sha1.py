@@ -3,10 +3,10 @@ import hmac
 
 from ..base import AbstractSignature
 
-__author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
-__copyright__ = '2013-2019 Artur Barseghyan'
-__license__ = 'GPL 2.0/LGPL 2.1'
-__all__ = ('HMACSHA1Signature',)
+__author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
+__copyright__ = "2013-2019 Artur Barseghyan"
+__license__ = "GPL 2.0/LGPL 2.1"
+__all__ = ("HMACSHA1Signature",)
 
 
 class HMACSHA1Signature(AbstractSignature):
@@ -28,7 +28,7 @@ class HMACSHA1Signature(AbstractSignature):
         raw_hmac = hmac.new(
             cls.make_secret_key(secret_key),
             cls.get_base(auth_user, valid_until, extra=extra),
-            hashlib.sha1
+            hashlib.sha1,
         ).digest()
 
         return raw_hmac

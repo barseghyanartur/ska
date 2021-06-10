@@ -4,19 +4,19 @@ from .defaults import (
     DEFAULT_SIGNATURE_PARAM,
     DEFAULT_AUTH_USER_PARAM,
     DEFAULT_VALID_UNTIL_PARAM,
-    DEFAULT_EXTRA_PARAM
+    DEFAULT_EXTRA_PARAM,
 )
 from .signatures import Signature
 from .utils import RequestHelper
 
-__author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
-__copyright__ = '2013-2019 Artur Barseghyan'
-__license__ = 'GPL 2.0/LGPL 2.1'
+__author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
+__copyright__ = "2013-2019 Artur Barseghyan"
+__license__ = "GPL 2.0/LGPL 2.1"
 __all__ = (
-    'extract_signed_request_data',
-    'sign_url',
-    'signature_to_dict',
-    'validate_signed_request_data',
+    "extract_signed_request_data",
+    "sign_url",
+    "signature_to_dict",
+    "validate_signed_request_data",
 )
 
 
@@ -27,18 +27,20 @@ __all__ = (
 # **************************************************************************
 
 
-def sign_url(auth_user,
-             secret_key,
-             valid_until=None,
-             lifetime=SIGNATURE_LIFETIME,
-             url='',
-             suffix=DEFAULT_URL_SUFFIX,
-             signature_param=DEFAULT_SIGNATURE_PARAM,
-             auth_user_param=DEFAULT_AUTH_USER_PARAM,
-             valid_until_param=DEFAULT_VALID_UNTIL_PARAM,
-             extra=None,
-             extra_param=DEFAULT_EXTRA_PARAM,
-             signature_cls=Signature):
+def sign_url(
+    auth_user,
+    secret_key,
+    valid_until=None,
+    lifetime=SIGNATURE_LIFETIME,
+    url="",
+    suffix=DEFAULT_URL_SUFFIX,
+    signature_param=DEFAULT_SIGNATURE_PARAM,
+    auth_user_param=DEFAULT_AUTH_USER_PARAM,
+    valid_until_param=DEFAULT_VALID_UNTIL_PARAM,
+    extra=None,
+    extra_param=DEFAULT_EXTRA_PARAM,
+    signature_cls=Signature,
+):
     """Sign the URL.
 
     :param str auth_user: Username of the user making the request.
@@ -95,7 +97,7 @@ def sign_url(auth_user,
         secret_key=secret_key,
         valid_until=valid_until,
         lifetime=lifetime,
-        extra=extra
+        extra=extra,
     )
 
     request_helper = RequestHelper(
@@ -103,7 +105,7 @@ def sign_url(auth_user,
         auth_user_param=auth_user_param,
         valid_until_param=valid_until_param,
         extra_param=extra_param,
-        signature_cls=signature_cls
+        signature_cls=signature_cls,
     )
 
     signed_url = request_helper.signature_to_url(
@@ -115,16 +117,18 @@ def sign_url(auth_user,
     return signed_url
 
 
-def signature_to_dict(auth_user,
-                      secret_key,
-                      valid_until=None,
-                      lifetime=SIGNATURE_LIFETIME,
-                      signature_param=DEFAULT_SIGNATURE_PARAM,
-                      auth_user_param=DEFAULT_AUTH_USER_PARAM,
-                      valid_until_param=DEFAULT_VALID_UNTIL_PARAM,
-                      extra=None,
-                      extra_param=DEFAULT_EXTRA_PARAM,
-                      signature_cls=Signature):
+def signature_to_dict(
+    auth_user,
+    secret_key,
+    valid_until=None,
+    lifetime=SIGNATURE_LIFETIME,
+    signature_param=DEFAULT_SIGNATURE_PARAM,
+    auth_user_param=DEFAULT_AUTH_USER_PARAM,
+    valid_until_param=DEFAULT_VALID_UNTIL_PARAM,
+    extra=None,
+    extra_param=DEFAULT_EXTRA_PARAM,
+    signature_cls=Signature,
+):
     """Return a dictionary containing the signature data params.
 
     :param str auth_user: Username of the user making the request.
@@ -176,7 +180,7 @@ def signature_to_dict(auth_user,
         secret_key=secret_key,
         valid_until=valid_until,
         lifetime=lifetime,
-        extra=extra
+        extra=extra,
     )
 
     request_helper = RequestHelper(
@@ -184,23 +188,23 @@ def signature_to_dict(auth_user,
         auth_user_param=auth_user_param,
         valid_until_param=valid_until_param,
         extra_param=extra_param,
-        signature_cls=signature_cls
+        signature_cls=signature_cls,
     )
 
-    signature_dict = request_helper.signature_to_dict(
-        signature=signature
-    )
+    signature_dict = request_helper.signature_to_dict(signature=signature)
 
     return signature_dict
 
 
-def validate_signed_request_data(data,
-                                 secret_key,
-                                 signature_param=DEFAULT_SIGNATURE_PARAM,
-                                 auth_user_param=DEFAULT_AUTH_USER_PARAM,
-                                 valid_until_param=DEFAULT_VALID_UNTIL_PARAM,
-                                 extra_param=DEFAULT_EXTRA_PARAM,
-                                 signature_cls=Signature):
+def validate_signed_request_data(
+    data,
+    secret_key,
+    signature_param=DEFAULT_SIGNATURE_PARAM,
+    auth_user_param=DEFAULT_AUTH_USER_PARAM,
+    valid_until_param=DEFAULT_VALID_UNTIL_PARAM,
+    extra_param=DEFAULT_EXTRA_PARAM,
+    signature_cls=Signature,
+):
     """Validate the signed request data.
 
     :param dict data: Dictionary holding the (HTTP) request (for example GET
@@ -226,26 +230,27 @@ def validate_signed_request_data(data,
         auth_user_param=auth_user_param,
         valid_until_param=valid_until_param,
         extra_param=extra_param,
-        signature_cls=signature_cls
+        signature_cls=signature_cls,
     )
 
     validation_result = request_helper.validate_request_data(
-        data=data,
-        secret_key=secret_key
+        data=data, secret_key=secret_key
     )
 
     return validation_result
 
 
-def extract_signed_request_data(data,
-                                secret_key=None,
-                                signature_param=DEFAULT_SIGNATURE_PARAM,
-                                auth_user_param=DEFAULT_AUTH_USER_PARAM,
-                                valid_until_param=DEFAULT_VALID_UNTIL_PARAM,
-                                extra_param=DEFAULT_EXTRA_PARAM,
-                                validate=False,
-                                fail_silently=False,
-                                signature_cls=Signature):
+def extract_signed_request_data(
+    data,
+    secret_key=None,
+    signature_param=DEFAULT_SIGNATURE_PARAM,
+    auth_user_param=DEFAULT_AUTH_USER_PARAM,
+    valid_until_param=DEFAULT_VALID_UNTIL_PARAM,
+    extra_param=DEFAULT_EXTRA_PARAM,
+    validate=False,
+    fail_silently=False,
+    signature_cls=Signature,
+):
     """Validate the signed request data.
 
     :param dict data: Dictionary holding the (HTTP) request (for example
@@ -270,12 +275,12 @@ def extract_signed_request_data(data,
         auth_user_param=auth_user_param,
         valid_until_param=valid_until_param,
         extra_param=extra_param,
-        signature_cls=signature_cls
+        signature_cls=signature_cls,
     )
 
     return request_helper.extract_signed_data(
         data,
         secret_key=secret_key,
         validate=validate,
-        fail_silently=fail_silently
+        fail_silently=fail_silently,
     )

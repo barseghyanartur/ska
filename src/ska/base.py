@@ -9,12 +9,12 @@ from . import error_codes
 from .defaults import SIGNATURE_LIFETIME, TIMESTAMP_FORMAT
 from .helpers import sorted_urlencode
 
-__author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
-__copyright__ = '2013-2019 Artur Barseghyan'
-__license__ = 'GPL 2.0/LGPL 2.1'
+__author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
+__copyright__ = "2013-2019 Artur Barseghyan"
+__license__ = "GPL 2.0/LGPL 2.1"
 __all__ = (
-    'SignatureValidationResult',
-    'AbstractSignature',
+    "SignatureValidationResult",
+    "AbstractSignature",
 )
 
 # ****************************************************************************
@@ -51,10 +51,12 @@ class SignatureValidationResult(object):
 
     def __str__(self):
         return str(self.result)
+
     __repr__ = __str__
 
     def __bool__(self):
         return self.result
+
     __nonzero__ = __bool__
 
     @property
@@ -63,7 +65,7 @@ class SignatureValidationResult(object):
 
         :return string:
         """
-        return ' '.join(map(text_type, self.errors))
+        return " ".join(map(text_type, self.errors))
 
     @property
     def reason(self):
@@ -87,7 +89,7 @@ class AbstractSignature(object):
     :param float|str valid_until:
     """
 
-    __slots__ = ('signature', 'auth_user', 'valid_until', 'extra')
+    __slots__ = ("signature", "auth_user", "valid_until", "extra")
 
     def __init__(self, signature, auth_user, valid_until, extra=None):
         """Constructor."""
@@ -98,15 +100,24 @@ class AbstractSignature(object):
 
     def __str__(self):
         return self.signature
+
     __repr__ = __str__
 
     def __bool__(self):
         return not self.is_expired()
+
     __nonzero__ = __bool__
 
     @classmethod
-    def validate_signature(cls, signature, auth_user, secret_key, valid_until,
-                           extra=None, return_object=False):
+    def validate_signature(
+        cls,
+        signature,
+        auth_user,
+        secret_key,
+        valid_until,
+        extra=None,
+        return_object=False,
+    ):
         """Validates the signature.
 
         :param str signature:
@@ -138,14 +149,14 @@ class AbstractSignature(object):
             auth_user=auth_user,
             secret_key=secret_key,
             valid_until=valid_until,
-            extra=extra
+            extra=extra,
         )
 
         if not return_object:
             return sig.signature == signature and not sig.is_expired()
 
         else:
-            result = (sig.signature == signature and not sig.is_expired())
+            result = sig.signature == signature and not sig.is_expired()
             errors = []
             if sig.signature != signature:
                 errors.append(error_codes.INVALID_SIGNATURE)
@@ -223,8 +234,14 @@ class AbstractSignature(object):
         raise NotImplementedError("You should implement this method!")
 
     @classmethod
-    def generate_signature(cls, auth_user, secret_key, valid_until=None,
-                           lifetime=SIGNATURE_LIFETIME, extra=None):
+    def generate_signature(
+        cls,
+        auth_user,
+        secret_key,
+        valid_until=None,
+        lifetime=SIGNATURE_LIFETIME,
+        extra=None,
+    ):
         """Generates the signature.
 
         If timestamp is given, the signature is created using the given
@@ -247,8 +264,8 @@ class AbstractSignature(object):
         if not valid_until:
             valid_until = time.mktime(
                 (
-                    datetime.datetime.now() +
-                    datetime.timedelta(seconds=lifetime)
+                    datetime.datetime.now()
+                    + datetime.timedelta(seconds=lifetime)
                 ).timetuple()
             )
         else:
@@ -261,8 +278,12 @@ class AbstractSignature(object):
             cls.make_hash(auth_user, secret_key, valid_until, extra)
         )
 
-        return cls(signature=signature, auth_user=auth_user,
-                   valid_until=valid_until, extra=extra)
+        return cls(
+            signature=signature,
+            auth_user=auth_user,
+            valid_until=valid_until,
+            extra=extra,
+        )
 
     @staticmethod
     def datetime_to_timestamp(dtv):

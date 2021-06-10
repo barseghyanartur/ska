@@ -6,17 +6,17 @@ from six.moves.urllib.parse import quote
 
 from .defaults import SIGNATURE_LIFETIME
 
-__title__ = 'ska.helpers'
-__author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
-__copyright__ = '2013-2019 Artur Barseghyan'
-__license__ = 'GPL 2.0/LGPL 2.1'
+__title__ = "ska.helpers"
+__author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
+__copyright__ = "2013-2019 Artur Barseghyan"
+__license__ = "GPL 2.0/LGPL 2.1"
 __all__ = (
-    'get_callback_func',
-    'dict_keys',
-    'dict_to_ordered_list',
-    'sorted_urlencode',
-    'extract_signed_data',
-    'make_valid_until',
+    "get_callback_func",
+    "dict_keys",
+    "dict_to_ordered_list",
+    "sorted_urlencode",
+    "extract_signed_data",
+    "make_valid_until",
 )
 
 
@@ -34,11 +34,10 @@ def get_callback_func(func, fail_silently=True):
         return func
     elif isinstance(func, str):
         try:
-            module_path, class_name = func.rsplit('.', 1)
+            module_path, class_name = func.rsplit(".", 1)
         except ValueError as err:
             if not fail_silently:
-                raise ImportError(
-                    "%s doesn't look like a module path" % func)
+                raise ImportError("%s doesn't look like a module path" % func)
 
         module = import_module(module_path)
 
@@ -47,9 +46,9 @@ def get_callback_func(func, fail_silently=True):
         except AttributeError as err:
             if not fail_silently:
                 raise ImportError(
-                    'Module "%s" does not define a "%s" attribute/class' % (
-                        module_path, class_name)
-                    )
+                    'Module "%s" does not define a "%s" attribute/class'
+                    % (module_path, class_name)
+                )
 
 
 def dict_keys(data, return_string=False):
@@ -65,7 +64,7 @@ def dict_keys(data, return_string=False):
     keys.sort()
 
     if return_string:
-        return ','.join(keys)
+        return ",".join(keys)
 
     return keys
 
@@ -89,7 +88,7 @@ def sorted_urlencode(data, quoted=True):
     constant way that stays the same between various python versions.
     """
     _sorted = [f"{k}={v}" for k, v in dict_to_ordered_list(data)]
-    res = '&'.join(_sorted)
+    res = "&".join(_sorted)
     if quoted:
         res = quote(res)
     return res

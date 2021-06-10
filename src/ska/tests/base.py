@@ -4,14 +4,14 @@ from urllib.parse import urlparse, parse_qs
 
 from .. import TIMESTAMP_FORMAT
 
-__author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
-__copyright__ = '2013-2019 Artur Barseghyan'
-__license__ = 'GPL 2.0/LGPL 2.1'
+__author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
+__copyright__ = "2013-2019 Artur Barseghyan"
+__license__ = "GPL 2.0/LGPL 2.1"
 __all__ = (
-    'LOG_INFO',
-    'log_info',
-    'timestamp_to_human_readable',
-    'parse_url_params',
+    "LOG_INFO",
+    "log_info",
+    "timestamp_to_human_readable",
+    "parse_url_params",
 )
 
 
@@ -28,16 +28,17 @@ def log_info(func):
         """Inner"""
         result = func(self, *args, **kwargs)
 
-        logger.debug('\n\n%s', func.__name__)
-        logger.debug('============================')
+        logger.debug("\n\n%s", func.__name__)
+        logger.debug("============================")
         if func.__doc__:
             logger.debug('""" %s """', func.__doc__.strip())
-        logger.debug('----------------------------')
+        logger.debug("----------------------------")
         if result is not None:
             logger.debug(result)
-        logger.debug('\n++++++++++++++++++++++++++++')
+        logger.debug("\n++++++++++++++++++++++++++++")
 
         return result
+
     return inner
 
 

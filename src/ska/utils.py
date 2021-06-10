@@ -8,15 +8,13 @@ from .defaults import (
     DEFAULT_VALID_UNTIL_PARAM,
 )
 from .exceptions import InvalidData, ImproperlyConfigured
-from .helpers import (
-    dict_keys, extract_signed_data as extract_signed_data
-)
+from .helpers import dict_keys, extract_signed_data as extract_signed_data
 from .signatures import Signature
 
-__author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
-__copyright__ = '2013-2019 Artur Barseghyan'
-__license__ = 'GPL 2.0/LGPL 2.1'
-__all__ = ('RequestHelper',)
+__author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
+__copyright__ = "2013-2019 Artur Barseghyan"
+__license__ = "GPL 2.0/LGPL 2.1"
+__all__ = ("RequestHelper",)
 
 # ***************************************************************************
 # ***************************************************************************
@@ -33,12 +31,15 @@ class RequestHelper(object):
     :param str valid_until_param:
     :param str extra_param:
     """
-    def __init__(self,
-                 signature_param=DEFAULT_SIGNATURE_PARAM,
-                 auth_user_param=DEFAULT_AUTH_USER_PARAM,
-                 valid_until_param=DEFAULT_VALID_UNTIL_PARAM,
-                 extra_param=DEFAULT_EXTRA_PARAM,
-                 signature_cls=Signature):
+
+    def __init__(
+        self,
+        signature_param=DEFAULT_SIGNATURE_PARAM,
+        auth_user_param=DEFAULT_AUTH_USER_PARAM,
+        valid_until_param=DEFAULT_VALID_UNTIL_PARAM,
+        extra_param=DEFAULT_EXTRA_PARAM,
+        signature_cls=Signature,
+    ):
         """Constructor."""
         self.signature_param = signature_param
         self.auth_user_param = auth_user_param
@@ -46,8 +47,9 @@ class RequestHelper(object):
         self.extra_param = extra_param
         self.signature_cls = signature_cls
 
-    def signature_to_url(self, signature, endpoint_url='',
-                         suffix=DEFAULT_URL_SUFFIX):
+    def signature_to_url(
+        self, signature, endpoint_url="", suffix=DEFAULT_URL_SUFFIX
+    ):
         """URL encodes the signature params.
 
         :param ska.Signature signature:
@@ -182,13 +184,12 @@ class RequestHelper(object):
         >>>     secret_key='your-secret-key'
         >>> )
         """
-        signature = data.get(self.signature_param, '')
-        auth_user = data.get(self.auth_user_param, '')
-        valid_until = data.get(self.valid_until_param, '')
+        signature = data.get(self.signature_param, "")
+        auth_user = data.get(self.auth_user_param, "")
+        valid_until = data.get(self.valid_until_param, "")
 
         extra = extract_signed_data(
-            data=data,
-            extra=data.get(self.extra_param, '').split(',')
+            data=data, extra=data.get(self.extra_param, "").split(",")
         )
 
         validation_result = self.signature_cls.validate_signature(
@@ -197,20 +198,23 @@ class RequestHelper(object):
             secret_key=secret_key,
             valid_until=valid_until,
             return_object=True,
-            extra=extra
+            extra=extra,
         )
 
         return validation_result
 
-    def extract_signed_data(self, data, secret_key=None, validate=False,
-                            fail_silently=False):
+    def extract_signed_data(
+        self, data, secret_key=None, validate=False, fail_silently=False
+    ):
         """Extract signed data from the request."""
         if validate:
             if not secret_key:
                 if fail_silently:
                     return {}
-                raise ImproperlyConfigured("You should provide `secret_key` "
-                                           "if `validate` is set to True.")
+                raise ImproperlyConfigured(
+                    "You should provide `secret_key` "
+                    "if `validate` is set to True."
+                )
             validation_result = self.validate_request_data(data, secret_key)
             if not validation_result.result:
                 if fail_silently:
@@ -218,6 +222,5 @@ class RequestHelper(object):
                 raise InvalidData(validation_result.message)
 
         return extract_signed_data(
-            data=data,
-            extra=data.get(self.extra_param, '').split(',')
+            data=data, extra=data.get(self.extra_param, "").split(",")
         )
