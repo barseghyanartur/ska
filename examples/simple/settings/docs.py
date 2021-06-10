@@ -1,0 +1,3 @@
+from .dev import *
+
+LOGGING = {}

@@ -33,7 +33,7 @@ except Exception as e:
     copyright = "2014-2021, Artur Barseghyan <artur.barseghyan@gmail.com>"
 
 # -- Django configuration ------------------------------------------------------
-os.environ["DJANGO_SETTINGS_MODULE"] = "settings"
+os.environ["DJANGO_SETTINGS_MODULE"] = "settings.docs"
 import django
 
 django.setup()
