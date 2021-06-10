@@ -2,7 +2,6 @@ from six import python_2_unicode_compatible
 
 from .gettext import _
 
-__title__ = 'ska.error_codes'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2019 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'

@@ -9,8 +9,6 @@ from .defaults import (
 from .signatures import Signature
 from .utils import RequestHelper
 
-
-__title__ = 'ska.shortcuts'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2019 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'

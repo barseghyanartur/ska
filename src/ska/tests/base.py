@@ -1,19 +1,9 @@
 import datetime
 import logging
-
-from six import PY3
+from urllib.parse import urlparse, parse_qs
 
 from .. import TIMESTAMP_FORMAT
 
-try:
-    from six.moves.urllib.parse import urlparse, parse_qs
-except ImportError as err:
-    if PY3:
-        from urllib.parse import urlparse, parse_qs
-    else:
-        from urlparse import urlparse, parse_qs
-
-__title__ = 'ska.tests.base'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2019 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'

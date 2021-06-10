@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timedelta
 from importlib import import_module
 import time
 
@@ -88,7 +88,7 @@ def sorted_urlencode(data, quoted=True):
     """Similar to built-in ``urlencode``, but always puts data in a sorted
     constant way that stays the same between various python versions.
     """
-    _sorted = ["{0}={1}".format(k, v) for k, v in dict_to_ordered_list(data)]
+    _sorted = [f"{k}={v}" for k, v in dict_to_ordered_list(data)]
     res = '&'.join(_sorted)
     if quoted:
         res = quote(res)
@@ -116,8 +116,5 @@ def make_valid_until(lifetime=SIGNATURE_LIFETIME):
     :param int lifetime:
     :return datetime.datetime"""
     return time.mktime(
-        (
-            datetime.datetime.now() +
-            datetime.timedelta(seconds=lifetime)
-        ).timetuple()
+        (datetime.now() + timedelta(seconds=lifetime)).timetuple()
     )

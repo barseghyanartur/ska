@@ -13,7 +13,6 @@ from .helpers import (
 )
 from .signatures import Signature
 
-__title__ = 'ska.utils'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2019 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'
@@ -97,7 +96,7 @@ class RequestHelper(object):
         # reserved (`auth_user`, `signature`, etc).
         params.update(signature.extra)
 
-        return "{0}{1}{2}".format(endpoint_url, suffix, urlencode(params))
+        return f"{endpoint_url}{suffix}{urlencode(params)}"
 
     def signature_to_dict(self, signature):
         """Put signature into a dictionary.

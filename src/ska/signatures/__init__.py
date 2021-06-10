@@ -5,7 +5,6 @@ from ..signatures.hmac_sha256 import HMACSHA256Signature
 from ..signatures.hmac_sha384 import HMACSHA384Signature
 from ..signatures.hmac_sha512 import HMACSHA512Signature
 
-__title__ = 'ska.signatures'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2019 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'

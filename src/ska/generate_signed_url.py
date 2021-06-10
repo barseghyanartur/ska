@@ -4,7 +4,6 @@ import argparse
 
 from .shortcuts import sign_url
 
-__title__ = 'ska.generate_signed_url'
 __author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
 __copyright__ = '2013-2019 Artur Barseghyan'
 __license__ = 'GPL 2.0/LGPL 2.1'

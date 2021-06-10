@@ -830,8 +830,3 @@ class ExtraTest(unittest.TestCase):
                     signature_cls=signature_cls
                 )
         return flow
-
-
-if __name__ == "__main__":
-    # Tests
-    unittest.main()
