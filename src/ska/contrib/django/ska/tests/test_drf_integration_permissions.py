@@ -17,22 +17,22 @@ from ska.defaults import DEFAULT_PROVIDER_PARAM
 
 import factories
 
-__author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
-__copyright__ = '2013-2019 Artur Barseghyan'
-__license__ = 'GPL 2.0/LGPL 2.1'
+__author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
+__copyright__ = "2013-2019 Artur Barseghyan"
+__license__ = "GPL 2.0/LGPL 2.1"
 __all__ = (
-    'DRFIntegrationPermissionsTestCase',
-    'DRFIntegrationPermissionsConstanceTestCase',
+    "DRFIntegrationPermissionsTestCase",
+    "DRFIntegrationPermissionsConstanceTestCase",
 )
 
 LOGGER = logging.getLogger(__name__)
 
 OVERRIDE_SETTINGS_KWARGS = {
-    'AUTHENTICATION_BACKENDS': (
-        'ska.contrib.django.ska.backends.constance_backend.SkaAuthenticationConstanceBackend',
-        'django.contrib.auth.backends.ModelBackend',
+    "AUTHENTICATION_BACKENDS": (
+        "ska.contrib.django.ska.backends.constance_backend.SkaAuthenticationConstanceBackend",
+        "django.contrib.auth.backends.ModelBackend",
     ),
-    'ROOT_URLCONF': 'constance_urls',
+    "ROOT_URLCONF": "constance_urls",
 }
 
 
@@ -49,24 +49,22 @@ class BaseDRFIntegrationPermissionsTestCase(TransactionTestCase):
         cls.client = APIClient()
 
         cls.provider_list_url = reverse(
-            'fooitemmodel_provider_signed_request_required-list'
+            "fooitemmodel_provider_signed_request_required-list"
         )
-        cls.list_url = reverse(
-            'fooitemmodel_signed_request_required-list'
-        )
+        cls.list_url = reverse("fooitemmodel_signed_request_required-list")
 
         cls.constance_provider_list_url = reverse(
-            'fooitemmodel_constance_provider_signed_request_required-list'
+            "fooitemmodel_constance_provider_signed_request_required-list"
         )
         cls.constance_list_url = reverse(
-            'fooitemmodel_constance_signed_request_required-list'
+            "fooitemmodel_constance_signed_request_required-list"
         )
 
-        cls.AUTH_USER = 'test_auth_backend_user'
-        cls.AUTH_USER_EMAIL = 'test_ska_auth_user@mail.example.com'
-        cls.AUTH_USER_FIRST_NAME = 'John'
-        cls.AUTH_USER_LAST_NAME = 'Doe'
-        cls.PROVIDER_NAME = 'client_1.admins'
+        cls.AUTH_USER = "test_auth_backend_user"
+        cls.AUTH_USER_EMAIL = "test_ska_auth_user@mail.example.com"
+        cls.AUTH_USER_FIRST_NAME = "John"
+        cls.AUTH_USER_LAST_NAME = "Doe"
+        cls.PROVIDER_NAME = "client_1.admins"
 
     def setUp(self):
         """Set up."""
@@ -74,21 +72,21 @@ class BaseDRFIntegrationPermissionsTestCase(TransactionTestCase):
         self.foo_item = self.foo_items[0]
 
         self.provider_detail_url = reverse(
-            'fooitemmodel_provider_signed_request_required-detail',
-            kwargs={'id': self.foo_item.pk}
+            "fooitemmodel_provider_signed_request_required-detail",
+            kwargs={"id": self.foo_item.pk},
         )
         self.detail_url = reverse(
-            'fooitemmodel_signed_request_required-detail',
-            kwargs={'id': self.foo_item.pk}
+            "fooitemmodel_signed_request_required-detail",
+            kwargs={"id": self.foo_item.pk},
         )
 
         self.constance_provider_detail_url = reverse(
-            'fooitemmodel_constance_provider_signed_request_required-detail',
-            kwargs={'id': self.foo_item.pk}
+            "fooitemmodel_constance_provider_signed_request_required-detail",
+            kwargs={"id": self.foo_item.pk},
         )
         self.constance_detail_url = reverse(
-            'fooitemmodel_constance_signed_request_required-detail',
-            kwargs={'id': self.foo_item.pk}
+            "fooitemmodel_constance_signed_request_required-detail",
+            kwargs={"id": self.foo_item.pk},
         )
 
         factories.SkaSecretKeyConstanceFactory()
@@ -106,16 +104,18 @@ class BaseDRFIntegrationPermissionsTestCase(TransactionTestCase):
             (
                 status.HTTP_401_UNAUTHORIZED,
                 status.HTTP_403_FORBIDDEN,
-            )
+            ),
         )
 
-    def _test_permissions_request_signed(self,
-                                         secret_key,
-                                         expected_response_code,
-                                         url,
-                                         auth_user=None,
-                                         auth_user_email=None,
-                                         provider_name=None):
+    def _test_permissions_request_signed(
+        self,
+        secret_key,
+        expected_response_code,
+        url,
+        auth_user=None,
+        auth_user_email=None,
+        provider_name=None,
+    ):
         """Test permissions signed requests.
 
         :return:
@@ -127,19 +127,16 @@ class BaseDRFIntegrationPermissionsTestCase(TransactionTestCase):
 
         # Testing signed URLs
         extra = {
-            'email': auth_user_email,
-            'first_name': self.AUTH_USER_FIRST_NAME,
-            'last_name': self.AUTH_USER_LAST_NAME,
+            "email": auth_user_email,
+            "first_name": self.AUTH_USER_FIRST_NAME,
+            "last_name": self.AUTH_USER_LAST_NAME,
         }
 
         if provider_name:
             extra.update({DEFAULT_PROVIDER_PARAM: provider_name})
 
         signed_list_url_url = sign_url(
-            auth_user=auth_user,
-            secret_key=secret_key,
-            url=url,
-            extra=extra
+            auth_user=auth_user, secret_key=secret_key, url=url, extra=extra
         )
 
         data = {}
@@ -164,9 +161,7 @@ class DRFIntegrationPermissionsTestCase(BaseDRFIntegrationPermissionsTestCase):
 
         :return:
         """
-        self._test_permissions_request_not_signed_fail(
-            self.provider_list_url
-        )
+        self._test_permissions_request_not_signed_fail(self.provider_list_url)
 
     def test_permissions_provider_detail_request_not_signed_fail(self):
         """Fail test permissions provider detail request not signed.
@@ -182,32 +177,28 @@ class DRFIntegrationPermissionsTestCase(BaseDRFIntegrationPermissionsTestCase):
 
         :return:
         """
-        self._test_permissions_request_not_signed_fail(
-            self.list_url
-        )
+        self._test_permissions_request_not_signed_fail(self.list_url)
 
     def test_permissions_detail_request_not_signed_fail(self):
         """Fail test permissions detail request not signed.
 
         :return:
         """
-        self._test_permissions_request_not_signed_fail(
-            self.detail_url
-        )
+        self._test_permissions_request_not_signed_fail(self.detail_url)
 
     def test_provider_permissions_list_request_signed(self):
         """Test permissions signed provider list request.
 
         :return:
         """
-        secret_key = PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
+        secret_key = PROVIDERS[self.PROVIDER_NAME]["SECRET_KEY"]
         self._test_permissions_request_signed(
             secret_key,
             status.HTTP_200_OK,
             self.provider_list_url,
             auth_user=self.AUTH_USER,
             auth_user_email=self.AUTH_USER_EMAIL,
-            provider_name=self.PROVIDER_NAME
+            provider_name=self.PROVIDER_NAME,
         )
 
     def test_provider_permissions_detail_request_signed(self):
@@ -215,24 +206,24 @@ class DRFIntegrationPermissionsTestCase(BaseDRFIntegrationPermissionsTestCase):
 
         :return:
         """
-        secret_key = PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
+        secret_key = PROVIDERS[self.PROVIDER_NAME]["SECRET_KEY"]
         self._test_permissions_request_signed(
             secret_key,
             status.HTTP_200_OK,
             self.provider_detail_url,
             auth_user=self.AUTH_USER,
             auth_user_email=self.AUTH_USER_EMAIL,
-            provider_name=self.PROVIDER_NAME
+            provider_name=self.PROVIDER_NAME,
         )
 
     def test_provider_permissions_list_request_signed_wrong_secret_key_fail(
-            self
+        self,
     ):
         """Test permissions signed provider list request wrong secret key.
 
         :return:
         """
-        secret_key = PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
+        secret_key = PROVIDERS[self.PROVIDER_NAME]["SECRET_KEY"]
         self._test_permissions_request_signed(
             "{}w".format(secret_key),
             (
@@ -242,17 +233,17 @@ class DRFIntegrationPermissionsTestCase(BaseDRFIntegrationPermissionsTestCase):
             self.provider_list_url,
             auth_user=self.AUTH_USER,
             auth_user_email=self.AUTH_USER_EMAIL,
-            provider_name=self.PROVIDER_NAME
+            provider_name=self.PROVIDER_NAME,
         )
 
     def test_provider_permissions_detail_request_signed_wrong_secret_key_fail(
-            self
+        self,
     ):
         """Test permissions signed provider detail request wrong secret key.
 
         :return:
         """
-        secret_key = PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
+        secret_key = PROVIDERS[self.PROVIDER_NAME]["SECRET_KEY"]
         self._test_permissions_request_signed(
             "{}w".format(secret_key),
             (
@@ -262,7 +253,7 @@ class DRFIntegrationPermissionsTestCase(BaseDRFIntegrationPermissionsTestCase):
             self.provider_detail_url,
             auth_user=self.AUTH_USER,
             auth_user_email=self.AUTH_USER_EMAIL,
-            provider_name=self.PROVIDER_NAME
+            provider_name=self.PROVIDER_NAME,
         )
 
     def test_permissions_list_request_signed(self):
@@ -276,7 +267,7 @@ class DRFIntegrationPermissionsTestCase(BaseDRFIntegrationPermissionsTestCase):
             status.HTTP_200_OK,
             self.list_url,
             auth_user=self.AUTH_USER,
-            auth_user_email=self.AUTH_USER_EMAIL
+            auth_user_email=self.AUTH_USER_EMAIL,
         )
 
     def test_permissions_detail_request_signed(self):
@@ -290,7 +281,7 @@ class DRFIntegrationPermissionsTestCase(BaseDRFIntegrationPermissionsTestCase):
             status.HTTP_200_OK,
             self.detail_url,
             auth_user=self.AUTH_USER,
-            auth_user_email=self.AUTH_USER_EMAIL
+            auth_user_email=self.AUTH_USER_EMAIL,
         )
 
     def test_permissions_list_request_signed_wrong_secret_key_fail(self):
@@ -307,7 +298,7 @@ class DRFIntegrationPermissionsTestCase(BaseDRFIntegrationPermissionsTestCase):
             ),
             self.list_url,
             auth_user=self.AUTH_USER,
-            auth_user_email=self.AUTH_USER_EMAIL
+            auth_user_email=self.AUTH_USER_EMAIL,
         )
 
     def test_permissions_detail_request_signed_wrong_secret_key_fail(self):
@@ -324,7 +315,7 @@ class DRFIntegrationPermissionsTestCase(BaseDRFIntegrationPermissionsTestCase):
             ),
             self.detail_url,
             auth_user=self.AUTH_USER,
-            auth_user_email=self.AUTH_USER_EMAIL
+            auth_user_email=self.AUTH_USER_EMAIL,
         )
 
 
@@ -366,9 +357,7 @@ class DRFIntegrationPermissionsConstanceTestCase(
 
         :return:
         """
-        self._test_permissions_request_not_signed_fail(
-            self.constance_list_url
-        )
+        self._test_permissions_request_not_signed_fail(self.constance_list_url)
 
     @override_settings(**OVERRIDE_SETTINGS_KWARGS)
     def test_permissions_detail_request_not_signed_fail(self):
@@ -386,14 +375,14 @@ class DRFIntegrationPermissionsConstanceTestCase(
 
         :return:
         """
-        secret_key = config.SKA_PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
+        secret_key = config.SKA_PROVIDERS[self.PROVIDER_NAME]["SECRET_KEY"]
         self._test_permissions_request_signed(
             secret_key,
             status.HTTP_200_OK,
             self.constance_provider_list_url,
             auth_user=self.AUTH_USER,
             auth_user_email=self.AUTH_USER_EMAIL,
-            provider_name=self.PROVIDER_NAME
+            provider_name=self.PROVIDER_NAME,
         )
 
     @override_settings(**OVERRIDE_SETTINGS_KWARGS)
@@ -402,25 +391,25 @@ class DRFIntegrationPermissionsConstanceTestCase(
 
         :return:
         """
-        secret_key = config.SKA_PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
+        secret_key = config.SKA_PROVIDERS[self.PROVIDER_NAME]["SECRET_KEY"]
         self._test_permissions_request_signed(
             secret_key,
             status.HTTP_200_OK,
             self.constance_provider_detail_url,
             auth_user=self.AUTH_USER,
             auth_user_email=self.AUTH_USER_EMAIL,
-            provider_name=self.PROVIDER_NAME
+            provider_name=self.PROVIDER_NAME,
         )
 
     @override_settings(**OVERRIDE_SETTINGS_KWARGS)
     def test_provider_permissions_list_request_signed_wrong_secret_key_fail(
-            self
+        self,
     ):
         """Test permissions signed provider list request wrong secret key.
 
         :return:
         """
-        secret_key = config.SKA_PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
+        secret_key = config.SKA_PROVIDERS[self.PROVIDER_NAME]["SECRET_KEY"]
         self._test_permissions_request_signed(
             "{}w".format(secret_key),
             (
@@ -430,18 +419,18 @@ class DRFIntegrationPermissionsConstanceTestCase(
             self.constance_provider_list_url,
             auth_user=self.AUTH_USER,
             auth_user_email=self.AUTH_USER_EMAIL,
-            provider_name=self.PROVIDER_NAME
+            provider_name=self.PROVIDER_NAME,
         )
 
     @override_settings(**OVERRIDE_SETTINGS_KWARGS)
     def test_provider_permissions_detail_request_signed_wrong_secret_key_fail(
-            self
+        self,
     ):
         """Test permissions signed provider detail request wrong secret key.
 
         :return:
         """
-        secret_key = config.SKA_PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
+        secret_key = config.SKA_PROVIDERS[self.PROVIDER_NAME]["SECRET_KEY"]
         self._test_permissions_request_signed(
             "{}w".format(secret_key),
             (
@@ -451,7 +440,7 @@ class DRFIntegrationPermissionsConstanceTestCase(
             self.constance_provider_detail_url,
             auth_user=self.AUTH_USER,
             auth_user_email=self.AUTH_USER_EMAIL,
-            provider_name=self.PROVIDER_NAME
+            provider_name=self.PROVIDER_NAME,
         )
 
     @override_settings(**OVERRIDE_SETTINGS_KWARGS)
@@ -466,7 +455,7 @@ class DRFIntegrationPermissionsConstanceTestCase(
             status.HTTP_200_OK,
             self.constance_list_url,
             auth_user=self.AUTH_USER,
-            auth_user_email=self.AUTH_USER_EMAIL
+            auth_user_email=self.AUTH_USER_EMAIL,
         )
 
     @override_settings(**OVERRIDE_SETTINGS_KWARGS)
@@ -481,7 +470,7 @@ class DRFIntegrationPermissionsConstanceTestCase(
             status.HTTP_200_OK,
             self.constance_detail_url,
             auth_user=self.AUTH_USER,
-            auth_user_email=self.AUTH_USER_EMAIL
+            auth_user_email=self.AUTH_USER_EMAIL,
         )
 
     @override_settings(**OVERRIDE_SETTINGS_KWARGS)
@@ -499,7 +488,7 @@ class DRFIntegrationPermissionsConstanceTestCase(
             ),
             self.constance_list_url,
             auth_user=self.AUTH_USER,
-            auth_user_email=self.AUTH_USER_EMAIL
+            auth_user_email=self.AUTH_USER_EMAIL,
         )
 
     @override_settings(**OVERRIDE_SETTINGS_KWARGS)
@@ -517,5 +506,5 @@ class DRFIntegrationPermissionsConstanceTestCase(
             ),
             self.constance_detail_url,
             auth_user=self.AUTH_USER,
-            auth_user_email=self.AUTH_USER_EMAIL
+            auth_user_email=self.AUTH_USER_EMAIL,
         )

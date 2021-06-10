@@ -2,10 +2,10 @@ from django.conf import settings
 
 from ....contrib.django.ska import defaults
 
-__author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
-__copyright__ = '2013-2019 Artur Barseghyan'
-__license__ = 'GPL 2.0/LGPL 2.1'
-__all__ = ('get_setting',)
+__author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
+__copyright__ = "2013-2019 Artur Barseghyan"
+__license__ = "GPL 2.0/LGPL 2.1"
+__all__ = ("get_setting",)
 
 
 def get_setting(setting, override=None):
@@ -14,7 +14,7 @@ def get_setting(setting, override=None):
 
     If override is not None, it will be used instead of the setting.
     """
-    attr_name = 'SKA_{}'.format(setting)
+    attr_name = "SKA_{}".format(setting)
     if hasattr(settings, attr_name):
         return getattr(settings, attr_name)
     else:

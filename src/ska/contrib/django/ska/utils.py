@@ -4,13 +4,13 @@ from ....defaults import DEFAULT_PROVIDER_PARAM
 from .models import Signature
 from .settings import PROVIDERS, SECRET_KEY
 
-__author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
-__copyright__ = '2013-2019 Artur Barseghyan'
-__license__ = 'GPL 2.0/LGPL 2.1'
+__author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
+__copyright__ = "2013-2019 Artur Barseghyan"
+__license__ = "GPL 2.0/LGPL 2.1"
 __all__ = (
-    'purge_signature_data',
-    'get_secret_key',
-    'get_provider_data',
+    "purge_signature_data",
+    "get_secret_key",
+    "get_provider_data",
 )
 
 
@@ -35,7 +35,7 @@ def get_secret_key(data, default=SECRET_KEY):
     if provider:
         provider_data = PROVIDERS.get(provider, None)
         if provider_data:
-            return provider_data.get('SECRET_KEY', default)
+            return provider_data.get("SECRET_KEY", default)
 
     return default
 

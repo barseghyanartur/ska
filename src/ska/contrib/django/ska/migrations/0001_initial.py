@@ -7,26 +7,47 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Signature',
+            name="Signature",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('signature', models.CharField(max_length=255, verbose_name='Signature')),
-                ('auth_user', models.CharField(max_length=255, verbose_name='Auth user')),
-                ('valid_until', models.DateTimeField(verbose_name='Valid until')),
-                ('created', models.DateTimeField(auto_now_add=True, verbose_name='Date created')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "signature",
+                    models.CharField(max_length=255, verbose_name="Signature"),
+                ),
+                (
+                    "auth_user",
+                    models.CharField(max_length=255, verbose_name="Auth user"),
+                ),
+                (
+                    "valid_until",
+                    models.DateTimeField(verbose_name="Valid until"),
+                ),
+                (
+                    "created",
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name="Date created"
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Token',
-                'verbose_name_plural': 'Tokens',
+                "verbose_name": "Token",
+                "verbose_name_plural": "Tokens",
             },
         ),
         migrations.AlterUniqueTogether(
-            name='signature',
-            unique_together={('signature', 'auth_user', 'valid_until')},
+            name="signature",
+            unique_together={("signature", "auth_user", "valid_until")},
         ),
     ]

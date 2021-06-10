@@ -10,12 +10,10 @@ from .helpers import (
     NUM_ITEMS,
 )
 
-__author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
-__copyright__ = '2013-2019 Artur Barseghyan'
-__license__ = 'GPL 2.0/LGPL 2.1'
-__all__ = (
-    'SkaDecoratorsTest',
-)
+__author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
+__copyright__ = "2013-2019 Artur Barseghyan"
+__license__ = "GPL 2.0/LGPL 2.1"
+__all__ = ("SkaDecoratorsTest",)
 
 
 # *********************************************************************
@@ -57,15 +55,15 @@ class SkaDecoratorsTest(TransactionTestCase):
         # Testing signed URLs
         signed_absolute_url = self.item.get_signed_absolute_url()
         self.assertIsNotNone(signed_absolute_url)
-        flow.append(('Signed absolute URL', signed_absolute_url))
+        flow.append(("Signed absolute URL", signed_absolute_url))
 
         # Testing view with signed URL
         client = Client()
         response = client.get(signed_absolute_url, {})
-        response_status_code = getattr(response, 'status_code', None)
+        response_status_code = getattr(response, "status_code", None)
         self.assertIn(response_status_code, (200, 201, 202))
         flow.append(
-            ('Response status code for signed URL', response_status_code)
+            ("Response status code for signed URL", response_status_code)
         )
 
         return flow
@@ -83,20 +81,18 @@ class SkaDecoratorsTest(TransactionTestCase):
         # Testing unsigned URLs
         absolute_url = self.item.get_absolute_url()
         self.assertTrue(absolute_url is not None)
-        flow.append(('Unsigned absolute URL', absolute_url))
+        flow.append(("Unsigned absolute URL", absolute_url))
 
         # Testing view with signed URL
         client = Client()
         response = client.get(absolute_url, {})
-        response_status_code = getattr(response, 'status_code', None)
-        response_content = getattr(response, 'content', "")
+        response_status_code = getattr(response, "status_code", None)
+        response_content = getattr(response, "content", "")
         self.assertIn(response_status_code, (401,))
         flow.append(
-            ('Response status code for unsigned URL', response_status_code)
+            ("Response status code for unsigned URL", response_status_code)
         )
-        flow.append(
-            ('Response content for unsigned URL', response_content)
-        )
+        flow.append(("Response content for unsigned URL", response_content))
 
         return flow
 
@@ -109,18 +105,17 @@ class SkaDecoratorsTest(TransactionTestCase):
         flow = []
 
         # Testing signed URLs
-        signed_absolute_url = self.item \
-            .get_signed_class_based_absolute_url()
+        signed_absolute_url = self.item.get_signed_class_based_absolute_url()
         self.assertIsNotNone(signed_absolute_url)
-        flow.append(('Signed absolute URL', signed_absolute_url))
+        flow.append(("Signed absolute URL", signed_absolute_url))
 
         # Testing view with signed URL
         client = Client()
         response = client.get(signed_absolute_url, {})
-        response_status_code = getattr(response, 'status_code', None)
+        response_status_code = getattr(response, "status_code", None)
         self.assertIn(response_status_code, (200, 201, 202))
         flow.append(
-            ('Response status code for signed URL', response_status_code)
+            ("Response status code for signed URL", response_status_code)
         )
 
         return flow
@@ -138,19 +133,17 @@ class SkaDecoratorsTest(TransactionTestCase):
         # Testing unsigned URLs
         absolute_url = self.item.get_cbv_absolute_url()
         self.assertTrue(absolute_url is not None)
-        flow.append(('Unsigned absolute URL', absolute_url))
+        flow.append(("Unsigned absolute URL", absolute_url))
 
         # Testing view with signed URL
         client = Client()
         response = client.get(absolute_url, {})
-        response_status_code = getattr(response, 'status_code', None)
-        response_content = getattr(response, 'content', "")
+        response_status_code = getattr(response, "status_code", None)
+        response_content = getattr(response, "content", "")
         self.assertIn(response_status_code, (401,))
         flow.append(
-            ('Response status code for unsigned URL', response_status_code)
+            ("Response status code for unsigned URL", response_status_code)
         )
-        flow.append(
-            ('Response content for unsigned URL', response_content)
-        )
+        flow.append(("Response content for unsigned URL", response_content))
 
         return flow

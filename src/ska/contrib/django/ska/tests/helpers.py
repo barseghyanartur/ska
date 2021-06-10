@@ -6,20 +6,20 @@ import pytest
 
 import factories
 
-__author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
-__copyright__ = '2013-2019 Artur Barseghyan'
-__license__ = 'GPL 2.0/LGPL 2.1'
+__author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
+__copyright__ = "2013-2019 Artur Barseghyan"
+__license__ = "GPL 2.0/LGPL 2.1"
 __all__ = (
-    'change_date',
-    'create_admin_user',
-    'generate_data',
-    'LOG_INFO',
-    'log_info',
-    'NUM_ITEMS',
-    'PROJECT_DIR',
-    'project_dir',
-    'SKA_TEST_USER_PASSWORD',
-    'SKA_TEST_USER_USERNAME',
+    "change_date",
+    "create_admin_user",
+    "generate_data",
+    "LOG_INFO",
+    "log_info",
+    "NUM_ITEMS",
+    "PROJECT_DIR",
+    "project_dir",
+    "SKA_TEST_USER_PASSWORD",
+    "SKA_TEST_USER_USERNAME",
 )
 
 LOGGER = logging.getLogger(__name__)
@@ -27,7 +27,7 @@ LOGGER = logging.getLogger(__name__)
 
 def project_dir(base):
     """Project dir."""
-    return os.path.join(os.path.dirname(__file__), base).replace('\\', '/')
+    return os.path.join(os.path.dirname(__file__), base).replace("\\", "/")
 
 
 PROJECT_DIR = project_dir
@@ -48,16 +48,17 @@ def log_info(func):
         """Inner."""
         result = func(self, *args, **kwargs)
 
-        LOGGER.debug('\n\n%s', func.__name__)
-        LOGGER.debug('============================')
+        LOGGER.debug("\n\n%s", func.__name__)
+        LOGGER.debug("============================")
         if func.__doc__:
             LOGGER.debug('""" %s """', func.__doc__.strip())
-        LOGGER.debug('----------------------------')
+        LOGGER.debug("----------------------------")
         if result is not None:
             LOGGER.debug(result)
-        LOGGER.debug('\n++++++++++++++++++++++++++++')
+        LOGGER.debug("\n++++++++++++++++++++++++++++")
 
         return result
+
     return inner
 
 
@@ -74,7 +75,7 @@ def create_admin_user():
     with diverse accounts are to be implemented.
     """
     user = factories.TestAdminUsernameSuperAdminUserFactory(
-        email='admin@dev.django-ska.com'
+        email="admin@dev.django-ska.com"
     )
 
 

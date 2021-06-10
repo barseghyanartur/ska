@@ -12,13 +12,13 @@ from .......exceptions import ImproperlyConfigured, InvalidData
 
 from ....utils import get_provider_data
 
-__author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
-__copyright__ = '2013-2019 Artur Barseghyan'
-__license__ = 'GPL 2.0/LGPL 2.1'
+__author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
+__copyright__ = "2013-2019 Artur Barseghyan"
+__license__ = "GPL 2.0/LGPL 2.1"
 __all__ = (
-    'AbstractSignedRequestRequired',
-    'BaseSignedRequestRequired',
-    'BaseProviderSignedRequestRequired',
+    "AbstractSignedRequestRequired",
+    "BaseSignedRequestRequired",
+    "BaseProviderSignedRequestRequired",
 )
 
 LOGGER = logging.getLogger(__file__)
@@ -62,12 +62,7 @@ class AbstractSignedRequestRequired(permissions.BasePermission):
         """
         request_data = self.get_request_data(request, view, obj)
 
-        secret_key = self.get_secret_key(
-            request_data,
-            request,
-            view,
-            obj
-        )
+        secret_key = self.get_secret_key(request_data, request, view, obj)
 
         if not secret_key:
             return False
@@ -80,7 +75,7 @@ class AbstractSignedRequestRequired(permissions.BasePermission):
                 signature_param=DEFAULT_SIGNATURE_PARAM,
                 auth_user_param=DEFAULT_AUTH_USER_PARAM,
                 valid_until_param=DEFAULT_VALID_UNTIL_PARAM,
-                extra_param=DEFAULT_EXTRA_PARAM
+                extra_param=DEFAULT_EXTRA_PARAM,
             )
             return validation_result.result
         except (ImproperlyConfigured, InvalidData) as err:
@@ -106,8 +101,10 @@ class BaseSignedRequestRequired(AbstractSignedRequestRequired):
         :param obj:
         :return:
         """
-        settings = self.get_settings(request_data, request=None, view=None, obj=None)
-        return settings.get('SECRET_KEY', None)
+        settings = self.get_settings(
+            request_data, request=None, view=None, obj=None
+        )
+        return settings.get("SECRET_KEY", None)
 
 
 class BaseProviderSignedRequestRequired(AbstractSignedRequestRequired):
@@ -122,8 +119,10 @@ class BaseProviderSignedRequestRequired(AbstractSignedRequestRequired):
         :param obj:
         :return:
         """
-        provider_settings = self.get_settings(request_data, request=None, view=None, obj=None)
+        provider_settings = self.get_settings(
+            request_data, request=None, view=None, obj=None
+        )
         provider_data = get_provider_data(request_data, provider_settings)
         if provider_data:
-            secret_key = provider_data['SECRET_KEY']
+            secret_key = provider_data["SECRET_KEY"]
             return secret_key

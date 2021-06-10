@@ -22,12 +22,10 @@ import factories
 
 from .helpers import log_info
 
-__author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
-__copyright__ = '2013-2019 Artur Barseghyan'
-__license__ = 'GPL 2.0/LGPL 2.1'
-__all__ = (
-    'SkaAuthenticationConstanceBackendTest',
-)
+__author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
+__copyright__ = "2013-2019 Artur Barseghyan"
+__license__ = "GPL 2.0/LGPL 2.1"
+__all__ = ("SkaAuthenticationConstanceBackendTest",)
 
 # *********************************************************************
 # *********************************************************************
@@ -90,16 +88,16 @@ OVERRIDE_SETTINGS_KWARGS = {
     #     'ska.contrib.django.ska.integration.constance_integration',
     #     'foo',  # Our example app
     # ),
-    'AUTHENTICATION_BACKENDS': (
-        'ska.contrib.django.ska.backends.constance_backend.SkaAuthenticationConstanceBackend',
-        'django.contrib.auth.backends.ModelBackend',
+    "AUTHENTICATION_BACKENDS": (
+        "ska.contrib.django.ska.backends.constance_backend.SkaAuthenticationConstanceBackend",
+        "django.contrib.auth.backends.ModelBackend",
     ),
-    'ROOT_URLCONF': 'constance_urls',
+    "ROOT_URLCONF": "constance_urls",
 }
 
 OVERRIDE_SETTINGS_DB_STORE_SIGNATURES_KWARGS = {
-    'SKA_DB_STORE_SIGNATURES': True,
-    'SKA_DB_PERFORM_SIGNATURE_CHECK': True,
+    "SKA_DB_STORE_SIGNATURES": True,
+    "SKA_DB_PERFORM_SIGNATURE_CHECK": True,
 }
 
 
@@ -111,24 +109,26 @@ class SkaAuthenticationConstanceBackendTest(TransactionTestCase):
 
     @override_settings(**OVERRIDE_SETTINGS_KWARGS)
     def setUp(self):
-        self.AUTH_USER = 'test_auth_backend_user'
-        self.AUTH_USER_EMAIL = 'test_ska_auth_user@mail.example.com'
-        self.AUTH_USER_FIRST_NAME = 'John'
-        self.AUTH_USER_LAST_NAME = 'Doe'
-        self.PROVIDER_NAME = 'client_1.admins'
-        self.LOGIN_URL = '/ska/login/'
+        self.AUTH_USER = "test_auth_backend_user"
+        self.AUTH_USER_EMAIL = "test_ska_auth_user@mail.example.com"
+        self.AUTH_USER_FIRST_NAME = "John"
+        self.AUTH_USER_LAST_NAME = "Doe"
+        self.PROVIDER_NAME = "client_1.admins"
+        self.LOGIN_URL = "/ska/login/"
         factories.SkaProvidersConstanceFactory()
 
     @override_settings(**OVERRIDE_SETTINGS_KWARGS)
     @override_config(**OVERRIDE_CONSTANCE_KWARGS)
-    def __test_login(self,
-                     secret_key,
-                     response_codes,
-                     provider_name=None,
-                     logout=False,
-                     test_email_data=None,
-                     do_signature_check=True,
-                     debug_info=""):
+    def __test_login(
+        self,
+        secret_key,
+        response_codes,
+        provider_name=None,
+        logout=False,
+        test_email_data=None,
+        do_signature_check=True,
+        debug_info="",
+    ):
         """Test login.
 
         :param secret_key:
@@ -148,9 +148,9 @@ class SkaAuthenticationConstanceBackendTest(TransactionTestCase):
 
         # Testing signed URLs
         extra = {
-            'email': self.AUTH_USER_EMAIL,
-            'first_name': self.AUTH_USER_FIRST_NAME,
-            'last_name': self.AUTH_USER_LAST_NAME,
+            "email": self.AUTH_USER_EMAIL,
+            "first_name": self.AUTH_USER_FIRST_NAME,
+            "last_name": self.AUTH_USER_LAST_NAME,
         }
         if provider_name:
             extra.update({DEFAULT_PROVIDER_PARAM: provider_name})
@@ -159,55 +159,48 @@ class SkaAuthenticationConstanceBackendTest(TransactionTestCase):
             auth_user=self.AUTH_USER,
             secret_key=secret_key,
             url=self.LOGIN_URL,
-            extra=extra
+            extra=extra,
         )
 
         self.assertIsNotNone(signed_login_url)
-        flow.append(('Signed login URL', signed_login_url))
+        flow.append(("Signed login URL", signed_login_url))
 
         # Testing view with signed URL
         self._client = Client()
         response = self._client.get(signed_login_url, {})
-        response_status_code = getattr(response, 'status_code', None)
+        response_status_code = getattr(response, "status_code", None)
 
         self.assertIn(response_status_code, (first_response_code,))
         flow.append(
-            (
-                'Response status code for signed URL',
-                response_status_code
-            )
+            ("Response status code for signed URL", response_status_code)
         )
 
         if test_email_data:
-            self.assertEqual(
-                len(mail.outbox),
-                len(test_email_data['emails'])
-            )
+            self.assertEqual(len(mail.outbox), len(test_email_data["emails"]))
 
-            for _index, _subject in test_email_data['emails'].items():
-                self.assertEqual(
-                    mail.outbox[_index].subject,
-                    _subject
-                )
+            for _index, _subject in test_email_data["emails"].items():
+                self.assertEqual(mail.outbox[_index].subject, _subject)
 
         if logout:
             self.__logout()
 
         # If both `DB_STORE_SIGNATURES` and `DB_PERFORM_SIGNATURE_CHECK`
         # are set to True, second login attempt shall not be successful.
-        if ska_settings.DB_STORE_SIGNATURES \
-                and ska_settings.DB_PERFORM_SIGNATURE_CHECK \
-                and do_signature_check:
+        if (
+            ska_settings.DB_STORE_SIGNATURES
+            and ska_settings.DB_PERFORM_SIGNATURE_CHECK
+            and do_signature_check
+        ):
             # Testing again with signed URL and this time, it should fail
 
             self._client = Client()
             response = self._client.get(signed_login_url, {})
-            response_status_code = getattr(response, 'status_code', None)
+            response_status_code = getattr(response, "status_code", None)
             self.assertIn(response_status_code, (second_response_code,))
             flow.append(
                 (
-                    'Response status '
-                    'code for signed URL', response_status_code
+                    "Response status " "code for signed URL",
+                    response_status_code,
                 )
             )
             if logout:
@@ -230,7 +223,7 @@ class SkaAuthenticationConstanceBackendTest(TransactionTestCase):
             ska_settings.SECRET_KEY,
             [302, 403],
             logout=True,
-            debug_info="test_01_login"
+            debug_info="test_01_login",
         )
 
     @log_info
@@ -238,7 +231,7 @@ class SkaAuthenticationConstanceBackendTest(TransactionTestCase):
     @override_config(**OVERRIDE_CONSTANCE_KWARGS)
     def test_02_provider_login(self):
         """Test auth using ``SECRET_KEY`` defined in ``PROVIDERS``."""
-        secret_key = config.SKA_PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
+        secret_key = config.SKA_PROVIDERS[self.PROVIDER_NAME]["SECRET_KEY"]
 
         # Authenticate for the first time. There shall be 2 emails
         # for `create` and `info` callbacks.
@@ -248,12 +241,12 @@ class SkaAuthenticationConstanceBackendTest(TransactionTestCase):
             self.PROVIDER_NAME,
             logout=True,
             test_email_data={
-                'emails': {
-                    0: 'Welcome create::admins!',
-                    1: 'Welcome info::constance::admins!',
+                "emails": {
+                    0: "Welcome create::admins!",
+                    1: "Welcome info::constance::admins!",
                 }
             },
-            debug_info="test_02_provider_login::first time"
+            debug_info="test_02_provider_login::first time",
         )
 
         # Sleep for just one second between first and the second tests.
@@ -268,15 +261,15 @@ class SkaAuthenticationConstanceBackendTest(TransactionTestCase):
             self.PROVIDER_NAME,
             logout=True,
             test_email_data={
-                'emails': {
-                    0: 'Welcome create::admins!',
-                    1: 'Welcome info::constance::admins!',
-                    2: 'Welcome get::admins!',
-                    3: 'Welcome info::constance::admins!',
+                "emails": {
+                    0: "Welcome create::admins!",
+                    1: "Welcome info::constance::admins!",
+                    2: "Welcome get::admins!",
+                    3: "Welcome info::constance::admins!",
                 }
             },
             do_signature_check=False,
-            debug_info="test_02_provider_login::second time"
+            debug_info="test_02_provider_login::second time",
         )
 
     @log_info
@@ -289,10 +282,10 @@ class SkaAuthenticationConstanceBackendTest(TransactionTestCase):
         secret key.
         """
         return self.__test_login(
-            ska_settings.SECRET_KEY + 'wrong',
+            ska_settings.SECRET_KEY + "wrong",
             [403, 403],
             logout=True,
-            debug_info="test_03_login_fail_wrong_secret_key"
+            debug_info="test_03_login_fail_wrong_secret_key",
         )
 
     @log_info
@@ -304,12 +297,9 @@ class SkaAuthenticationConstanceBackendTest(TransactionTestCase):
         Fail test authentication using ``SECRET_KEY`` defined in `
         `PROVIDERS``, providing wrong secret key.
         """
-        secret_key = config.SKA_PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
+        secret_key = config.SKA_PROVIDERS[self.PROVIDER_NAME]["SECRET_KEY"]
         return self.__test_login(
-            secret_key + 'wrong',
-            [403, 403],
-            self.PROVIDER_NAME,
-            logout=True
+            secret_key + "wrong", [403, 403], self.PROVIDER_NAME, logout=True
         )
 
     @log_info
@@ -321,60 +311,54 @@ class SkaAuthenticationConstanceBackendTest(TransactionTestCase):
         Fail test authentication using ``SECRET_KEY`` defined in
         ``PROVIDERS``, providing wrong provider name.
         """
-        secret_key = config.SKA_PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
+        secret_key = config.SKA_PROVIDERS[self.PROVIDER_NAME]["SECRET_KEY"]
         return self.__test_login(
-            secret_key + 'wrong',
+            secret_key + "wrong",
             [403, 403],
-            self.PROVIDER_NAME + 'wrong',
+            self.PROVIDER_NAME + "wrong",
             logout=True,
-            debug_info="test_05_provider_login_fail_wrong_provider"
+            debug_info="test_05_provider_login_fail_wrong_provider",
         )
 
     @log_info
     @override_settings(**OVERRIDE_SETTINGS_KWARGS)
     @override_settings(**OVERRIDE_SETTINGS_DB_STORE_SIGNATURES_KWARGS)
     @override_config(**OVERRIDE_CONSTANCE_KWARGS)
+    @mock.patch("ska.contrib.django.ska.settings.DB_STORE_SIGNATURES", True)
     @mock.patch(
-        'ska.contrib.django.ska.settings.DB_STORE_SIGNATURES',
-        True
-    )
-    @mock.patch(
-        'ska.contrib.django.ska.settings.DB_PERFORM_SIGNATURE_CHECK',
-        True
+        "ska.contrib.django.ska.settings.DB_PERFORM_SIGNATURE_CHECK", True
     )
     def test_06_purge_stored_signatures_data(self):
         """Test purge stored signature data."""
-        secret_key = config.SKA_PROVIDERS[self.PROVIDER_NAME]['SECRET_KEY']
+        secret_key = config.SKA_PROVIDERS[self.PROVIDER_NAME]["SECRET_KEY"]
         # Login
         self.__test_login(
             secret_key,
             [302, 403],
             self.PROVIDER_NAME,
             logout=True,
-            debug_info="test_06_purge_stored_signatures_data"
+            debug_info="test_06_purge_stored_signatures_data",
         )
 
         # Duplicate signatures
         signature = Signature.objects.first()
         signature.id = None
-        signature.signature += '0'
+        signature.signature += "0"
         signature.save()
         signature.id = None
-        signature.signature += '0'
+        signature.signature += "0"
         signature.save()
         # There should be 3
         self.assertEqual(Signature.objects.all().count(), 3)
 
         # Manually set valid_until to no longer valid so that we can
         # test
-        invalid_until = (
-            datetime.datetime.now() - datetime.timedelta(minutes=20)
+        invalid_until = datetime.datetime.now() - datetime.timedelta(
+            minutes=20
         )
-        Signature.objects.update(
-            valid_until=invalid_until
-        )
+        Signature.objects.update(valid_until=invalid_until)
 
         # Call purge command
-        call_command('ska_purge_stored_signature_data')
+        call_command("ska_purge_stored_signature_data")
         # All old records shall be gone
         self.assertEqual(Signature.objects.all().count(), 0)

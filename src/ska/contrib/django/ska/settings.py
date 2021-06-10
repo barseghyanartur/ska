@@ -35,59 +35,63 @@ from django.utils.translation import gettext_lazy as _
 from ....exceptions import ImproperlyConfigured
 from .conf import get_setting
 
-__author__ = 'Artur Barseghyan <artur.barseghyan@gmail.com>'
-__copyright__ = '2013-2019 Artur Barseghyan'
-__license__ = 'GPL 2.0/LGPL 2.1'
+__author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
+__copyright__ = "2013-2019 Artur Barseghyan"
+__license__ = "GPL 2.0/LGPL 2.1"
 __all__ = (
-    'AUTH_USER',
-    'DB_PERFORM_SIGNATURE_CHECK',
-    'DB_STORE_SIGNATURES',
-    'PROVIDERS',
-    'REDIRECT_AFTER_LOGIN',
-    'SECRET_KEY',
-    'UNAUTHORISED_REQUEST_ERROR_MESSAGE',
-    'UNAUTHORISED_REQUEST_ERROR_TEMPLATE',
-    'USER_CREATE_CALLBACK',
-    'USER_GET_CALLBACK',
-    'USER_INFO_CALLBACK',
-    'USER_VALIDATE_CALLBACK',
+    "AUTH_USER",
+    "DB_PERFORM_SIGNATURE_CHECK",
+    "DB_STORE_SIGNATURES",
+    "PROVIDERS",
+    "REDIRECT_AFTER_LOGIN",
+    "SECRET_KEY",
+    "UNAUTHORISED_REQUEST_ERROR_MESSAGE",
+    "UNAUTHORISED_REQUEST_ERROR_TEMPLATE",
+    "USER_CREATE_CALLBACK",
+    "USER_GET_CALLBACK",
+    "USER_INFO_CALLBACK",
+    "USER_VALIDATE_CALLBACK",
 )
 
 UNAUTHORISED_REQUEST_ERROR_MESSAGE = get_setting(
-    'UNAUTHORISED_REQUEST_ERROR_MESSAGE'
+    "UNAUTHORISED_REQUEST_ERROR_MESSAGE"
 )
 UNAUTHORISED_REQUEST_ERROR_TEMPLATE = get_setting(
-    'UNAUTHORISED_REQUEST_ERROR_TEMPLATE'
+    "UNAUTHORISED_REQUEST_ERROR_TEMPLATE"
 )
-AUTH_USER = get_setting('AUTH_USER')
+AUTH_USER = get_setting("AUTH_USER")
 
 try:
     SECRET_KEY = settings.SKA_SECRET_KEY
 except Exception:
     raise ImproperlyConfigured(
-        _("You should define a variable ``SKA_SECRET_KEY`` in your "
-          "`settings` module!")
+        _(
+            "You should define a variable ``SKA_SECRET_KEY`` in your "
+            "`settings` module!"
+        )
     )
 
-USER_VALIDATE_CALLBACK = get_setting('USER_VALIDATE_CALLBACK')
-USER_GET_CALLBACK = get_setting('USER_GET_CALLBACK')
-USER_CREATE_CALLBACK = get_setting('USER_CREATE_CALLBACK')
-USER_INFO_CALLBACK = get_setting('USER_INFO_CALLBACK')
-REDIRECT_AFTER_LOGIN = get_setting('REDIRECT_AFTER_LOGIN')
+USER_VALIDATE_CALLBACK = get_setting("USER_VALIDATE_CALLBACK")
+USER_GET_CALLBACK = get_setting("USER_GET_CALLBACK")
+USER_CREATE_CALLBACK = get_setting("USER_CREATE_CALLBACK")
+USER_INFO_CALLBACK = get_setting("USER_INFO_CALLBACK")
+REDIRECT_AFTER_LOGIN = get_setting("REDIRECT_AFTER_LOGIN")
 
-DB_STORE_SIGNATURES = get_setting('DB_STORE_SIGNATURES')
-DB_PERFORM_SIGNATURE_CHECK = get_setting('DB_PERFORM_SIGNATURE_CHECK')
+DB_STORE_SIGNATURES = get_setting("DB_STORE_SIGNATURES")
+DB_PERFORM_SIGNATURE_CHECK = get_setting("DB_PERFORM_SIGNATURE_CHECK")
 
-PROVIDERS = get_setting('PROVIDERS')
+PROVIDERS = get_setting("PROVIDERS")
 
 
 def validate_providers():
     """Validate providers set in Django `settings` module of the project."""
     for uid, data in PROVIDERS.items():
-        if 'SECRET_KEY' not in data:
+        if "SECRET_KEY" not in data:
             raise ImproperlyConfigured(
-                _("You should defined a key ``SECRET_KEY`` for each provider "
-                  "in your `settings module`!")
+                _(
+                    "You should defined a key ``SECRET_KEY`` for each provider "
+                    "in your `settings module`!"
+                )
             )
 
 
