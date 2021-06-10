@@ -6,7 +6,6 @@ import json
 
 from django.forms import ValidationError, fields
 from django.utils.translation import gettext_lazy as _
-import six
 
 
 class JSONFieldMixin(object):
@@ -15,7 +14,7 @@ class JSONFieldMixin(object):
         super(JSONFieldMixin, self).__init__(*args, **kwargs)
 
     def to_python(self, value):
-        if isinstance(value, six.string_types) and value:
+        if isinstance(value, str) and value:
             try:
                 return json.loads(value, **self.load_kwargs)
             except ValueError:

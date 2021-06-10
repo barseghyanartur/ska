@@ -2,9 +2,7 @@
 import os
 import sys
 
-from django_nine import versions
-
-from .core import PROJECT_DIR, gettext
+from .core import PROJECT_DIR
 
 DEBUG = False
 DEBUG_TOOLBAR = False
@@ -112,113 +110,28 @@ except Exception:
 
 # ***************************************************************************
 
-if versions.DJANGO_GTE_1_10:
-    TEMPLATES = [
-        {
-            "BACKEND": "django.template.backends.django.DjangoTemplates",
-            # 'APP_DIRS': True,
-            "DIRS": [PROJECT_DIR(os.path.join("..", "templates"))],
-            "OPTIONS": {
-                "context_processors": [
-                    "django.template.context_processors.debug",
-                    "django.template.context_processors.request",
-                    "django.contrib.auth.context_processors.auth",
-                    "django.contrib.messages.context_processors.messages",
-                    # "context_processors.testing",  # Testing
-                ],
-                "loaders": [
-                    "django.template.loaders.filesystem.Loader",
-                    "django.template.loaders.app_directories.Loader",
-                    # 'django.template.loaders.eggs.Loader',
-                ],
-                "debug": DEBUG_TEMPLATE,
-            },
+TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        # 'APP_DIRS': True,
+        "DIRS": [PROJECT_DIR(os.path.join("..", "templates"))],
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+                # "context_processors.testing",  # Testing
+            ],
+            "loaders": [
+                "django.template.loaders.filesystem.Loader",
+                "django.template.loaders.app_directories.Loader",
+                # 'django.template.loaders.eggs.Loader',
+            ],
+            "debug": DEBUG_TEMPLATE,
         },
-    ]
-elif versions.DJANGO_GTE_1_9:
-    TEMPLATES = [
-        {
-            "BACKEND": "django.template.backends.django.DjangoTemplates",
-            # 'APP_DIRS': True,
-            "DIRS": [PROJECT_DIR(os.path.join("..", "templates"))],
-            "OPTIONS": {
-                "context_processors": [
-                    "django.contrib.auth.context_processors.auth",
-                    "django.template.context_processors.debug",
-                    "django.template.context_processors.i18n",
-                    "django.template.context_processors.media",
-                    "django.template.context_processors.static",
-                    "django.template.context_processors.tz",
-                    "django.contrib.messages.context_processors.messages",
-                    "django.template.context_processors.request",
-                    # "context_processors.testing",  # Testing
-                ],
-                "loaders": [
-                    "django.template.loaders.filesystem.Loader",
-                    "django.template.loaders.app_directories.Loader",
-                    # 'django.template.loaders.eggs.Loader',
-                ],
-                "debug": DEBUG_TEMPLATE,
-            },
-        },
-    ]
-elif versions.DJANGO_GTE_1_8:
-    TEMPLATES = [
-        {
-            "BACKEND": "django.template.backends.django.DjangoTemplates",
-            # 'APP_DIRS': True,
-            "DIRS": [PROJECT_DIR(os.path.join("..", "templates"))],
-            "OPTIONS": {
-                "context_processors": [
-                    "django.contrib.auth.context_processors.auth",
-                    "django.template.context_processors.debug",
-                    "django.template.context_processors.i18n",
-                    "django.template.context_processors.media",
-                    "django.template.context_processors.static",
-                    "django.template.context_processors.tz",
-                    "django.contrib.messages.context_processors.messages",
-                    "django.template.context_processors.request",
-                    # "context_processors.testing",  # Testing
-                ],
-                "loaders": [
-                    "django.template.loaders.filesystem.Loader",
-                    "django.template.loaders.app_directories.Loader",
-                    # 'django.template.loaders.eggs.Loader',
-                ],
-                "debug": DEBUG_TEMPLATE,
-            },
-        },
-    ]
-else:
-    TEMPLATE_DEBUG = DEBUG_TEMPLATE
-
-    # List of callables that know how to import templates from various
-    # sources.
-    TEMPLATE_LOADERS = (
-        "django.template.loaders.filesystem.Loader",
-        "django.template.loaders.app_directories.Loader",
-        "django.template.loaders.eggs.Loader",
-    )
-
-    TEMPLATE_CONTEXT_PROCESSORS = (
-        "django.contrib.auth.context_processors.auth",
-        "django.core.context_processors.debug",
-        "django.core.context_processors.i18n",
-        "django.core.context_processors.media",
-        "django.core.context_processors.static",
-        "django.core.context_processors.tz",
-        "django.contrib.messages.context_processors.messages",
-        "django.core.context_processors.request",
-    )
-
-    TEMPLATE_DIRS = (
-        # Put strings here, like "/home/html/django_templates" or
-        # "C:/www/django/templates".
-        # Always use forward slashes, even on Windows.
-        # Don't forget to use absolute paths, not relative paths.
-        PROJECT_DIR(os.path.join("..", "templates")),
-    )
-
+    },
+]
 
 # ***************************************************************************
 
@@ -425,7 +338,4 @@ if DEV:
     # sys.path.insert(0, os.path.abspath('src'))
     sys.path.insert(0, os.path.abspath(ska_source_path))
 
-if versions.DJANGO_GTE_2_0:
-    MIDDLEWARE = _MIDDLEWARE
-else:
-    MIDDLEWARE_CLASSES = _MIDDLEWARE
+MIDDLEWARE = _MIDDLEWARE

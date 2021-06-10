@@ -2,8 +2,6 @@ from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from six import python_2_unicode_compatible
-
 from ska.contrib.django.ska.decorators import sign_url
 
 __all__ = (
@@ -15,7 +13,6 @@ __all__ = (
 )
 
 
-@python_2_unicode_compatible
 class FooItem(models.Model):
     """Foo item.
 

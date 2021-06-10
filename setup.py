@@ -59,7 +59,6 @@ setup(
     license="GPL-2.0-only OR LGPL-2.1-or-later",
     scripts=["src/ska/bin/ska-sign-url"],
     install_requires=[
-        "six>=1.9",
         "django-nine>=0.2.4",
     ],
     extras_require={

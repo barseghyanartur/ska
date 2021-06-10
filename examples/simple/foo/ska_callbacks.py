@@ -5,8 +5,6 @@ from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
 from django.utils.translation import gettext_lazy as _
 
-from django_nine import versions
-
 from ska.defaults import DEFAULT_AUTH_USER_PARAM
 
 __all__ = (
