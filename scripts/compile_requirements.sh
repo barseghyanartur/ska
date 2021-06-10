@@ -28,6 +28,9 @@ pip-compile django_3_2.in "$@"
 echo "pip-compile docs.in"
 pip-compile docs.in "$@"
 
+echo "pip-compile documentation.in"
+pip-compile documentation.in "$@"
+
 echo "pip-compile style_checkers.in"
 pip-compile style_checkers.in "$@"
 

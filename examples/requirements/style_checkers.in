@@ -1,10 +1,11 @@
 
 # Style checkers
-pydocstyle
-pylint
+black
+check-manifest
+check-manifest
 flake8
 isort
 pre-commit
-check-manifest
+pydocstyle
+pylint
 restview
-check-manifest

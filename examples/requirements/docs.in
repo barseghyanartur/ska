@@ -1,5 +1,5 @@
-rstcheck==3.3.1
 Jinja2
 MarkupSafe
 Sphinx
 docutils
+rstcheck==3.3.1
