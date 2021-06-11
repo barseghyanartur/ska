@@ -52,12 +52,12 @@ class SignatureValidationResult:
         self.result = result
         self.errors = errors if errors else {}
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.result)
 
     __repr__ = __str__
 
-    def __bool__(self):
+    def __bool__(self) -> bool:
         return self.result
 
     __nonzero__ = __bool__
@@ -66,7 +66,7 @@ class SignatureValidationResult:
     def message(self) -> str:
         """Human readable message of all errors.
 
-        :return string:
+        :return:
         """
         return " ".join(map(str, self.errors))
 
@@ -76,7 +76,7 @@ class SignatureValidationResult:
 
         For backwards compatibility. Returns list of text messages.
 
-        :return list:
+        :return:
         """
         return map(str, self.errors)
 
@@ -86,9 +86,9 @@ class AbstractSignature:
 
     Based on symmetric keys.
 
-    :param str signature:
-    :param str auth_user:
-    :param float|str valid_until:
+    :param signature:
+    :param auth_user:
+    :param valid_until:
     """
 
     __slots__ = ("signature", "auth_user", "valid_until", "extra")
@@ -128,14 +128,14 @@ class AbstractSignature:
     ) -> Union[SignatureValidationResult, bool]:
         """Validates the signature.
 
-        :param str signature:
-        :param str auth_user:
-        :param str secret_key:
-        :param float|str valid_until: Unix timestamp.
-        :param dict extra: Extra arguments to be validated.
-        :param bool return_object: If set to True, an instance of
+        :param signature:
+        :param auth_user:
+        :param secret_key:
+        :param valid_until: Unix timestamp.
+        :param extra: Extra arguments to be validated.
+        :param return_object: If set to True, an instance of
             ``SignatureValidationResult`` is returned.
-        :return bool:
+        :return:
 
         :example:
         >>> Signature.validate_signature(
@@ -178,7 +178,7 @@ class AbstractSignature:
 
         Returns True if signature is expired and False otherwise.
 
-        :return bool:
+        :return:
 
         :example:
         >>> # Generating the signature
@@ -207,9 +207,9 @@ class AbstractSignature:
         Add something here so that timestamp to signature conversion is not
         that obvious.
 
-        :param string auth_user:
-        :param int timestamp:
-        :param dict extra:
+        :param auth_user:
+        :param timestamp:
+        :param extra:
         """
         if not extra:
             extra = {}
@@ -227,22 +227,28 @@ class AbstractSignature:
     def make_secret_key(secret_key: str) -> bytes:
         """The secret key how its' supposed to be used in generate signature.
 
-        :param str secret_key:
-        :return str:
+        :param secret_key:
+        :return:
         """
         return secret_key.encode()  # return b64encode(secret_key)
 
     @classmethod
-    def make_hash(cls, auth_user: str, secret_key: str, valid_until: Union[str, float]=None, extra: Optional[Dict[str, Union[str, int]]]=None):
+    def make_hash(
+        cls,
+        auth_user: str,
+        secret_key: str,
+        valid_until: Union[str, float] = None,
+        extra: Optional[Dict[str, Union[str, int]]] = None,
+    ) -> str:
         """Make hash.
 
         You should implement this method in your signature class.
 
-        :param str auth_user:
-        :param str secret_key:
-        :param float|str valid_until: Unix timestamp, valid until.
-        :param dict extra: Additional variables to be added.
-        :return str:
+        :param auth_user:
+        :param secret_key:
+        :param valid_until: Unix timestamp, valid until.
+        :param extra: Additional variables to be added.
+        :return:
         """
         raise NotImplementedError("You should implement this method!")
 
@@ -260,12 +266,12 @@ class AbstractSignature:
         If timestamp is given, the signature is created using the given
         timestamp. Otherwise current time is used.
 
-        :param str auth_user:
-        :param str secret_key:
-        :param float|str valid_until: Unix timestamp, valid until.
-        :param int lifetime: Lifetime of the signature in seconds.
-        :param dict extra: Additional variables to be added.
-        :return str:
+        :param auth_user:
+        :param secret_key:
+        :param valid_until: Unix timestamp, valid until.
+        :param lifetime: Lifetime of the signature in seconds.
+        :param extra: Additional variables to be added.
+        :return:
 
         :example:
         >>> sig = Signature.generate_signature('user', 'your-secret-key')
@@ -296,7 +302,7 @@ class AbstractSignature:
         )
 
     @staticmethod
-    def datetime_to_timestamp(dtv: datetime) -> str:
+    def datetime_to_timestamp(dtv: datetime) -> Optional[str]:
         """Human readable datetime according to the format specified.
 
          Format is specified in ``TIMESTAMP_FORMAT``.
@@ -310,7 +316,7 @@ class AbstractSignature:
             pass
 
     @staticmethod
-    def datetime_to_unix_timestamp(dtv: datetime) -> float:
+    def datetime_to_unix_timestamp(dtv: datetime) -> Optional[float]:
         """Convert ``datetime.datetime`` to Unix timestamp.
 
         :param datetime.datetime dtv:
