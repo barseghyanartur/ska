@@ -93,8 +93,6 @@ importlib-resources==5.1.4
     # via
     #   pre-commit
     #   virtualenv
-iniconfig==1.1.1
-    # via pytest
 isort==5.8.0
     # via
     #   -r style_checkers.in
@@ -107,8 +105,12 @@ mccabe==0.6.1
     #   pylint
 mock==4.0.3
     # via -r test.in
+more-itertools==8.8.0
+    # via pytest
 mypy-extensions==0.4.3
-    # via black
+    # via
+    #   black
+    #   pyannotate
 nodeenv==1.6.0
     # via pre-commit
 packaging==20.9
@@ -132,6 +134,8 @@ py==1.10.0
     #   -r test.in
     #   pytest
     #   tox
+pyannotate==1.2.0
+    # via pytest-annotate
 pycodestyle==2.7.0
     # via flake8
 pycparser==2.20
@@ -150,6 +154,8 @@ pylint==2.8.3
     # via -r style_checkers.in
 pyparsing==2.4.7
     # via packaging
+pytest-annotate==1.0.3
+    # via -r test.in
 pytest-cov==2.12.0
     # via -r test.in
 pytest-django==4.3.0
@@ -158,9 +164,10 @@ pytest-ordering==0.6
     # via -r test.in
 pytest-pythonpath==0.7.3
     # via -r test.in
-pytest==6.2.4
+pytest==5.4.3
     # via
     #   -r test.in
+    #   pytest-annotate
     #   pytest-cov
     #   pytest-django
     #   pytest-ordering
@@ -186,6 +193,7 @@ selenium==3.141.0
 six==1.16.0
     # via
     #   bleach
+    #   pyannotate
     #   python-dateutil
     #   readme-renderer
     #   tox
@@ -209,7 +217,6 @@ toml==0.10.2
     #   pep517
     #   pre-commit
     #   pylint
-    #   pytest
     #   tox
 tox==3.23.1
     # via -r test.in
@@ -228,6 +235,8 @@ virtualenv==20.4.7
     # via
     #   pre-commit
     #   tox
+wcwidth==0.2.5
+    # via pytest
 webencodings==0.5.1
     # via bleach
 wrapt==1.12.1
