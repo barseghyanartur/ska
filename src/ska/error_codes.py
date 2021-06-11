@@ -28,16 +28,16 @@ class ErrorCode(object):
 
     __slots__ = ("code", "message")
 
-    def __init__(self, code, message):
+    def __init__(self, code: int, message: str):
         self.code = code
         self.message = message
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.message
 
     __repr__ = __str__
 
-    def __int__(self):
+    def __int__(self) -> int:
         return self.code
 
 
