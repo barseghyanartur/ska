@@ -40,7 +40,7 @@ def sign_url(
     signature_param: str = DEFAULT_SIGNATURE_PARAM,
     auth_user_param: str = DEFAULT_AUTH_USER_PARAM,
     valid_until_param: str = DEFAULT_VALID_UNTIL_PARAM,
-    extra: Optional[Dict[str, Union[str, int]]] = None,
+    extra: Optional[Dict[str, Union[bytes, str, float, int]]] = None,
     extra_param: str = DEFAULT_EXTRA_PARAM,
     signature_cls: Type[AbstractSignature] = Signature,
 ) -> str:
@@ -200,7 +200,7 @@ def signature_to_dict(
 
 
 def validate_signed_request_data(
-    data: Dict[str, Union[bytes, str, float]],
+    data: Dict[str, Union[bytes, str, float, int]],
     secret_key: str,
     signature_param: str = DEFAULT_SIGNATURE_PARAM,
     auth_user_param: str = DEFAULT_AUTH_USER_PARAM,
@@ -244,7 +244,7 @@ def validate_signed_request_data(
 
 
 def extract_signed_request_data(
-    data: Dict[str, Union[str, float, int]],
+    data: Dict[str, Union[bytes, str, float, int]],
     secret_key: Optional[str] = None,
     signature_param: str = DEFAULT_SIGNATURE_PARAM,
     auth_user_param: str = DEFAULT_AUTH_USER_PARAM,

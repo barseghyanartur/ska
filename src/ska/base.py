@@ -98,7 +98,7 @@ class AbstractSignature:
         signature: bytes,
         auth_user: str,
         valid_until: Union[float, str],
-        extra: Optional[Dict[str, Union[str, int]]] = None,
+        extra: Optional[Dict[str, Union[bytes, str, float, int]]] = None,
     ) -> None:
         """Constructor."""
         self.signature = signature
@@ -123,7 +123,7 @@ class AbstractSignature:
         auth_user: str,
         secret_key: str,
         valid_until: Union[str, float],
-        extra: Optional[Dict[str, str]] = None,
+        extra: Optional[Dict[str, Union[bytes, str, float, int]]] = None,
         return_object: bool = False,
     ) -> Union[SignatureValidationResult, bool]:
         """Validates the signature.
@@ -200,7 +200,7 @@ class AbstractSignature:
         cls,
         auth_user: str,
         timestamp: Union[float, str],
-        extra: Optional[Dict[str, Union[str, int]]] = None,
+        extra: Optional[Dict[str, Union[bytes, str, float, int]]] = None,
     ) -> bytes:
         """Get base string.
 
@@ -238,7 +238,7 @@ class AbstractSignature:
         auth_user: str,
         secret_key: str,
         valid_until: Union[str, float] = None,
-        extra: Optional[Dict[str, Union[str, int]]] = None,
+        extra: Optional[Dict[str, Union[bytes, str, float, int]]] = None,
     ) -> str:
         """Make hash.
 
@@ -259,7 +259,7 @@ class AbstractSignature:
         secret_key: str,
         valid_until: Optional[Union[float, str]] = None,
         lifetime: int = SIGNATURE_LIFETIME,
-        extra: Optional[Dict[str, Union[str, int]]] = None,
+        extra: Optional[Dict[str, Union[bytes, str, float, int]]] = None,
     ) -> "AbstractSignature":
         """Generates the signature.
 
