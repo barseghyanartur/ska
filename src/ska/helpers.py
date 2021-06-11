@@ -24,7 +24,7 @@ def get_callback_func(
 ) -> Optional[Callable]:
     """Take a string and try to extract a function from it.
 
-    :param mixed func: If `callable` is given, return as is. If `str`
+    :param func: If `callable` is given, return as is. If `str`
         is given, try to extract the function from the string given and
         return.
     :param fail_silently:
@@ -63,6 +63,7 @@ def dict_keys(
 
     :param data:
     :param return_string:
+    :return:
     """
     keys = list(data.keys())
     keys.sort()
@@ -91,6 +92,10 @@ def sorted_urlencode(
 ) -> str:
     """Similar to built-in ``urlencode``, but always puts data in a sorted
     constant way that stays the same between various python versions.
+
+    :param data:
+    :param quoted:
+    :return:
     """
     _sorted = [f"{k}={v}" for k, v in dict_to_ordered_list(data)]
     res = "&".join(_sorted)
@@ -119,8 +124,9 @@ def extract_signed_data(
 def make_valid_until(lifetime: int = SIGNATURE_LIFETIME) -> float:
     """Make valid until.
 
-    :param int lifetime:
-    :return datetime.datetime"""
+    :param lifetime:
+    :return:
+    """
     return time.mktime(
         (datetime.now() + timedelta(seconds=lifetime)).timetuple()
     )

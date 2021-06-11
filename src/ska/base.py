@@ -91,7 +91,7 @@ class AbstractSignature:
     :param valid_until:
     """
 
-    __slots__ = ("signature", "auth_user", "valid_until", "extra")
+    __slots__ = ("signature", "auth_user", "valid_until", "extra",)
 
     def __init__(
         self,
@@ -106,8 +106,8 @@ class AbstractSignature:
         self.valid_until = valid_until
         self.extra = extra if extra else {}
 
-    def __str__(self):
-        return self.signature
+    def __str__(self) -> str:
+        return self.signature.decode()
 
     __repr__ = __str__
 
@@ -307,8 +307,8 @@ class AbstractSignature:
 
          Format is specified in ``TIMESTAMP_FORMAT``.
 
-        :param datetime.datetime dtv:
-        :return str:
+        :param dtv:
+        :return:
         """
         try:
             return dtv.strftime(TIMESTAMP_FORMAT)
@@ -319,8 +319,8 @@ class AbstractSignature:
     def datetime_to_unix_timestamp(dtv: datetime) -> Optional[float]:
         """Convert ``datetime.datetime`` to Unix timestamp.
 
-        :param datetime.datetime dtv:
-        :return float: Unix timestamp.
+        :param dtv:
+        :return: Unix timestamp.
         """
         try:
             return time.mktime(dtv.timetuple())
@@ -337,9 +337,9 @@ class AbstractSignature:
         is not valid timestamp (according to the format we have specified in
         the ``TIMESTAMP_FORMAT``). Mainly used internally.
 
-        :param str timestamp:
-        :param bool fail_silently:
-        :return str:
+        :param timestamp:
+        :param fail_silently:
+        :return:
         """
         try:
             return datetime.strptime(timestamp, TIMESTAMP_FORMAT)
@@ -357,9 +357,9 @@ class AbstractSignature:
         If ``fail_silently`` is set to False, raises exceptions if timestamp
         is not valid timestamp.
 
-        :param float|str timestamp: UNIX timestamp. Possible to parse to float.
-        :param bool fail_silently:
-        :return str:
+        :param timestamp: UNIX timestamp. Possible to parse to float.
+        :param fail_silently:
+        :return:
         """
         try:
             return datetime.fromtimestamp(float(timestamp))

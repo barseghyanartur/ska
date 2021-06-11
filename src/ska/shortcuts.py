@@ -222,7 +222,7 @@ def validate_signed_request_data(
     :param extra_param: Name of the (foe example GET or POST) param
         name which holds the ``extra`` keys value.
     :param signature_cls:
-    :return ska.SignatureValidationResult: A ``ska.SignatureValidationResult``
+    :return: A ``ska.SignatureValidationResult``
         object with the following properties:
             - `result` (bool): True if data is valid. False otherwise.
             - `reason` (Iterable): List of strings, indicating validation
