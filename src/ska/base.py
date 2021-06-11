@@ -1,10 +1,12 @@
 from datetime import datetime, timedelta
 import time
+from typing import Any, Dict, List, Optional, Union
 
 from base64 import b64encode
 
 from . import error_codes
 from .defaults import SIGNATURE_LIFETIME, TIMESTAMP_FORMAT
+from .error_codes import ErrorCode
 from .helpers import sorted_urlencode
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
@@ -22,7 +24,7 @@ __all__ = (
 # ****************************************************************************
 
 
-class SignatureValidationResult(object):
+class SignatureValidationResult:
     """
     Signature validation result container.
 
@@ -41,7 +43,11 @@ class SignatureValidationResult(object):
 
     # __slots__ = ('result', 'reason', 'errors')
 
-    def __init__(self, result, errors=None):
+    def __init__(
+        self,
+        result: bool,
+        errors: Optional[List[Union[ErrorCode, Any]]] = None,
+    ) -> None:
         """Constructor."""
         self.result = result
         self.errors = errors if errors else {}
@@ -57,7 +63,7 @@ class SignatureValidationResult(object):
     __nonzero__ = __bool__
 
     @property
-    def message(self):
+    def message(self) -> str:
         """Human readable message of all errors.
 
         :return string:
@@ -65,7 +71,7 @@ class SignatureValidationResult(object):
         return " ".join(map(str, self.errors))
 
     @property
-    def reason(self):
+    def reason(self) -> map:
         """Reason.
 
         For backwards compatibility. Returns list of text messages.
@@ -75,7 +81,7 @@ class SignatureValidationResult(object):
         return map(str, self.errors)
 
 
-class AbstractSignature(object):
+class AbstractSignature:
     """Abstract class for signature generation and validation.
 
     Based on symmetric keys.
@@ -87,7 +93,13 @@ class AbstractSignature(object):
 
     __slots__ = ("signature", "auth_user", "valid_until", "extra")
 
-    def __init__(self, signature, auth_user, valid_until, extra=None):
+    def __init__(
+        self,
+        signature: bytes,
+        auth_user: str,
+        valid_until: Union[float, str],
+        extra: Optional[Dict[str, Union[str, int]]] = None,
+    ) -> None:
         """Constructor."""
         self.signature = signature
         self.auth_user = auth_user
@@ -99,7 +111,7 @@ class AbstractSignature(object):
 
     __repr__ = __str__
 
-    def __bool__(self):
+    def __bool__(self) -> bool:
         return not self.is_expired()
 
     __nonzero__ = __bool__
@@ -107,13 +119,13 @@ class AbstractSignature(object):
     @classmethod
     def validate_signature(
         cls,
-        signature,
-        auth_user,
-        secret_key,
-        valid_until,
-        extra=None,
-        return_object=False,
-    ):
+        signature: Union[str, bytes],
+        auth_user: str,
+        secret_key: str,
+        valid_until: Union[str, float],
+        extra: Optional[Dict[str, str]] = None,
+        return_object: bool = False,
+    ) -> Union[SignatureValidationResult, bool]:
         """Validates the signature.
 
         :param str signature:
@@ -161,7 +173,7 @@ class AbstractSignature(object):
 
             return SignatureValidationResult(result, errors)
 
-    def is_expired(self):
+    def is_expired(self) -> bool:
         """Checks if current signature is expired.
 
         Returns True if signature is expired and False otherwise.
@@ -184,7 +196,12 @@ class AbstractSignature(object):
         return not res
 
     @classmethod
-    def get_base(cls, auth_user, timestamp, extra=None):
+    def get_base(
+        cls,
+        auth_user: str,
+        timestamp: Union[float, str],
+        extra: Optional[Dict[str, Union[str, int]]] = None,
+    ) -> bytes:
         """Get base string.
 
         Add something here so that timestamp to signature conversion is not
@@ -207,7 +224,7 @@ class AbstractSignature(object):
         return ("_".join(_base)).encode()
 
     @staticmethod
-    def make_secret_key(secret_key):
+    def make_secret_key(secret_key: str) -> bytes:
         """The secret key how its' supposed to be used in generate signature.
 
         :param str secret_key:
@@ -216,7 +233,7 @@ class AbstractSignature(object):
         return secret_key.encode()  # return b64encode(secret_key)
 
     @classmethod
-    def make_hash(cls, auth_user, secret_key, valid_until=None, extra=None):
+    def make_hash(cls, auth_user: str, secret_key: str, valid_until: Union[str, float]=None, extra: Optional[Dict[str, Union[str, int]]]=None):
         """Make hash.
 
         You should implement this method in your signature class.
@@ -232,12 +249,12 @@ class AbstractSignature(object):
     @classmethod
     def generate_signature(
         cls,
-        auth_user,
-        secret_key,
-        valid_until=None,
-        lifetime=SIGNATURE_LIFETIME,
-        extra=None,
-    ):
+        auth_user: str,
+        secret_key: str,
+        valid_until: Optional[Union[float, str]] = None,
+        lifetime: int = SIGNATURE_LIFETIME,
+        extra: Optional[Dict[str, Union[str, int]]] = None,
+    ) -> "AbstractSignature":
         """Generates the signature.
 
         If timestamp is given, the signature is created using the given
@@ -279,7 +296,7 @@ class AbstractSignature(object):
         )
 
     @staticmethod
-    def datetime_to_timestamp(dtv):
+    def datetime_to_timestamp(dtv: datetime) -> str:
         """Human readable datetime according to the format specified.
 
          Format is specified in ``TIMESTAMP_FORMAT``.
@@ -293,7 +310,7 @@ class AbstractSignature(object):
             pass
 
     @staticmethod
-    def datetime_to_unix_timestamp(dtv):
+    def datetime_to_unix_timestamp(dtv: datetime) -> float:
         """Convert ``datetime.datetime`` to Unix timestamp.
 
         :param datetime.datetime dtv:
@@ -305,7 +322,9 @@ class AbstractSignature(object):
             pass
 
     @classmethod
-    def timestamp_to_date(cls, timestamp, fail_silently=True):
+    def timestamp_to_date(
+        cls, timestamp: Union[float, str], fail_silently: bool = True
+    ) -> Union[datetime, None]:
         """Converts the given timestamp to date.
 
         If ``fail_silently`` is set to False, raises exceptions if timestamp
@@ -325,7 +344,9 @@ class AbstractSignature(object):
                 return None
 
     @classmethod
-    def unix_timestamp_to_date(cls, timestamp, fail_silently=True):
+    def unix_timestamp_to_date(
+        cls, timestamp: Union[float, str], fail_silently: bool = True
+    ) -> Union[datetime, None]:
         """Converts the given Unix timestamp to date.
         If ``fail_silently`` is set to False, raises exceptions if timestamp
         is not valid timestamp.
