@@ -1,5 +1,7 @@
+from typing import Any, Dict, Optional, Union, Type
 from urllib.parse import urlencode
 
+from .base import AbstractSignature, SignatureValidationResult
 from .defaults import (
     DEFAULT_URL_SUFFIX,
     DEFAULT_EXTRA_PARAM,
@@ -34,12 +36,12 @@ class RequestHelper(object):
 
     def __init__(
         self,
-        signature_param=DEFAULT_SIGNATURE_PARAM,
-        auth_user_param=DEFAULT_AUTH_USER_PARAM,
-        valid_until_param=DEFAULT_VALID_UNTIL_PARAM,
-        extra_param=DEFAULT_EXTRA_PARAM,
-        signature_cls=Signature,
-    ):
+        signature_param: str = DEFAULT_SIGNATURE_PARAM,
+        auth_user_param: str = DEFAULT_AUTH_USER_PARAM,
+        valid_until_param: str = DEFAULT_VALID_UNTIL_PARAM,
+        extra_param: str = DEFAULT_EXTRA_PARAM,
+        signature_cls: Type[AbstractSignature] = Signature,
+    ) -> None:
         """Constructor."""
         self.signature_param = signature_param
         self.auth_user_param = auth_user_param
@@ -48,8 +50,11 @@ class RequestHelper(object):
         self.signature_cls = signature_cls
 
     def signature_to_url(
-        self, signature, endpoint_url="", suffix=DEFAULT_URL_SUFFIX
-    ):
+        self,
+        signature: AbstractSignature,
+        endpoint_url: str = "",
+        suffix: str = DEFAULT_URL_SUFFIX,
+    ) -> str:
         """URL encodes the signature params.
 
         :param ska.Signature signature:
@@ -100,7 +105,9 @@ class RequestHelper(object):
 
         return f"{endpoint_url}{suffix}{urlencode(params)}"
 
-    def signature_to_dict(self, signature):
+    def signature_to_dict(
+        self, signature: AbstractSignature
+    ) -> Dict[str, Union[bytes, str, float, int]]:
         """Put signature into a dictionary.
 
          Dictionary can be used later on to send requests (for example, a POST
@@ -152,7 +159,9 @@ class RequestHelper(object):
 
         return data
 
-    def validate_request_data(self, data, secret_key):
+    def validate_request_data(
+        self, data: Dict[str, Union[bytes, str, float, int]], secret_key: str
+    ) -> SignatureValidationResult:
         """Validate the request data.
 
         :param dict data:
@@ -204,8 +213,12 @@ class RequestHelper(object):
         return validation_result
 
     def extract_signed_data(
-        self, data, secret_key=None, validate=False, fail_silently=False
-    ):
+        self,
+        data: Dict[str, Union[bytes, str, float, int]],
+        secret_key: Optional[str] = None,
+        validate: bool = False,
+        fail_silently: bool = False,
+    ) -> Dict[str, str]:
         """Extract signed data from the request."""
         if validate:
             if not secret_key:
