@@ -239,7 +239,7 @@ class AbstractSignature:
         secret_key: str,
         valid_until: Union[str, float] = None,
         extra: Optional[Dict[str, Union[bytes, str, float, int]]] = None,
-    ) -> str:
+    ) -> bytes:
         """Make hash.
 
         You should implement this method in your signature class.
