@@ -89,9 +89,7 @@ def provider_sign_url(
         if fail_silently:
             return None
         else:
-            raise ImproperlyConfigured(
-                f"Provider {provider} does not exist"
-            )
+            raise ImproperlyConfigured(f"Provider {provider} does not exist")
     secret_key = PROVIDERS.get(provider, {}).get("SECRET_KEY", None)
 
     if extra is None:

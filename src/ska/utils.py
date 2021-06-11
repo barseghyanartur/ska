@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional, Union, Type
+from typing import Dict, Optional, Union, Type
 from urllib.parse import urlencode
 
 from .base import AbstractSignature, SignatureValidationResult
@@ -26,13 +26,7 @@ __all__ = ("RequestHelper",)
 
 
 class RequestHelper(object):
-    """Request helper for easy put/extract of signature params from URLs.
-
-    :param str signature_param:
-    :param str auth_user_param:
-    :param str valid_until_param:
-    :param str extra_param:
-    """
+    """Request helper for easy put/extract of signature params from URLs."""
 
     def __init__(
         self,
@@ -42,7 +36,14 @@ class RequestHelper(object):
         extra_param: str = DEFAULT_EXTRA_PARAM,
         signature_cls: Type[AbstractSignature] = Signature,
     ) -> None:
-        """Constructor."""
+        """Constructor.
+
+        :param signature_param:
+        :param auth_user_param:
+        :param valid_until_param:
+        :param extra_param:
+        :param signature_cls:
+        """
         self.signature_param = signature_param
         self.auth_user_param = auth_user_param
         self.valid_until_param = valid_until_param
@@ -57,11 +58,11 @@ class RequestHelper(object):
     ) -> str:
         """URL encodes the signature params.
 
-        :param ska.Signature signature:
-        :param str endpoint_url:
-        :param str suffix: Suffix to add after the ``endpoint_url`` and before
+        :param signature: Signature class.
+        :param endpoint_url:
+        :param suffix: Suffix to add after the ``endpoint_url`` and before
             the appended signature params.
-        :return str:
+        :return:
 
         :example:
 
@@ -113,8 +114,8 @@ class RequestHelper(object):
          Dictionary can be used later on to send requests (for example, a POST
          request) to the server.
 
-        :param ska.Signature signature:
-        :return dict:
+        :param signature: Signature class.
+        :return:
 
         :example:
 
@@ -164,9 +165,9 @@ class RequestHelper(object):
     ) -> SignatureValidationResult:
         """Validate the request data.
 
-        :param dict data:
-        :param str secret_key:
-        :return ska.SignatureValidationResult:
+        :param data:
+        :param secret_key:
+        :return:
 
         :example:
         If your imaginary `HttpRequest` object has `GET` property (dict),
@@ -219,7 +220,14 @@ class RequestHelper(object):
         validate: bool = False,
         fail_silently: bool = False,
     ) -> Dict[str, str]:
-        """Extract signed data from the request."""
+        """Extract signed data from the request.
+
+        :param data:
+        :param secret_key:
+        :param validate:
+        :param fail_silently:
+        :return:
+        """
         if validate:
             if not secret_key:
                 if fail_silently:

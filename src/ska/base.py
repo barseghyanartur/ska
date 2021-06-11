@@ -1,8 +1,7 @@
+from base64 import b64encode
 from datetime import datetime, timedelta
 import time
 from typing import Any, Dict, List, Optional, Union
-
-from base64 import b64encode
 
 from . import error_codes
 from .defaults import SIGNATURE_LIFETIME, TIMESTAMP_FORMAT
@@ -91,7 +90,12 @@ class AbstractSignature:
     :param valid_until:
     """
 
-    __slots__ = ("signature", "auth_user", "valid_until", "extra",)
+    __slots__ = (
+        "signature",
+        "auth_user",
+        "valid_until",
+        "extra",
+    )
 
     def __init__(
         self,
