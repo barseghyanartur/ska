@@ -1,9 +1,12 @@
 import logging
+from typing import Dict, Optional, Union
 
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 from django.db import IntegrityError
+from django.http import HttpRequest
+from rest_framework.request import Request
 
 from ..... import Signature, extract_signed_request_data
 from .....helpers import get_callback_func
@@ -38,7 +41,12 @@ __all__ = ("BaseSkaAuthenticationBackend",)
 class BaseSkaAuthenticationBackend(object):
     """Base authentication backend."""
 
-    def get_settings(self, request_data=None, request=None, **kwargs):
+    def get_settings(
+        self,
+        request_data: Dict[str, Union[bytes, str, float, int]] = None,
+        request: HttpRequest = None,
+        **kwargs,
+    ):
         """Get settings.
 
         :return:
@@ -47,7 +55,12 @@ class BaseSkaAuthenticationBackend(object):
             "You should implement this method in your authentication backend"
         )
 
-    def get_secret_key(self, request_data=None, request=None, **kwargs):
+    def get_secret_key(
+        self,
+        request_data: Dict[str, Union[bytes, str, float, int]] = None,
+        request: HttpRequest = None,
+        **kwargs,
+    ) -> str:
         """Get secret key.
 
         :return:
@@ -56,10 +69,14 @@ class BaseSkaAuthenticationBackend(object):
             "You should implement this method in your authentication backend"
         )
 
-    def get_request_data(self, request, **kwargs):
+    def get_request_data(
+        self, request: Union[HttpRequest, Request], **kwargs
+    ) -> Dict[str, str]:
         return request.GET.dict()
 
-    def authenticate(self, request, **kwargs):
+    def authenticate(
+        self, request: Union[HttpRequest, Request], **kwargs
+    ) -> Optional[User]:
         """Authenticate.
 
         :param django.http.HttpRequest request:
@@ -213,7 +230,7 @@ class BaseSkaAuthenticationBackend(object):
 
         return user
 
-    def get_user(self, user_id):
+    def get_user(self, user_id: int) -> User:
         """Get user in the ``django.contrib.auth.models.User`` if exists.
 
         :param int user_id:
