@@ -33,7 +33,13 @@ LOGGER = logging.getLogger(__file__)
 class AbstractSignedRequestRequired(permissions.BasePermission):
     """Signed request required permission."""
 
-    def get_settings(self, request_data, request=None, view=None, obj=None):
+    def get_settings(
+        self,
+        request_data: Dict[str, Union[bytes, str, float, int]],
+        request: Optional[Request] = None,
+        view: Optional[GenericViewSet] = None,
+        obj: Optional[Model] = None,
+    ) -> Dict[str, str]:
         """Get settings.
 
         :return:
@@ -42,7 +48,13 @@ class AbstractSignedRequestRequired(permissions.BasePermission):
             "You should implement this method in your permission class"
         )
 
-    def get_secret_key(self, request_data, request=None, view=None, obj=None):
+    def get_secret_key(
+        self,
+        request_data: Dict[str, Union[bytes, str, float, int]],
+        request: Optional[Request] = None,
+        view: Optional[GenericViewSet] = None,
+        obj: Optional[Model] = None,
+    ):
         """Get secret key.
 
         :param request_data:
