@@ -1,7 +1,11 @@
+from typing import Optional, Type, Dict, Union
+
 from django import template
 from django.core.exceptions import ImproperlyConfigured
+from django.template import RequestContext
 
 from ..... import sign_url as ska_sign_url
+from .....base import AbstractSignature
 from .....defaults import (
     DEFAULT_AUTH_USER_PARAM,
     DEFAULT_EXTRA_PARAM,
@@ -13,6 +17,7 @@ from .....defaults import (
 )
 from .....signatures import Signature
 from ..settings import SECRET_KEY, PROVIDERS
+
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2013-2021 Artur Barseghyan"
@@ -28,20 +33,20 @@ register = template.Library()
 
 @register.simple_tag(takes_context=True)
 def sign_url(
-    context,
-    url="",
-    auth_user=None,
-    secret_key=SECRET_KEY,
-    valid_until=None,
-    lifetime=SIGNATURE_LIFETIME,
-    suffix=DEFAULT_URL_SUFFIX,
-    signature_param=DEFAULT_SIGNATURE_PARAM,
-    auth_user_param=DEFAULT_AUTH_USER_PARAM,
-    valid_until_param=DEFAULT_VALID_UNTIL_PARAM,
-    extra=None,
-    extra_param=DEFAULT_EXTRA_PARAM,
-    signature_cls=Signature,
-):
+    context: RequestContext,
+    url: str = "",
+    auth_user: Optional[str] = None,
+    secret_key: str = SECRET_KEY,
+    valid_until: Optional[Union[float, str]] = None,
+    lifetime: int = SIGNATURE_LIFETIME,
+    suffix: str = DEFAULT_URL_SUFFIX,
+    signature_param: str = DEFAULT_SIGNATURE_PARAM,
+    auth_user_param: str = DEFAULT_AUTH_USER_PARAM,
+    valid_until_param: str = DEFAULT_VALID_UNTIL_PARAM,
+    extra: Optional[Dict[str, Union[bytes, str, float, int]]] = None,
+    extra_param: str = DEFAULT_EXTRA_PARAM,
+    signature_cls: Type[AbstractSignature] = Signature,
+) -> str:
     """Sign URL."""
     # The `extra` and `extra_param` are not used at the moment.
     if not auth_user:
@@ -65,21 +70,21 @@ def sign_url(
 
 @register.simple_tag(takes_context=True)
 def provider_sign_url(
-    context,
-    provider,
-    url="",
-    auth_user=None,
-    valid_until=None,
-    lifetime=SIGNATURE_LIFETIME,
-    suffix=DEFAULT_URL_SUFFIX,
-    signature_param=DEFAULT_SIGNATURE_PARAM,
-    auth_user_param=DEFAULT_AUTH_USER_PARAM,
-    valid_until_param=DEFAULT_VALID_UNTIL_PARAM,
-    extra=None,
-    extra_param=DEFAULT_EXTRA_PARAM,
-    signature_cls=Signature,
-    fail_silently=True,
-):
+    context: RequestContext,
+    provider: str,
+    url: str = "",
+    auth_user: Optional[str] = None,
+    valid_until: Optional[Union[float, str]] = None,
+    lifetime: int = SIGNATURE_LIFETIME,
+    suffix: str = DEFAULT_URL_SUFFIX,
+    signature_param: str = DEFAULT_SIGNATURE_PARAM,
+    auth_user_param: str = DEFAULT_AUTH_USER_PARAM,
+    valid_until_param: str = DEFAULT_VALID_UNTIL_PARAM,
+    extra: Optional[Dict[str, Union[bytes, str, float, int]]] = None,
+    extra_param: str = DEFAULT_EXTRA_PARAM,
+    signature_cls: Type[AbstractSignature] = Signature,
+    fail_silently: bool = True,
+) -> Union[str, None]:
     """Sign URL."""
     # The `extra` and `extra_param` are not used at the moment.
     if not auth_user:
