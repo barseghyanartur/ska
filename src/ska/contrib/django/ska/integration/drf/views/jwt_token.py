@@ -1,6 +1,9 @@
+from typing import Optional
+
 from django.contrib.auth import authenticate
 
 from rest_framework.views import APIView
+from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_jwt.settings import api_settings
@@ -19,7 +22,7 @@ __all__ = ("ObtainJSONWebTokenView",)
 class ObtainJSONWebTokenView(APIView):
     """Obtain a JSON web token."""
 
-    def get(self, request, format=None):
+    def get(self, request: Request, format: Optional[str] = None) -> Response:
         user = authenticate(request=request)
 
         if user is not None:

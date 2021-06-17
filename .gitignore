@@ -28,3 +28,4 @@ monkeytype.sqlite3
 /src/ska.egg-info
 /src/ska/contrib/plone/
 /examples/simple/tmp/
+monkeytype.sqlite3

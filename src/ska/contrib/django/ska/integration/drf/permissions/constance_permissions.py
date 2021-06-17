@@ -1,4 +1,10 @@
+from typing import Dict, Optional, Union
+
 from constance import config
+
+from django.db.models import Model
+from rest_framework.request import Request
+from rest_framework.viewsets import GenericViewSet
 
 from .base import (
     BaseProviderSignedRequestRequired,
@@ -17,7 +23,13 @@ __all__ = (
 class ConstanceSignedRequestRequired(BaseSignedRequestRequired):
     """Signed request required permission."""
 
-    def get_settings(self, request_data, request=None, view=None, obj=None):
+    def get_settings(
+        self,
+        request_data: Dict[str, Union[bytes, str, float, int]],
+        request: Optional[Request] = None,
+        view: Optional[GenericViewSet] = None,
+        obj: Optional[Model] = None,
+    ) -> Dict[str, str]:
         return {
             "SECRET_KEY": config.SKA_SECRET_KEY,
         }
@@ -28,5 +40,11 @@ class ConstanceProviderSignedRequestRequired(
 ):
     """Provider signed request required permission."""
 
-    def get_settings(self, request_data, request=None, view=None, obj=None):
+    def get_settings(
+        self,
+        request_data: Dict[str, Union[bytes, str, float, int]],
+        request: Optional[Request] = None,
+        view: Optional[GenericViewSet] = None,
+        obj: Optional[Model] = None,
+    ) -> Dict[str, Dict[str, str]]:
         return config.SKA_PROVIDERS

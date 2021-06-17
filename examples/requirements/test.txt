@@ -14,6 +14,8 @@ coverage[toml]==5.5
     # via
     #   -r test.in
     #   pytest-cov
+dataclasses==0.8
+    # via libcst
 distlib==0.3.2
     # via virtualenv
 factory_boy==2.11.1
@@ -34,12 +36,18 @@ importlib-metadata==4.5.0
     #   virtualenv
 importlib-resources==5.1.4
     # via virtualenv
+libcst==0.3.19
+    # via monkeytype
 mock==4.0.3
     # via -r test.in
+monkeytype==21.5.0
+    # via pytest-monkeytype
 more-itertools==8.8.0
     # via pytest
 mypy-extensions==0.4.3
-    # via pyannotate
+    # via
+    #   monkeytype
+    #   typing-inspect
 packaging==20.9
     # via
     #   pytest
@@ -53,15 +61,13 @@ py==1.10.0
     #   -r test.in
     #   pytest
     #   tox
-pyannotate==1.2.0
-    # via pytest-annotate
 pyparsing==2.4.7
     # via packaging
-pytest-annotate==1.0.3
-    # via -r test.in
 pytest-cov==2.12.0
     # via -r test.in
 pytest-django==4.3.0
+    # via -r test.in
+pytest-monkeytype==1.1.0
     # via -r test.in
 pytest-ordering==0.6
     # via -r test.in
@@ -70,20 +76,21 @@ pytest-pythonpath==0.7.3
 pytest==5.4.3
     # via
     #   -r test.in
-    #   pytest-annotate
     #   pytest-cov
     #   pytest-django
+    #   pytest-monkeytype
     #   pytest-ordering
     #   pytest-pythonpath
 python-dateutil==2.8.1
     # via faker
+pyyaml==5.4.1
+    # via libcst
 radar==0.3
     # via -r test.in
 selenium==3.141.0
     # via -r test.in
 six==1.16.0
     # via
-    #   pyannotate
     #   python-dateutil
     #   tox
     #   virtualenv
@@ -100,7 +107,12 @@ toml==0.10.2
 tox==3.23.1
     # via -r test.in
 typing-extensions==3.10.0.0
-    # via importlib-metadata
+    # via
+    #   importlib-metadata
+    #   libcst
+    #   typing-inspect
+typing-inspect==0.7.1
+    # via libcst
 urllib3==1.26.5
     # via selenium
 virtualenv==20.4.7

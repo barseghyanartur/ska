@@ -4,6 +4,6 @@ __license__ = "GPL 2.0/LGPL 2.1"
 __all__ = ("_",)
 
 
-def _(val):
+def _(val: str) -> str:
     """For future integrations with gettext."""
     return val

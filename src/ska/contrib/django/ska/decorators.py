@@ -32,7 +32,9 @@
   :param str valid_until_param: Name of the GET param name which would hold
       the ``valid_until`` value.
 """
+from typing import Callable, Dict, Union, Optional
 
+from django.http import HttpRequest
 from django.shortcuts import render
 from django.utils.translation import gettext, gettext_lazy as _
 
@@ -73,12 +75,12 @@ class BaseValidateSignedRequest:
 
     def __init__(
         self,
-        secret_key=SECRET_KEY,
-        signature_param=DEFAULT_SIGNATURE_PARAM,
-        auth_user_param=DEFAULT_AUTH_USER_PARAM,
-        valid_until_param=DEFAULT_VALID_UNTIL_PARAM,
-        extra_param=DEFAULT_EXTRA_PARAM,
-    ):
+        secret_key: str = SECRET_KEY,
+        signature_param: str = DEFAULT_SIGNATURE_PARAM,
+        auth_user_param: str = DEFAULT_AUTH_USER_PARAM,
+        valid_until_param: str = DEFAULT_VALID_UNTIL_PARAM,
+        extra_param: str = DEFAULT_EXTRA_PARAM,
+    ) -> None:
         """Constructor."""
         self.secret_key = secret_key
         self.signature_param = signature_param
@@ -86,7 +88,9 @@ class BaseValidateSignedRequest:
         self.valid_until_param = valid_until_param
         self.extra_param = extra_param
 
-    def get_request_data(self, request, *args, **kwargs):
+    def get_request_data(
+        self, request: HttpRequest, *args, **kwargs
+    ) -> Dict[str, str]:
         return request.GET.dict()
 
 
@@ -119,10 +123,10 @@ class ValidateSignedRequest(BaseValidateSignedRequest):
     >>>     # Your code
     """
 
-    def __call__(self, func):
+    def __call__(self, func: Callable) -> Callable:
         """Call."""
 
-        def inner(request, *args, **kwargs):
+        def inner(request: HttpRequest, *args, **kwargs):
             """Inner."""
             request_data = self.get_request_data(request, *args, **kwargs)
 
@@ -196,10 +200,10 @@ class MethodValidateSignedRequest(BaseValidateSignedRequest):
     >>>         # Your code
     """
 
-    def __call__(self, func):
+    def __call__(self, func: Callable) -> Callable:
         """Call."""
 
-        def inner(this, request, *args, **kwargs):
+        def inner(this, request: HttpRequest, *args, **kwargs):
             """Inner."""
             request_data = self.get_request_data(request, *args, **kwargs)
 
@@ -252,7 +256,7 @@ class SignAbsoluteURL:
 
     :attribute str auth_user: Username of the user making the request.
     :attribute str secret_key: The shared secret key.
-    :attribute float|str valid_until: Unix timestamp. If not given, generated
+    :attribute float | str valid_until: Unix timestamp. If not given, generated
         automatically (now + lifetime).
     :attribute int lifetime: Signature lifetime in seconds.
     :attribute str suffix: Suffix to add after the ``endpoint_url`` and before
@@ -283,16 +287,16 @@ class SignAbsoluteURL:
 
     def __init__(
         self,
-        auth_user=AUTH_USER,
-        secret_key=SECRET_KEY,
-        valid_until=None,
-        lifetime=SIGNATURE_LIFETIME,
-        suffix=DEFAULT_URL_SUFFIX,
-        signature_param=DEFAULT_SIGNATURE_PARAM,
-        auth_user_param=DEFAULT_AUTH_USER_PARAM,
-        valid_until_param=DEFAULT_VALID_UNTIL_PARAM,
-        extra=None,
-        extra_param=DEFAULT_EXTRA_PARAM,
+        auth_user: str = AUTH_USER,
+        secret_key: str = SECRET_KEY,
+        valid_until: Union[str, float] = None,
+        lifetime: int = SIGNATURE_LIFETIME,
+        suffix: str = DEFAULT_URL_SUFFIX,
+        signature_param: str = DEFAULT_SIGNATURE_PARAM,
+        auth_user_param: str = DEFAULT_AUTH_USER_PARAM,
+        valid_until_param: str = DEFAULT_VALID_UNTIL_PARAM,
+        extra: Optional[Dict[str, Union[bytes, str, float, int]]] = None,
+        extra_param: str = DEFAULT_EXTRA_PARAM,
     ):
         """Constructor."""
         self.auth_user = auth_user
@@ -306,7 +310,7 @@ class SignAbsoluteURL:
         self.extra = extra if extra is not None else {}
         self.extra_param = extra_param
 
-    def __call__(self, func):
+    def __call__(self, func: Callable):
         """Call."""
 
         def inner(this, *args, **kwargs):

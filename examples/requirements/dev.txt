@@ -53,7 +53,9 @@ cryptography==3.4.7
     #   pyjwt
     #   secretstorage
 dataclasses==0.8
-    # via black
+    # via
+    #   black
+    #   libcst
 decorator==5.0.9
     # via
     #   ipython
@@ -150,6 +152,8 @@ keyring==23.0.1
     # via twine
 lazy-object-proxy==1.6.0
     # via astroid
+libcst==0.3.19
+    # via monkeytype
 markupsafe==2.0.1
     # via
     #   -r docs.in
@@ -160,12 +164,15 @@ mccabe==0.6.1
     #   pylint
 mock==4.0.3
     # via -r test.in
+monkeytype==21.5.0
+    # via pytest-monkeytype
 more-itertools==8.8.0
     # via pytest
 mypy-extensions==0.4.3
     # via
     #   black
-    #   pyannotate
+    #   monkeytype
+    #   typing-inspect
 nodeenv==1.6.0
     # via pre-commit
 packaging==20.9
@@ -206,8 +213,6 @@ py==1.10.0
     #   -r test.in
     #   pytest
     #   tox
-pyannotate==1.2.0
-    # via pytest-annotate
 pycodestyle==2.7.0
     # via flake8
 pycparser==2.20
@@ -228,11 +233,11 @@ pylint==2.8.3
     # via -r style_checkers.in
 pyparsing==2.4.7
     # via packaging
-pytest-annotate==1.0.3
-    # via -r test.in
 pytest-cov==2.12.0
     # via -r test.in
 pytest-django==4.3.0
+    # via -r test.in
+pytest-monkeytype==1.1.0
     # via -r test.in
 pytest-ordering==0.6
     # via -r test.in
@@ -241,9 +246,9 @@ pytest-pythonpath==0.7.3
 pytest==5.4.3
     # via
     #   -r test.in
-    #   pytest-annotate
     #   pytest-cov
     #   pytest-django
+    #   pytest-monkeytype
     #   pytest-ordering
     #   pytest-pythonpath
 python-dateutil==2.8.1
@@ -253,7 +258,9 @@ pytz==2021.1
     #   babel
     #   django
 pyyaml==5.4.1
-    # via pre-commit
+    # via
+    #   libcst
+    #   pre-commit
 radar==0.3
     # via -r test.in
 readme-renderer==29.0
@@ -287,7 +294,6 @@ six==1.16.0
     # via
     #   bleach
     #   prompt-toolkit
-    #   pyannotate
     #   python-dateutil
     #   readme-renderer
     #   tox
@@ -346,6 +352,10 @@ typing-extensions==3.10.0.0
     #   asgiref
     #   black
     #   importlib-metadata
+    #   libcst
+    #   typing-inspect
+typing-inspect==0.7.1
+    # via libcst
 urllib3==1.26.5
     # via
     #   requests
