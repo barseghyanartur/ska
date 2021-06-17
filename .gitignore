@@ -12,6 +12,7 @@
 /.eggs/
 /.idea/
 /.pytest_cache/
+monkeytype.sqlite3
 
 /examples/simple/settings/local_settings.py
 /examples/static
