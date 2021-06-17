@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from importlib import import_module
 import time
+from typing import Callable, Dict, List, Tuple, Union, Optional
 from urllib.parse import quote
 
 from .defaults import SIGNATURE_LIFETIME
@@ -18,14 +19,16 @@ __all__ = (
 )
 
 
-def get_callback_func(func, fail_silently=True):
+def get_callback_func(
+    func: Union[str, Callable], fail_silently: bool = True
+) -> Optional[Callable]:
     """Take a string and try to extract a function from it.
 
-    :param mixed func: If `callable` is given, return as is. If `string`
+    :param func: If `callable` is given, return as is. If `str`
         is given, try to extract the function from the string given and
         return.
-    :param fail_silently: bool
-    :return callable: Returns `callable` if what's extracted is callable or
+    :param fail_silently:
+    :return: Returns `callable` if what's extracted is callable or
         None otherwise.
     """
     if callable(func):
@@ -36,6 +39,7 @@ def get_callback_func(func, fail_silently=True):
         except ValueError as err:
             if not fail_silently:
                 raise ImportError(f"{func} doesn't look like a module path")
+            return None
 
         module = import_module(module_path)
 
@@ -49,14 +53,17 @@ def get_callback_func(func, fail_silently=True):
                 )
 
 
-def dict_keys(data, return_string=False):
+def dict_keys(
+    data: Dict[str, Union[bytes, str, float, int]], return_string: bool = False
+) -> Union[str, List[str]]:
     """Get sorted keys from dictionary given.
 
     If ``return_string`` argument is set to True, returns keys joined by
     commas.
 
-    :param dict data:
-    :param bool return_string:
+    :param data:
+    :param return_string:
+    :return:
     """
     keys = list(data.keys())
     keys.sort()
@@ -67,23 +74,28 @@ def dict_keys(data, return_string=False):
     return keys
 
 
-def dict_to_ordered_list(data):
+def dict_to_ordered_list(
+    data: Dict[str, Union[bytes, str, float, int]]
+) -> List[Tuple[str, Union[bytes, str, float, int]]]:
     """Get extra as ordered list.
 
-    Actually, I'm not sure whether I should or should not be using
-    ``OrderedDict`` here.
-
     :param dict data:
-    :return list:
+    :return:
     """
     items = list(data.items())
     items.sort()
     return items
 
 
-def sorted_urlencode(data, quoted=True):
+def sorted_urlencode(
+    data: Dict[str, Union[bytes, str, float, int]], quoted: bool = True
+) -> str:
     """Similar to built-in ``urlencode``, but always puts data in a sorted
     constant way that stays the same between various python versions.
+
+    :param data:
+    :param quoted:
+    :return:
     """
     _sorted = [f"{k}={v}" for k, v in dict_to_ordered_list(data)]
     res = "&".join(_sorted)
@@ -92,12 +104,14 @@ def sorted_urlencode(data, quoted=True):
     return res
 
 
-def extract_signed_data(data, extra):
+def extract_signed_data(
+    data: Dict[str, Union[bytes, str, float, int]], extra: List[str]
+) -> Dict[str, Union[bytes, str, float, int]]:
     """Filters out non-white-listed items from the ``extra`` dictionary given.
 
-    :param dict data:
-    :param list extra:
-    :return dict:
+    :param data:
+    :param extra:
+    :return:
     """
     extracted_extra = dict(data)
     for key, value in data.items():
@@ -107,11 +121,12 @@ def extract_signed_data(data, extra):
     return extracted_extra
 
 
-def make_valid_until(lifetime=SIGNATURE_LIFETIME):
+def make_valid_until(lifetime: int = SIGNATURE_LIFETIME) -> float:
     """Make valid until.
 
-    :param int lifetime:
-    :return datetime.datetime"""
+    :param lifetime:
+    :return:
+    """
     return time.mktime(
         (datetime.now() + timedelta(seconds=lifetime)).timetuple()
     )

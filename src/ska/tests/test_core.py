@@ -1,5 +1,6 @@
 from copy import copy
 import datetime
+from decimal import Decimal
 import unittest
 
 from .. import (
@@ -594,6 +595,62 @@ class ShortcutsTest(unittest.TestCase):
         for signature_cls in self.signature_classes:
             flow += self.__test_signature_to_dict_validate_signed_request_data(
                 signature_cls=signature_cls
+            )
+        return flow
+
+    @log_info
+    def __test_sig_to_dict_var_types_validate_signed_request_data(
+        self, signature_cls=Signature
+    ):
+        """
+        Tests for `signature_to_dict` with complex data &
+        `validate_signed_request_data`.
+        """
+        flow = []
+
+        flow.append(("Signature class", signature_cls))
+
+        signature_dict = signature_to_dict(
+            auth_user=self.auth_user,
+            secret_key=self.secret_key,
+            signature_cls=signature_cls,
+            extra={
+                "int_type": 10,
+                "float_type": 10.99,
+                "str_type": "Lorem ipsum",
+                "bytes_type": "Dolor sit".encode(),
+                "decimal_type": Decimal("10.99"),
+                "bool_type": True,
+            },
+        )
+
+        flow.append(("Dictionary created", signature_dict))
+
+        # Now validate the signature data
+
+        validation_result = validate_signed_request_data(
+            data=signature_dict,
+            secret_key=self.secret_key,
+            signature_cls=signature_cls,
+        )
+
+        flow.append(("Signature is valid", validation_result.result))
+        flow.append(("Reason not valid", validation_result.reason))
+
+        self.assertTrue(validation_result.result)
+
+        return flow
+
+    def test_04_sig_to_dict_var_types_and_validate_signed_request_data(self):
+        """Tests for `signature_to_dict` with complex data &
+        `validate_signed_request_data`.
+        """
+        flow = []
+        for signature_cls in self.signature_classes:
+            flow.extend(
+                self.__test_sig_to_dict_var_types_validate_signed_request_data(
+                    signature_cls=signature_cls
+                )
             )
         return flow
 

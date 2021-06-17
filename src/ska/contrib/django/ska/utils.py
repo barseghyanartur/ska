@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Dict, Optional, Union
 
 from ....defaults import DEFAULT_PROVIDER_PARAM
 from .models import Signature
@@ -14,12 +15,15 @@ __all__ = (
 )
 
 
-def purge_signature_data():
+def purge_signature_data() -> None:
     """Purge old signature data (valid_until < now)."""
     Signature._default_manager.filter(valid_until__lt=datetime.now()).delete()
 
 
-def get_secret_key(data, default=SECRET_KEY):
+def get_secret_key(
+    data: Optional[Dict[str, Union[bytes, str, float, int]]],
+    default: str = SECRET_KEY,
+) -> str:
     """Obtain the secret key from request data given.
 
     This happens by looking up the secret key by `provider` param from the
@@ -40,7 +44,10 @@ def get_secret_key(data, default=SECRET_KEY):
     return default
 
 
-def get_provider_data(data, settings=None):
+def get_provider_data(
+    data: Dict[str, Union[bytes, str, float, int]],
+    settings: Optional[Dict[str, Dict[str, str]]] = None,
+) -> Optional[Dict[str, str]]:
     """Obtain the secret key from request data given.
 
     This happens by looking up the secret key by `provider` param from the

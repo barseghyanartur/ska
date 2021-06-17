@@ -1385,7 +1385,7 @@ Simply type:
 
 .. code-block:: sh
 
-    ./runtests.py
+    pytest
 
 Or use tox:
 

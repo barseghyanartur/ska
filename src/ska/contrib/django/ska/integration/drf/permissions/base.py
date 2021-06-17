@@ -1,5 +1,10 @@
+from typing import Dict, Optional, Union
 import logging
+
+from django.db.models import Model
 from rest_framework import permissions
+from rest_framework.request import Request
+from rest_framework.viewsets import GenericViewSet
 
 from ....... import validate_signed_request_data
 from .......defaults import (
@@ -11,6 +16,7 @@ from .......defaults import (
 from .......exceptions import ImproperlyConfigured, InvalidData
 
 from ....utils import get_provider_data
+
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2013-2021 Artur Barseghyan"
@@ -27,7 +33,13 @@ LOGGER = logging.getLogger(__file__)
 class AbstractSignedRequestRequired(permissions.BasePermission):
     """Signed request required permission."""
 
-    def get_settings(self, request_data, request=None, view=None, obj=None):
+    def get_settings(
+        self,
+        request_data: Dict[str, Union[bytes, str, float, int]],
+        request: Optional[Request] = None,
+        view: Optional[GenericViewSet] = None,
+        obj: Optional[Model] = None,
+    ) -> Dict[str, str]:
         """Get settings.
 
         :return:
@@ -36,7 +48,13 @@ class AbstractSignedRequestRequired(permissions.BasePermission):
             "You should implement this method in your permission class"
         )
 
-    def get_secret_key(self, request_data, request=None, view=None, obj=None):
+    def get_secret_key(
+        self,
+        request_data: Dict[str, Union[bytes, str, float, int]],
+        request: Optional[Request] = None,
+        view: Optional[GenericViewSet] = None,
+        obj: Optional[Model] = None,
+    ):
         """Get secret key.
 
         :param request_data:
@@ -49,10 +67,20 @@ class AbstractSignedRequestRequired(permissions.BasePermission):
             "You should implement this method in your permission class"
         )
 
-    def get_request_data(self, request, view, obj=None):
+    def get_request_data(
+        self,
+        request: Request,
+        view: GenericViewSet,
+        obj: Optional[Model] = None,
+    ) -> Dict[str, Union[bytes, str, float, int]]:
         return request.GET.dict()
 
-    def validate_signed_request(self, request, view, obj=None):
+    def validate_signed_request(
+        self,
+        request: Request,
+        view: GenericViewSet,
+        obj: Optional[Model] = None,
+    ) -> bool:
         """Validate signed request.
 
         :param request:
@@ -82,17 +110,25 @@ class AbstractSignedRequestRequired(permissions.BasePermission):
             LOGGER.debug(str(err))
             return False
 
-    def has_permission(self, request, view):
+    def has_permission(self, request: Request, view: GenericViewSet) -> bool:
         return self.validate_signed_request(request, view)
 
-    def has_object_permission(self, request, view, obj):
+    def has_object_permission(
+        self, request: Request, view: GenericViewSet, obj: Model
+    ) -> bool:
         return self.validate_signed_request(request, view, obj)
 
 
 class BaseSignedRequestRequired(AbstractSignedRequestRequired):
     """Signed request required permission."""
 
-    def get_secret_key(self, request_data, request=None, view=None, obj=None):
+    def get_secret_key(
+        self,
+        request_data: Dict[str, str],
+        request: Optional[Request] = None,
+        view: Optional[GenericViewSet] = None,
+        obj: Optional[Model] = None,
+    ) -> str:
         """Get secret key.
 
         :param request_data:
@@ -110,7 +146,13 @@ class BaseSignedRequestRequired(AbstractSignedRequestRequired):
 class BaseProviderSignedRequestRequired(AbstractSignedRequestRequired):
     """Provider signed request required permission."""
 
-    def get_secret_key(self, request_data, request=None, view=None, obj=None):
+    def get_secret_key(
+        self,
+        request_data: Dict[str, str],
+        request: Optional[Request] = None,
+        view: Optional[GenericViewSet] = None,
+        obj: Optional[Model] = None,
+    ) -> Optional[str]:
         """Get secret key.
 
         :param request_data:

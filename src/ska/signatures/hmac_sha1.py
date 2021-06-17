@@ -1,5 +1,6 @@
 import hashlib
 import hmac
+from typing import Union, Optional, Dict
 
 from ..base import AbstractSignature
 
@@ -13,14 +14,22 @@ class HMACSHA1Signature(AbstractSignature):
     """HMAC SHA-1 signature."""
 
     @classmethod
-    def make_hash(cls, auth_user, secret_key, valid_until=None, extra=None):
+    def make_hash(
+        cls,
+        auth_user: str,
+        secret_key: str,
+        valid_until: Union[str, float] = None,
+        extra: Optional[Dict[str, Union[bytes, str, float, int]]] = None,
+    ) -> bytes:
         """Make hash.
 
-        :param str auth_user:
-        :param str secret_key:
-        :param float|str valid_until: Unix timestamp, valid until.
-        :param dict extra: Additional variables to be added.
-        :return str:
+        You should implement this method in your signature class.
+
+        :param auth_user:
+        :param secret_key:
+        :param valid_until: Unix timestamp, valid until.
+        :param extra: Additional variables to be added.
+        :return:
         """
         if not extra:
             extra = {}

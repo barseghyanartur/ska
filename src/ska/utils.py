@@ -1,5 +1,7 @@
+from typing import Dict, Optional, Union, Type
 from urllib.parse import urlencode
 
+from .base import AbstractSignature, SignatureValidationResult
 from .defaults import (
     DEFAULT_URL_SUFFIX,
     DEFAULT_EXTRA_PARAM,
@@ -24,23 +26,24 @@ __all__ = ("RequestHelper",)
 
 
 class RequestHelper(object):
-    """Request helper for easy put/extract of signature params from URLs.
-
-    :param str signature_param:
-    :param str auth_user_param:
-    :param str valid_until_param:
-    :param str extra_param:
-    """
+    """Request helper for easy put/extract of signature params from URLs."""
 
     def __init__(
         self,
-        signature_param=DEFAULT_SIGNATURE_PARAM,
-        auth_user_param=DEFAULT_AUTH_USER_PARAM,
-        valid_until_param=DEFAULT_VALID_UNTIL_PARAM,
-        extra_param=DEFAULT_EXTRA_PARAM,
-        signature_cls=Signature,
-    ):
-        """Constructor."""
+        signature_param: str = DEFAULT_SIGNATURE_PARAM,
+        auth_user_param: str = DEFAULT_AUTH_USER_PARAM,
+        valid_until_param: str = DEFAULT_VALID_UNTIL_PARAM,
+        extra_param: str = DEFAULT_EXTRA_PARAM,
+        signature_cls: Type[AbstractSignature] = Signature,
+    ) -> None:
+        """Constructor.
+
+        :param signature_param:
+        :param auth_user_param:
+        :param valid_until_param:
+        :param extra_param:
+        :param signature_cls:
+        """
         self.signature_param = signature_param
         self.auth_user_param = auth_user_param
         self.valid_until_param = valid_until_param
@@ -48,15 +51,18 @@ class RequestHelper(object):
         self.signature_cls = signature_cls
 
     def signature_to_url(
-        self, signature, endpoint_url="", suffix=DEFAULT_URL_SUFFIX
-    ):
+        self,
+        signature: AbstractSignature,
+        endpoint_url: str = "",
+        suffix: str = DEFAULT_URL_SUFFIX,
+    ) -> str:
         """URL encodes the signature params.
 
-        :param ska.Signature signature:
-        :param str endpoint_url:
-        :param str suffix: Suffix to add after the ``endpoint_url`` and before
+        :param signature: Signature class.
+        :param endpoint_url:
+        :param suffix: Suffix to add after the ``endpoint_url`` and before
             the appended signature params.
-        :return str:
+        :return:
 
         :example:
 
@@ -100,14 +106,16 @@ class RequestHelper(object):
 
         return f"{endpoint_url}{suffix}{urlencode(params)}"
 
-    def signature_to_dict(self, signature):
+    def signature_to_dict(
+        self, signature: AbstractSignature
+    ) -> Dict[str, Union[bytes, str, float, int]]:
         """Put signature into a dictionary.
 
          Dictionary can be used later on to send requests (for example, a POST
          request) to the server.
 
-        :param ska.Signature signature:
-        :return dict:
+        :param signature: Signature class.
+        :return:
 
         :example:
 
@@ -152,12 +160,14 @@ class RequestHelper(object):
 
         return data
 
-    def validate_request_data(self, data, secret_key):
+    def validate_request_data(
+        self, data: Dict[str, Union[bytes, str, float, int]], secret_key: str
+    ) -> SignatureValidationResult:
         """Validate the request data.
 
-        :param dict data:
-        :param str secret_key:
-        :return ska.SignatureValidationResult:
+        :param data:
+        :param secret_key:
+        :return:
 
         :example:
         If your imaginary `HttpRequest` object has `GET` property (dict),
@@ -204,9 +214,20 @@ class RequestHelper(object):
         return validation_result
 
     def extract_signed_data(
-        self, data, secret_key=None, validate=False, fail_silently=False
-    ):
-        """Extract signed data from the request."""
+        self,
+        data: Dict[str, Union[bytes, str, float, int]],
+        secret_key: Optional[str] = None,
+        validate: bool = False,
+        fail_silently: bool = False,
+    ) -> Dict[str, str]:
+        """Extract signed data from the request.
+
+        :param data:
+        :param secret_key:
+        :param validate:
+        :param fail_silently:
+        :return:
+        """
         if validate:
             if not secret_key:
                 if fail_silently:

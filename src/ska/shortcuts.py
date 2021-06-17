@@ -1,3 +1,6 @@
+from typing import Dict, Optional, Type, Union
+
+from .base import SignatureValidationResult, AbstractSignature
 from .defaults import (
     DEFAULT_AUTH_USER_PARAM,
     DEFAULT_EXTRA_PARAM,
@@ -28,40 +31,40 @@ __all__ = (
 
 
 def sign_url(
-    auth_user,
-    secret_key,
-    valid_until=None,
-    lifetime=SIGNATURE_LIFETIME,
-    url="",
-    suffix=DEFAULT_URL_SUFFIX,
-    signature_param=DEFAULT_SIGNATURE_PARAM,
-    auth_user_param=DEFAULT_AUTH_USER_PARAM,
-    valid_until_param=DEFAULT_VALID_UNTIL_PARAM,
-    extra=None,
-    extra_param=DEFAULT_EXTRA_PARAM,
-    signature_cls=Signature,
-):
+    auth_user: str,
+    secret_key: str,
+    valid_until: Optional[Union[float, str]] = None,
+    lifetime: int = SIGNATURE_LIFETIME,
+    url: str = "",
+    suffix: str = DEFAULT_URL_SUFFIX,
+    signature_param: str = DEFAULT_SIGNATURE_PARAM,
+    auth_user_param: str = DEFAULT_AUTH_USER_PARAM,
+    valid_until_param: str = DEFAULT_VALID_UNTIL_PARAM,
+    extra: Optional[Dict[str, Union[bytes, str, float, int]]] = None,
+    extra_param: str = DEFAULT_EXTRA_PARAM,
+    signature_cls: Type[AbstractSignature] = Signature,
+) -> str:
     """Sign the URL.
 
-    :param str auth_user: Username of the user making the request.
-    :param str secret_key: The shared secret key.
-    :param float|str valid_until: Unix timestamp. If not given, generated
+    :param auth_user: Username of the user making the request.
+    :param secret_key: The shared secret key.
+    :param valid_until: Unix timestamp. If not given, generated
         automatically (now + lifetime).
-    :param int lifetime: Signature lifetime in seconds.
-    :param str url: URL to be signed.
-    :param str suffix: Suffix to add after the ``endpoint_url`` and before
+    :param lifetime: Signature lifetime in seconds.
+    :param url: URL to be signed.
+    :param suffix: Suffix to add after the ``endpoint_url`` and before
         the appended signature params.
-    :param str signature_param: Name of the GET param name which would hold
+    :param signature_param: Name of the GET param name which would hold
         the generated signature value.
-    :param str auth_user_param: Name of the GET param name which would hold
+    :param auth_user_param: Name of the GET param name which would hold
         the ``auth_user`` value.
-    :param str valid_until_param: Name of the GET param name which would
+    :param valid_until_param: Name of the GET param name which would
         hold the ``valid_until`` value.
-    :param dict extra: Extra variables to add to the request.
-    :param str extra_param: Name of the GET param name which would hold the
+    :param extra: Extra variables to add to the request.
+    :param extra_param: Name of the GET param name which would hold the
         ``extra_keys`` value.
     :param signature_cls:
-    :return str:
+    :return:
 
     :example:
     Required imports.
@@ -118,35 +121,35 @@ def sign_url(
 
 
 def signature_to_dict(
-    auth_user,
-    secret_key,
-    valid_until=None,
-    lifetime=SIGNATURE_LIFETIME,
-    signature_param=DEFAULT_SIGNATURE_PARAM,
-    auth_user_param=DEFAULT_AUTH_USER_PARAM,
-    valid_until_param=DEFAULT_VALID_UNTIL_PARAM,
-    extra=None,
-    extra_param=DEFAULT_EXTRA_PARAM,
-    signature_cls=Signature,
-):
+    auth_user: str,
+    secret_key: str,
+    valid_until: Optional[Union[float, str]] = None,
+    lifetime: int = SIGNATURE_LIFETIME,
+    signature_param: str = DEFAULT_SIGNATURE_PARAM,
+    auth_user_param: str = DEFAULT_AUTH_USER_PARAM,
+    valid_until_param: str = DEFAULT_VALID_UNTIL_PARAM,
+    extra: Optional[Dict[str, Union[str, int]]] = None,
+    extra_param: str = DEFAULT_EXTRA_PARAM,
+    signature_cls: Type[AbstractSignature] = Signature,
+) -> Dict[str, Union[bytes, str, float, int]]:
     """Return a dictionary containing the signature data params.
 
-    :param str auth_user: Username of the user making the request.
-    :param str secret_key: The shared secret key.
-    :param float|str valid_until: Unix timestamp. If not given, generated
+    :param auth_user: Username of the user making the request.
+    :param secret_key: The shared secret key.
+    :param valid_until: Unix timestamp. If not given, generated
         automatically (now + lifetime).
-    :param int lifetime: Signature lifetime in seconds.
-    :param str signature_param: Name of the (for example POST) param name
+    :param lifetime: Signature lifetime in seconds.
+    :param signature_param: Name of the (for example POST) param name
         which would hold the generated ``signature`` value.
-    :param str auth_user_param: Name of the (for example POST) param name
+    :param auth_user_param: Name of the (for example POST) param name
         which would hold the ``auth_user`` value.
-    :param str valid_until_param: Name of the (for example POST) param name
+    :param valid_until_param: Name of the (for example POST) param name
         which would hold the ``valid_until`` value.
-    :param dict extra: Additional arguments for the signature.
-    :param str extra_param: Name of the (for example POST) param name which
+    :param extra: Additional arguments for the signature.
+    :param extra_param: Name of the (for example POST) param name which
         would hold the ``extra`` keys value.
     :param signature_cls:
-    :return str:
+    :return:
 
     :example:
     Required imports.
@@ -197,33 +200,33 @@ def signature_to_dict(
 
 
 def validate_signed_request_data(
-    data,
-    secret_key,
-    signature_param=DEFAULT_SIGNATURE_PARAM,
-    auth_user_param=DEFAULT_AUTH_USER_PARAM,
-    valid_until_param=DEFAULT_VALID_UNTIL_PARAM,
-    extra_param=DEFAULT_EXTRA_PARAM,
-    signature_cls=Signature,
-):
+    data: Dict[str, Union[bytes, str, float, int]],
+    secret_key: str,
+    signature_param: str = DEFAULT_SIGNATURE_PARAM,
+    auth_user_param: str = DEFAULT_AUTH_USER_PARAM,
+    valid_until_param: str = DEFAULT_VALID_UNTIL_PARAM,
+    extra_param: str = DEFAULT_EXTRA_PARAM,
+    signature_cls: Type[AbstractSignature] = Signature,
+) -> SignatureValidationResult:
     """Validate the signed request data.
 
-    :param dict data: Dictionary holding the (HTTP) request (for example GET
+    :param data: Dictionary holding the (HTTP) request (for example GET
         or POST) data.
-    :param str secret_key: The shared secret key.
-    :param str signature_param: Name of the (for example GET or POST) param
+    :param secret_key: The shared secret key.
+    :param signature_param: Name of the (for example GET or POST) param
         name which holds the ``signature`` value.
-    :param str auth_user_param: Name of the (for example GET or POST) param
+    :param auth_user_param: Name of the (for example GET or POST) param
         name which holds the ``auth_user`` value.
-    :param str valid_until_param: Name of the (foe example GET or POST)
+    :param valid_until_param: Name of the (foe example GET or POST)
         param name which holds the ``valid_until`` value.
-    :param str extra_param: Name of the (foe example GET or POST) param
+    :param extra_param: Name of the (foe example GET or POST) param
         name which holds the ``extra`` keys value.
     :param signature_cls:
-    :return ska.SignatureValidationResult: A ``ska.SignatureValidationResult``
+    :return: A ``ska.SignatureValidationResult``
         object with the following properties:
             - `result` (bool): True if data is valid. False otherwise.
-            - `reason` (list): List of strings, indicating validation errors.
-              Empty list in case if `result` is True.
+            - `reason` (Iterable): List of strings, indicating validation
+              errors. Empty list in case if `result` is True.
     """
     request_helper = RequestHelper(
         signature_param=signature_param,
@@ -241,34 +244,34 @@ def validate_signed_request_data(
 
 
 def extract_signed_request_data(
-    data,
-    secret_key=None,
-    signature_param=DEFAULT_SIGNATURE_PARAM,
-    auth_user_param=DEFAULT_AUTH_USER_PARAM,
-    valid_until_param=DEFAULT_VALID_UNTIL_PARAM,
-    extra_param=DEFAULT_EXTRA_PARAM,
-    validate=False,
-    fail_silently=False,
-    signature_cls=Signature,
-):
+    data: Dict[str, Union[bytes, str, float, int]],
+    secret_key: Optional[str] = None,
+    signature_param: str = DEFAULT_SIGNATURE_PARAM,
+    auth_user_param: str = DEFAULT_AUTH_USER_PARAM,
+    valid_until_param: str = DEFAULT_VALID_UNTIL_PARAM,
+    extra_param: str = DEFAULT_EXTRA_PARAM,
+    validate: bool = False,
+    fail_silently: bool = False,
+    signature_cls: Type[AbstractSignature] = Signature,
+) -> Dict[str, Union[bytes, str, float, int]]:
     """Validate the signed request data.
 
-    :param dict data: Dictionary holding the (HTTP) request (for example
+    :param data: Dictionary holding the (HTTP) request (for example
         GET or POST) data.
-    :param str secret_key: The shared secret key.
-    :param str signature_param: Name of the (for example GET or POST) param
+    :param secret_key: The shared secret key.
+    :param signature_param: Name of the (for example GET or POST) param
         name which holds the ``signature`` value.
-    :param str auth_user_param: Name of the (for example GET or POST) param
+    :param auth_user_param: Name of the (for example GET or POST) param
         name which holds the ``auth_user`` value.
-    :param str valid_until_param: Name of the (foe example GET or POST) param
+    :param valid_until_param: Name of the (foe example GET or POST) param
         name which holds the ``valid_until`` value.
-    :param str extra_param: Name of the (foe example GET or POST) param name
+    :param extra_param: Name of the (foe example GET or POST) param name
         which holds the ``extra`` value.
-    :param bool validate: If set to True, request data is validated before
+    :param validate: If set to True, request data is validated before
         returning the result.
-    :param bool fail_silently: If set to True, exceptions are omitted.
+    :param fail_silently: If set to True, exceptions are omitted.
     :param signature_cls:
-    :return dict: Dictionary with signed request data.
+    :return: Dictionary with signed request data.
     """
     request_helper = RequestHelper(
         signature_param=signature_param,
