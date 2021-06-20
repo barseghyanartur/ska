@@ -15,8 +15,8 @@ validating) dictionaries and URLs.
     :target: https://pypi.python.org/pypi/ska/
     :alt: Supported Python versions
 
-.. image:: https://img.shields.io/travis/barseghyanartur/ska/master.svg
-   :target: http://travis-ci.org/barseghyanartur/ska
+.. image:: https://github.com/barseghyanartur/ska/workflows/test/badge.svg
+   :target: https://github.com/barseghyanartur/ska/actions
    :alt: Build Status
 
 .. image:: https://readthedocs.org/projects/ska/badge/?version=latest
