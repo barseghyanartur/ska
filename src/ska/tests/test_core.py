@@ -847,7 +847,7 @@ class ExtraTest(unittest.TestCase):
         return flow
 
     @log_info
-    def __t_sgn_url_and_vldt_sgnd_req_data_tamper_extra_keys_add(
+    def __t_sgn_url_prv_and_vldt_sgnd_req_data_tamper_extra_keys_add(
         self, signature_cls=Signature
     ):
         """Tests for `sign_url` and `validate_signed_request_data`.
