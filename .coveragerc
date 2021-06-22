@@ -7,6 +7,7 @@ omit =
     example/example/settings/*
     example/example/wsgi.py
     .tox/*
+relative_files = True
 
 [report]
 exclude_lines =
