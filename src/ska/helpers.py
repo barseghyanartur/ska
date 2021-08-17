@@ -1,6 +1,8 @@
+from collections import OrderedDict
 from datetime import datetime, timedelta
 from importlib import import_module
 import json
+from uuid import UUID
 import time
 from typing import Callable, Dict, List, Tuple, Union, Optional
 from urllib.parse import quote
@@ -90,6 +92,22 @@ def dict_to_ordered_list(
     return items
 
 
+def dict_to_ordered_dict(obj):
+    if isinstance(obj, dict):
+        obj = OrderedDict(sorted(obj.items()))
+        for k, v in obj.items():
+            if isinstance(v, dict) or isinstance(v, list):
+                obj[k] = dict_to_ordered_dict(v)
+
+    if isinstance(obj, list):
+        for i, v in enumerate(obj):
+            if isinstance(v, dict) or isinstance(v, list):
+                obj[i] = dict_to_ordered_dict(v)
+        obj = sorted(obj, key=lambda x: json.dumps(x))
+
+    return obj
+
+
 def default_value_dumper(value):
     return value
 
@@ -97,6 +115,8 @@ def default_value_dumper(value):
 def javascript_value_dumper(value):
     if isinstance(value, (int, float, str)):
         return value
+    # elif isinstance(value, UUID):
+    #     return str(value)
     else:
         return json.dumps(value, separators=(",", ":"))
 
@@ -117,7 +137,8 @@ def sorted_urlencode(
     if not value_dumper:
         value_dumper = default_value_dumper
 
-    _sorted = [f"{k}={value_dumper(v)}" for k, v in dict_to_ordered_list(data)]
+    # _sorted = [f"{k}={value_dumper(v)}" for k, v in dict_to_ordered_list(data)]
+    _sorted = [f"{k}={value_dumper(v)}" for k, v in dict_to_ordered_dict(data).items()]
     res = "&".join(_sorted)
     if quoted:
         res = quote(res)
