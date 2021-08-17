@@ -94,7 +94,7 @@ def dict_to_ordered_list(
 
 def dict_to_ordered_dict(obj):
     if isinstance(obj, dict):
-        obj = OrderedDict(sorted(obj.items()))
+        obj = dict(sorted(obj.items()))
         for k, v in obj.items():
             if isinstance(v, dict) or isinstance(v, list):
                 obj[k] = dict_to_ordered_dict(v)
