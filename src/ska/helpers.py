@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from importlib import import_module
+import json
 import time
 from typing import Callable, Dict, List, Tuple, Union, Optional
 from urllib.parse import quote
@@ -10,13 +11,14 @@ __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2013-2021 Artur Barseghyan"
 __license__ = "GPL 2.0/LGPL 2.1"
 __all__ = (
-    "get_callback_func",
     "default_value_dumper",
     "dict_keys",
     "dict_to_ordered_list",
-    "sorted_urlencode",
     "extract_signed_data",
+    "get_callback_func",
+    "javascript_value_dumper",
     "make_valid_until",
+    "sorted_urlencode",
 )
 
 
@@ -90,6 +92,13 @@ def dict_to_ordered_list(
 
 def default_value_dumper(value):
     return value
+
+
+def javascript_value_dumper(value):
+    if isinstance(value, (int, float, str)):
+        return value
+    else:
+        return json.dumps(value, separators=(",", ":"))
 
 
 def sorted_urlencode(

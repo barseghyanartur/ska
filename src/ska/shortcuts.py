@@ -245,7 +245,9 @@ def validate_signed_request_data(
     )
 
     validation_result = request_helper.validate_request_data(
-        data=data, secret_key=secret_key, value_dumper=value_dumper,
+        data=data,
+        secret_key=secret_key,
+        value_dumper=value_dumper,
     )
 
     return validation_result
