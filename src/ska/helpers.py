@@ -103,7 +103,7 @@ def dict_to_ordered_dict(obj):
         for i, v in enumerate(obj):
             if isinstance(v, dict) or isinstance(v, list):
                 obj[i] = dict_to_ordered_dict(v)
-        obj = sorted(obj, key=lambda x: json.dumps(x))
+        # obj = sorted(obj, key=lambda x: json.dumps(x))
 
     return obj
 
