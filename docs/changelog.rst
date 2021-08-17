@@ -15,6 +15,17 @@ are used for versioning (schema follows below):
   0.3.4 to 0.4).
 - All backwards incompatible changes are mentioned in this document.
 
+1.9
+-----
+2021-08-17
+
+- Add `value_dumper` to most of the functions/methods related to signature
+  generation/validation. It's aimed to make signatures generated in languages
+  better compatible with `ska`.
+- Add `quoter` to most of the functions/methods related to signature
+  generation/validation. It's aimed to make signatures generated in languages
+  better compatible with `ska`.
+
 1.8.2
 -----
 2021-06-18

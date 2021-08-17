@@ -135,6 +135,7 @@ def signature_to_dict(
     extra_param: str = DEFAULT_EXTRA_PARAM,
     signature_cls: Type[AbstractSignature] = Signature,
     value_dumper: Optional[Callable] = None,
+    quoter: Optional[Callable] = None,
 ) -> Dict[str, Union[bytes, str, float, int]]:
     """Return a dictionary containing the signature data params.
 
@@ -154,6 +155,7 @@ def signature_to_dict(
         would hold the ``extra`` keys value.
     :param signature_cls:
     :param value_dumper:
+    :param quoter:
     :return:
 
     :example:
@@ -190,6 +192,7 @@ def signature_to_dict(
         lifetime=lifetime,
         extra=extra,
         value_dumper=value_dumper,
+        quoter=quoter,
     )
 
     request_helper = RequestHelper(
@@ -214,6 +217,7 @@ def validate_signed_request_data(
     extra_param: str = DEFAULT_EXTRA_PARAM,
     signature_cls: Type[AbstractSignature] = Signature,
     value_dumper: Optional[Callable] = None,
+    quoter: Optional[Callable] = None,
 ) -> SignatureValidationResult:
     """Validate the signed request data.
 
@@ -230,6 +234,7 @@ def validate_signed_request_data(
         name which holds the ``extra`` keys value.
     :param signature_cls:
     :param value_dumper:
+    :param quoter:
     :return: A ``ska.SignatureValidationResult``
         object with the following properties:
             - `result` (bool): True if data is valid. False otherwise.
@@ -248,6 +253,7 @@ def validate_signed_request_data(
         data=data,
         secret_key=secret_key,
         value_dumper=value_dumper,
+        quoter=quoter,
     )
 
     return validation_result
@@ -264,6 +270,7 @@ def extract_signed_request_data(
     fail_silently: bool = False,
     signature_cls: Type[AbstractSignature] = Signature,
     value_dumper: Optional[Callable] = None,
+    quoter: Optional[Callable] = None,
 ) -> Dict[str, Union[bytes, str, float, int]]:
     """Validate the signed request data.
 
@@ -283,6 +290,7 @@ def extract_signed_request_data(
     :param fail_silently: If set to True, exceptions are omitted.
     :param signature_cls:
     :param value_dumper:
+    :param quoter:
     :return: Dictionary with signed request data.
     """
     request_helper = RequestHelper(
@@ -299,4 +307,5 @@ def extract_signed_request_data(
         validate=validate,
         fail_silently=fail_silently,
         value_dumper=value_dumper,
+        quoter=quoter,
     )

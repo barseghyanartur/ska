@@ -165,12 +165,14 @@ class RequestHelper(object):
         data: Dict[str, Union[bytes, str, float, int]],
         secret_key: str,
         value_dumper: Optional[Callable] = None,
+        quoter: Optional[Callable] = None,
     ) -> SignatureValidationResult:
         """Validate the request data.
 
         :param data:
         :param secret_key:
         :param value_dumper:
+        :param quoter:
         :return:
 
         :example:
@@ -214,6 +216,7 @@ class RequestHelper(object):
             return_object=True,
             extra=extra,
             value_dumper=value_dumper,
+            quoter=quoter,
         )
 
         return validation_result
@@ -225,6 +228,7 @@ class RequestHelper(object):
         validate: bool = False,
         fail_silently: bool = False,
         value_dumper: Optional[Callable] = None,
+        quoter: Optional[Callable] = None,
     ) -> Dict[str, str]:
         """Extract signed data from the request.
 
@@ -233,6 +237,7 @@ class RequestHelper(object):
         :param validate:
         :param fail_silently:
         :param value_dumper:
+        :param quoter:
         :return:
         """
         if validate:
@@ -244,7 +249,10 @@ class RequestHelper(object):
                     "if `validate` is set to True."
                 )
             validation_result = self.validate_request_data(
-                data, secret_key, value_dumper=value_dumper
+                data,
+                secret_key,
+                value_dumper=value_dumper,
+                quoter=quoter,
             )
             if not validation_result.result:
                 if fail_silently:

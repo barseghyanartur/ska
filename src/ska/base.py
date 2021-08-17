@@ -130,6 +130,7 @@ class AbstractSignature:
         extra: Optional[Dict[str, Union[bytes, str, float, int]]] = None,
         return_object: bool = False,
         value_dumper: Optional[Callable] = None,
+        quoter: Optional[Callable] = None,
     ) -> Union[SignatureValidationResult, bool]:
         """Validates the signature.
 
@@ -141,6 +142,7 @@ class AbstractSignature:
         :param return_object: If set to True, an instance of
             ``SignatureValidationResult`` is returned.
         :param value_dumper:
+        :param quoter:
         :return:
 
         :example:
@@ -165,6 +167,7 @@ class AbstractSignature:
             valid_until=valid_until,
             extra=extra,
             value_dumper=value_dumper,
+            quoter=quoter,
         )
 
         if not return_object:
@@ -209,6 +212,7 @@ class AbstractSignature:
         timestamp: Union[float, str],
         extra: Optional[Dict[str, Union[bytes, str, float, int]]] = None,
         value_dumper: Optional[Callable] = None,
+        quoter: Optional[Callable] = None,
     ) -> bytes:
         """Get base string.
 
@@ -219,6 +223,7 @@ class AbstractSignature:
         :param timestamp:
         :param extra:
         :param value_dumper:
+        :param quoter:
         """
         if not extra:
             extra = {}
@@ -227,7 +232,9 @@ class AbstractSignature:
 
         if extra:
             urlencoded_extra = sorted_urlencode(
-                extra, value_dumper=value_dumper
+                extra,
+                value_dumper=value_dumper,
+                quoter=quoter,
             )
             if urlencoded_extra:
                 _base.append(urlencoded_extra)
@@ -251,6 +258,7 @@ class AbstractSignature:
         valid_until: Union[str, float] = None,
         extra: Optional[Dict[str, Union[bytes, str, float, int]]] = None,
         value_dumper: Optional[Callable] = None,
+        quoter: Optional[Callable] = None,
     ) -> bytes:
         """Make hash.
 
@@ -261,6 +269,7 @@ class AbstractSignature:
         :param valid_until: Unix timestamp, valid until.
         :param extra: Additional variables to be added.
         :param value_dumper:
+        :param quoter:
         :return:
         """
         raise NotImplementedError("You should implement this method!")
@@ -274,6 +283,7 @@ class AbstractSignature:
         lifetime: int = SIGNATURE_LIFETIME,
         extra: Optional[Dict[str, Union[bytes, str, float, int]]] = None,
         value_dumper: Optional[Callable] = None,
+        quoter: Optional[Callable] = None,
     ) -> "AbstractSignature":
         """Generates the signature.
 
@@ -285,6 +295,8 @@ class AbstractSignature:
         :param valid_until: Unix timestamp, valid until.
         :param lifetime: Lifetime of the signature in seconds.
         :param extra: Additional variables to be added.
+        :param value_dumper:
+        :param quoter:
         :return:
 
         :example:
@@ -311,6 +323,7 @@ class AbstractSignature:
                 valid_until,
                 extra,
                 value_dumper=value_dumper,
+                quoter=quoter,
             )
         )
 

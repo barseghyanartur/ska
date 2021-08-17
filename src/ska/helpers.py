@@ -1,8 +1,6 @@
-from collections import OrderedDict
 from datetime import datetime, timedelta
 from importlib import import_module
 import json
-from uuid import UUID
 import time
 from typing import Callable, Dict, List, Tuple, Union, Optional
 from urllib.parse import quote
@@ -21,6 +19,8 @@ __all__ = (
     "javascript_value_dumper",
     "make_valid_until",
     "sorted_urlencode",
+    "default_quoter",
+    "javascript_quoter",
 )
 
 
@@ -121,10 +121,19 @@ def javascript_value_dumper(value):
         return json.dumps(value, separators=(",", ":"))
 
 
+def default_quoter(value):
+    return quote(value)
+
+
+def javascript_quoter(value):
+    return quote(value, safe="~()*!.'")
+
+
 def sorted_urlencode(
     data: Dict[str, Union[bytes, str, float, int]],
     quoted: bool = True,
     value_dumper: Optional[Callable] = default_value_dumper,
+    quoter: Optional[Callable] = default_quoter,
 ) -> str:
     """Similar to built-in ``urlencode``, but always puts data in a sorted
     constant way that stays the same between various python versions.
@@ -132,16 +141,22 @@ def sorted_urlencode(
     :param data:
     :param quoted:
     :param value_dumper:
+    :param quoter:
     :return:
     """
     if not value_dumper:
         value_dumper = default_value_dumper
 
+    if not quoter:
+        quoter = default_quoter
+
     # _sorted = [f"{k}={value_dumper(v)}" for k, v in dict_to_ordered_list(data)]
-    _sorted = [f"{k}={value_dumper(v)}" for k, v in dict_to_ordered_dict(data).items()]
+    _sorted = [
+        f"{k}={value_dumper(v)}" for k, v in dict_to_ordered_dict(data).items()
+    ]
     res = "&".join(_sorted)
     if quoted:
-        res = quote(res)
+        res = quoter(res)
     return res
 
 

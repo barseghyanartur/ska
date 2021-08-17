@@ -21,6 +21,7 @@ class HMACSHA224Signature(AbstractSignature):
         valid_until: Union[str, float] = None,
         extra: Optional[Dict[str, Union[bytes, str, float, int]]] = None,
         value_dumper: Optional[Callable] = None,
+        quoter: Optional[Callable] = None,
     ) -> bytes:
         """Make hash.
 
@@ -31,6 +32,7 @@ class HMACSHA224Signature(AbstractSignature):
         :param valid_until: Unix timestamp, valid until.
         :param extra: Additional variables to be added.
         :param value_dumper:
+        :param quoter:
         :return:
         """
         if not extra:
@@ -39,7 +41,11 @@ class HMACSHA224Signature(AbstractSignature):
         raw_hmac = hmac.new(
             cls.make_secret_key(secret_key),
             cls.get_base(
-                auth_user, valid_until, extra=extra, value_dumper=value_dumper
+                auth_user,
+                valid_until,
+                extra=extra,
+                value_dumper=value_dumper,
+                quoter=quoter,
             ),
             hashlib.sha224,
         ).digest()
