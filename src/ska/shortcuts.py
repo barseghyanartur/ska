@@ -1,4 +1,4 @@
-from typing import Dict, Optional, Type, Union
+from typing import Dict, Optional, Type, Union, Callable
 
 from .base import SignatureValidationResult, AbstractSignature
 from .defaults import (
@@ -43,6 +43,7 @@ def sign_url(
     extra: Optional[Dict[str, Union[bytes, str, float, int]]] = None,
     extra_param: str = DEFAULT_EXTRA_PARAM,
     signature_cls: Type[AbstractSignature] = Signature,
+    value_dumper: Optional[Callable] = None,
 ) -> str:
     """Sign the URL.
 
@@ -64,6 +65,7 @@ def sign_url(
     :param extra_param: Name of the GET param name which would hold the
         ``extra_keys`` value.
     :param signature_cls:
+    :param value_dumper:
     :return:
 
     :example:
@@ -101,6 +103,7 @@ def sign_url(
         valid_until=valid_until,
         lifetime=lifetime,
         extra=extra,
+        value_dumper=value_dumper,
     )
 
     request_helper = RequestHelper(
@@ -131,6 +134,8 @@ def signature_to_dict(
     extra: Optional[Dict[str, Union[str, int]]] = None,
     extra_param: str = DEFAULT_EXTRA_PARAM,
     signature_cls: Type[AbstractSignature] = Signature,
+    value_dumper: Optional[Callable] = None,
+    quoter: Optional[Callable] = None,
 ) -> Dict[str, Union[bytes, str, float, int]]:
     """Return a dictionary containing the signature data params.
 
@@ -149,6 +154,8 @@ def signature_to_dict(
     :param extra_param: Name of the (for example POST) param name which
         would hold the ``extra`` keys value.
     :param signature_cls:
+    :param value_dumper:
+    :param quoter:
     :return:
 
     :example:
@@ -184,6 +191,8 @@ def signature_to_dict(
         valid_until=valid_until,
         lifetime=lifetime,
         extra=extra,
+        value_dumper=value_dumper,
+        quoter=quoter,
     )
 
     request_helper = RequestHelper(
@@ -207,6 +216,8 @@ def validate_signed_request_data(
     valid_until_param: str = DEFAULT_VALID_UNTIL_PARAM,
     extra_param: str = DEFAULT_EXTRA_PARAM,
     signature_cls: Type[AbstractSignature] = Signature,
+    value_dumper: Optional[Callable] = None,
+    quoter: Optional[Callable] = None,
 ) -> SignatureValidationResult:
     """Validate the signed request data.
 
@@ -222,6 +233,8 @@ def validate_signed_request_data(
     :param extra_param: Name of the (foe example GET or POST) param
         name which holds the ``extra`` keys value.
     :param signature_cls:
+    :param value_dumper:
+    :param quoter:
     :return: A ``ska.SignatureValidationResult``
         object with the following properties:
             - `result` (bool): True if data is valid. False otherwise.
@@ -237,7 +250,10 @@ def validate_signed_request_data(
     )
 
     validation_result = request_helper.validate_request_data(
-        data=data, secret_key=secret_key
+        data=data,
+        secret_key=secret_key,
+        value_dumper=value_dumper,
+        quoter=quoter,
     )
 
     return validation_result
@@ -253,6 +269,8 @@ def extract_signed_request_data(
     validate: bool = False,
     fail_silently: bool = False,
     signature_cls: Type[AbstractSignature] = Signature,
+    value_dumper: Optional[Callable] = None,
+    quoter: Optional[Callable] = None,
 ) -> Dict[str, Union[bytes, str, float, int]]:
     """Validate the signed request data.
 
@@ -271,6 +289,8 @@ def extract_signed_request_data(
         returning the result.
     :param fail_silently: If set to True, exceptions are omitted.
     :param signature_cls:
+    :param value_dumper:
+    :param quoter:
     :return: Dictionary with signed request data.
     """
     request_helper = RequestHelper(
@@ -286,4 +306,6 @@ def extract_signed_request_data(
         secret_key=secret_key,
         validate=validate,
         fail_silently=fail_silently,
+        value_dumper=value_dumper,
+        quoter=quoter,
     )
