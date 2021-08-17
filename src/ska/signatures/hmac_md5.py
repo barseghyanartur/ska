@@ -1,6 +1,6 @@
 import hashlib
 import hmac
-from typing import Union, Optional, Dict
+from typing import Union, Optional, Dict, Callable
 
 from ..base import AbstractSignature
 
@@ -20,6 +20,7 @@ class HMACMD5Signature(AbstractSignature):
         secret_key: str,
         valid_until: Union[str, float] = None,
         extra: Optional[Dict[str, Union[bytes, str, float, int]]] = None,
+        value_dumper: Optional[Callable] = None,
     ) -> bytes:
         """Make hash.
 
@@ -29,6 +30,7 @@ class HMACMD5Signature(AbstractSignature):
         :param secret_key:
         :param valid_until: Unix timestamp, valid until.
         :param extra: Additional variables to be added.
+        :param value_dumper:
         :return:
         """
         if not extra:
@@ -36,7 +38,9 @@ class HMACMD5Signature(AbstractSignature):
 
         raw_hmac = hmac.new(
             cls.make_secret_key(secret_key),
-            cls.get_base(auth_user, valid_until, extra=extra),
+            cls.get_base(
+                auth_user, valid_until, extra=extra, value_dumper=value_dumper
+            ),
             hashlib.md5,
         ).digest()
 

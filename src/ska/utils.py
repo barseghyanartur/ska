@@ -1,4 +1,4 @@
-from typing import Dict, Optional, Union, Type
+from typing import Dict, Optional, Union, Type, Callable
 from urllib.parse import urlencode
 
 from .base import AbstractSignature, SignatureValidationResult
@@ -161,12 +161,16 @@ class RequestHelper(object):
         return data
 
     def validate_request_data(
-        self, data: Dict[str, Union[bytes, str, float, int]], secret_key: str
+        self,
+        data: Dict[str, Union[bytes, str, float, int]],
+        secret_key: str,
+        value_dumper: Optional[Callable] = None,
     ) -> SignatureValidationResult:
         """Validate the request data.
 
         :param data:
         :param secret_key:
+        :param value_dumper:
         :return:
 
         :example:
@@ -209,6 +213,7 @@ class RequestHelper(object):
             valid_until=valid_until,
             return_object=True,
             extra=extra,
+            value_dumper=value_dumper,
         )
 
         return validation_result
@@ -219,6 +224,7 @@ class RequestHelper(object):
         secret_key: Optional[str] = None,
         validate: bool = False,
         fail_silently: bool = False,
+        value_dumper: Optional[Callable] = None,
     ) -> Dict[str, str]:
         """Extract signed data from the request.
 
@@ -226,6 +232,7 @@ class RequestHelper(object):
         :param secret_key:
         :param validate:
         :param fail_silently:
+        :param value_dumper:
         :return:
         """
         if validate:
@@ -236,7 +243,9 @@ class RequestHelper(object):
                     "You should provide `secret_key` "
                     "if `validate` is set to True."
                 )
-            validation_result = self.validate_request_data(data, secret_key)
+            validation_result = self.validate_request_data(
+                data, secret_key, value_dumper=value_dumper
+            )
             if not validation_result.result:
                 if fail_silently:
                     return {}

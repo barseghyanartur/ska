@@ -26,7 +26,7 @@ from .shortcuts import (
 from .utils import RequestHelper
 
 __title__ = "ska"
-__version__ = "1.8.2"
+__version__ = "1.9"
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2013-2021 Artur Barseghyan"
 __license__ = "GPL 2.0/LGPL 2.1"

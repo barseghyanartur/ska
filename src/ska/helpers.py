@@ -11,6 +11,7 @@ __copyright__ = "2013-2021 Artur Barseghyan"
 __license__ = "GPL 2.0/LGPL 2.1"
 __all__ = (
     "get_callback_func",
+    "default_value_dumper",
     "dict_keys",
     "dict_to_ordered_list",
     "sorted_urlencode",
@@ -87,17 +88,27 @@ def dict_to_ordered_list(
     return items
 
 
+def default_value_dumper(value):
+    return value
+
+
 def sorted_urlencode(
-    data: Dict[str, Union[bytes, str, float, int]], quoted: bool = True
+    data: Dict[str, Union[bytes, str, float, int]],
+    quoted: bool = True,
+    value_dumper: Optional[Callable] = default_value_dumper,
 ) -> str:
     """Similar to built-in ``urlencode``, but always puts data in a sorted
     constant way that stays the same between various python versions.
 
     :param data:
     :param quoted:
+    :param value_dumper:
     :return:
     """
-    _sorted = [f"{k}={v}" for k, v in dict_to_ordered_list(data)]
+    if not value_dumper:
+        value_dumper = default_value_dumper
+
+    _sorted = [f"{k}={value_dumper(v)}" for k, v in dict_to_ordered_list(data)]
     res = "&".join(_sorted)
     if quoted:
         res = quote(res)
