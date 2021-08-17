@@ -4,7 +4,7 @@ import time
 from typing import Any, Dict, List, Optional, Union
 
 from . import error_codes
-from .defaults import SIGNATURE_LIFETIME, TIMESTAMP_FORMAT
+from .defaults import SIGNATURE_LIFETIME, TIMESTAMP_FORMAT, NESTED_SEPARATOR
 from .error_codes import ErrorCode
 from .helpers import sorted_urlencode
 
@@ -95,6 +95,7 @@ class AbstractSignature:
         "auth_user",
         "valid_until",
         "extra",
+        # "nested_separator",
     )
 
     def __init__(
@@ -103,12 +104,14 @@ class AbstractSignature:
         auth_user: str,
         valid_until: Union[float, str],
         extra: Optional[Dict[str, Union[bytes, str, float, int]]] = None,
+        # nested_separator: Optional[str] = None,
     ) -> None:
         """Constructor."""
         self.signature = signature
         self.auth_user = auth_user
         self.valid_until = valid_until
         self.extra = extra if extra else {}
+        # self.nested_separator = nested_separator
 
     def __str__(self) -> str:
         return self.signature.decode()
@@ -128,6 +131,7 @@ class AbstractSignature:
         secret_key: str,
         valid_until: Union[str, float],
         extra: Optional[Dict[str, Union[bytes, str, float, int]]] = None,
+        # nested_separator: Optional[str] = None,
         return_object: bool = False,
     ) -> Union[SignatureValidationResult, bool]:
         """Validates the signature.

@@ -3,10 +3,11 @@ from urllib.parse import urlencode
 
 from .base import AbstractSignature, SignatureValidationResult
 from .defaults import (
-    DEFAULT_URL_SUFFIX,
-    DEFAULT_EXTRA_PARAM,
-    DEFAULT_SIGNATURE_PARAM,
     DEFAULT_AUTH_USER_PARAM,
+    DEFAULT_EXTRA_PARAM,
+    DEFAULT_NESTED_SEPARATOR_PARAM,
+    DEFAULT_SIGNATURE_PARAM,
+    DEFAULT_URL_SUFFIX,
     DEFAULT_VALID_UNTIL_PARAM,
 )
 from .exceptions import InvalidData, ImproperlyConfigured
@@ -35,6 +36,7 @@ class RequestHelper(object):
         valid_until_param: str = DEFAULT_VALID_UNTIL_PARAM,
         extra_param: str = DEFAULT_EXTRA_PARAM,
         signature_cls: Type[AbstractSignature] = Signature,
+        nested_separator_param: str = DEFAULT_NESTED_SEPARATOR_PARAM,
     ) -> None:
         """Constructor.
 
@@ -49,6 +51,7 @@ class RequestHelper(object):
         self.valid_until_param = valid_until_param
         self.extra_param = extra_param
         self.signature_cls = signature_cls
+        self.nested_separator_param = nested_separator_param
 
     def signature_to_url(
         self,
@@ -98,7 +101,10 @@ class RequestHelper(object):
             self.auth_user_param: signature.auth_user,
             self.valid_until_param: signature.valid_until,
             self.extra_param: dict_keys(signature.extra, return_string=True),
+            # self.nested_separator_param: signature.nested_separator,
         }
+        # if signature.nested_separator:
+        #     params[self.nested_separator_param] = signature.nested_separator
 
         # Make some check that params used do not overlap with names
         # reserved (`auth_user`, `signature`, etc).

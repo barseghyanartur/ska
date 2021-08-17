@@ -8,6 +8,8 @@ from .defaults import (
     DEFAULT_URL_SUFFIX,
     DEFAULT_VALID_UNTIL_PARAM,
     SIGNATURE_LIFETIME,
+    DEFAULT_NESTED_SEPARATOR_PARAM,
+    NESTED_SEPARATOR,
 )
 from .signatures import Signature
 from .utils import RequestHelper
@@ -131,6 +133,8 @@ def signature_to_dict(
     extra: Optional[Dict[str, Union[str, int]]] = None,
     extra_param: str = DEFAULT_EXTRA_PARAM,
     signature_cls: Type[AbstractSignature] = Signature,
+    nested_separator: Optional[str] = None,
+    nested_separator_param: Optional[str] = None,
 ) -> Dict[str, Union[bytes, str, float, int]]:
     """Return a dictionary containing the signature data params.
 
@@ -172,6 +176,9 @@ def signature_to_dict(
     """
     if lifetime is None:
         lifetime = SIGNATURE_LIFETIME
+
+    if nested_separator is not None and nested_separator_param is None:
+        nested_separator_param = DEFAULT_NESTED_SEPARATOR_PARAM
 
     if not extra:
         extra = {}

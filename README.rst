@@ -380,6 +380,10 @@ It's possible to generate a signed URL from command line using the
 
     ska-sign-url -au user -sk your-secret-key --url http://example.com
 
+Nested structures
+~~~~~~~~~~~~~~~~~
+
+
 Advanced usage (low-level)
 --------------------------
 Sender side
