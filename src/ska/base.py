@@ -99,19 +99,22 @@ class AbstractSignature:
 
     def __init__(
         self,
-        signature: bytes,
+        signature: Union[str, bytes],
         auth_user: str,
         valid_until: Union[float, str],
         extra: Optional[Dict[str, Union[bytes, str, float, int]]] = None,
     ) -> None:
         """Constructor."""
-        self.signature = signature
+        if isinstance(signature, bytes):
+            self.signature = signature.decode()
+        else:
+            self.signature = signature
         self.auth_user = auth_user
         self.valid_until = valid_until
         self.extra = extra if extra else {}
 
     def __str__(self) -> str:
-        return self.signature.decode()
+        return self.signature
 
     __repr__ = __str__
 
@@ -155,8 +158,8 @@ class AbstractSignature:
         False
         """
 
-        if isinstance(signature, str):
-            signature = signature.encode()
+        # if isinstance(signature, str):
+        #     signature = signature.encode()
 
         if not extra:
             extra = {}
@@ -328,7 +331,7 @@ class AbstractSignature:
         )
 
         return cls(
-            signature=signature,
+            signature=signature.decode(),
             auth_user=auth_user,
             valid_until=valid_until,
             extra=extra,

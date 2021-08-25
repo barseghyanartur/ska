@@ -96,7 +96,8 @@ class RequestHelper(object):
         params = {
             self.signature_param: signature.signature,
             self.auth_user_param: signature.auth_user,
-            self.valid_until_param: signature.valid_until,
+            self.valid_until_param: str(signature.valid_until),
+            # self.valid_until_param: signature.valid_until,
             self.extra_param: dict_keys(signature.extra, return_string=True),
         }
 
@@ -152,7 +153,8 @@ class RequestHelper(object):
         data = {
             self.signature_param: signature.signature,
             self.auth_user_param: signature.auth_user,
-            self.valid_until_param: signature.valid_until,
+            self.valid_until_param: str(signature.valid_until),
+            # self.valid_until_param: signature.valid_until,
             self.extra_param: dict_keys(signature.extra, return_string=True),
         }
 
