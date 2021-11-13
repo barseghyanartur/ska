@@ -52,10 +52,6 @@ cryptography==3.4.7
     # via
     #   pyjwt
     #   secretstorage
-dataclasses==0.8
-    # via
-    #   black
-    #   libcst
 decorator==5.0.9
     # via
     #   ipython
