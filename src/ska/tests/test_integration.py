@@ -24,7 +24,8 @@ class IntegrationTest(unittest.TestCase):
     """
 
     def test_get_base(self, signature_cls=Signature):
-        """
+        """Test `get_base`.
+
         // Test case 1
         $base = getBase(AUTH_USER, VALID_UNTIL, null);
         $expectedBase = "1628717009.0_me@example.com";
@@ -125,3 +126,46 @@ class IntegrationTest(unittest.TestCase):
         )
         expected_data = 'one={"value":"\\u00e2"}'
         self.assertEqual(encoded_data, expected_data)
+
+    def test_signature_to_dict(self, signature_cls=Signature):
+        """Test `signature_to_dict`."""
+
+        # Test case 1
+        signature1 = signature_cls.generate_signature(
+            AUTH_USER,
+            SECRET_KEY,
+            VALID_UNTIL,
+            extra={},
+        )
+        expected_signature1 = b"WTjN2wPENDW1gCHEVPKz3IXlE0g="
+        self.assertEqual(signature1.signature, expected_signature1)
+
+        # Test case 2
+        signature2 = signature_cls.generate_signature(
+            AUTH_USER,
+            SECRET_KEY,
+            VALID_UNTIL,
+            extra={"one": "1", "two": "2"},
+        )
+        expected_signature2 = b"dFqd/VbWOaY3ROlL89K6JZZsfhE="
+        self.assertEqual(signature2.signature, expected_signature2)
+
+        # Test case 3
+        signature3 = signature_cls.generate_signature(
+            AUTH_USER,
+            SECRET_KEY,
+            VALID_UNTIL,
+            extra={"one": "â"},
+        )
+        expected_signature3 = b"dlT2WO/jYq7+xcvDEUkCnNW5TxA="
+        self.assertEqual(signature3.signature, expected_signature3)
+
+        # Test case 4
+        signature4 = signature_cls.generate_signature(
+            AUTH_USER,
+            SECRET_KEY,
+            VALID_UNTIL,
+            extra={"one": {"value": "â"}},
+        )
+        expected_signature4 = b"tC9XfkMvScjn3nSIvWjzfGHqxD0="
+        self.assertEqual(signature4.signature, expected_signature4)
