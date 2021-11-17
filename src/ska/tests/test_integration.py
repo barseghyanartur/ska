@@ -136,6 +136,8 @@ class IntegrationTest(unittest.TestCase):
             SECRET_KEY,
             VALID_UNTIL,
             extra={},
+            value_dumper=javascript_value_dumper,
+            quoter=javascript_quoter,
         )
         expected_signature1 = b"WTjN2wPENDW1gCHEVPKz3IXlE0g="
         self.assertEqual(signature1.signature, expected_signature1)
@@ -146,6 +148,8 @@ class IntegrationTest(unittest.TestCase):
             SECRET_KEY,
             VALID_UNTIL,
             extra={"one": "1", "two": "2"},
+            value_dumper=javascript_value_dumper,
+            quoter=javascript_quoter,
         )
         expected_signature2 = b"dFqd/VbWOaY3ROlL89K6JZZsfhE="
         self.assertEqual(signature2.signature, expected_signature2)
@@ -156,6 +160,8 @@ class IntegrationTest(unittest.TestCase):
             SECRET_KEY,
             VALID_UNTIL,
             extra={"one": "â"},
+            value_dumper=javascript_value_dumper,
+            quoter=javascript_quoter,
         )
         expected_signature3 = b"dlT2WO/jYq7+xcvDEUkCnNW5TxA="
         self.assertEqual(signature3.signature, expected_signature3)
@@ -166,6 +172,8 @@ class IntegrationTest(unittest.TestCase):
             SECRET_KEY,
             VALID_UNTIL,
             extra={"one": {"value": "â"}},
+            value_dumper=javascript_value_dumper,
+            quoter=javascript_quoter,
         )
-        expected_signature4 = b"tC9XfkMvScjn3nSIvWjzfGHqxD0="
+        expected_signature4 = b"+pA63D4EMF2pcfIlE/dYXyNkhx4="
         self.assertEqual(signature4.signature, expected_signature4)
