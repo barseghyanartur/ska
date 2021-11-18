@@ -36,10 +36,6 @@ coverage[toml]==5.5
     #   pytest-cov
 cryptography==3.4.7
     # via pyjwt
-dataclasses==0.8
-    # via
-    #   black
-    #   libcst
 distlib==0.3.2
     # via virtualenv
 django-constance==2.8.0
