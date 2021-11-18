@@ -87,7 +87,7 @@ Prerequisites
 =============
 Present
 -------
-- Core ``ska`` module requires Python 3.6, 3.7, 3.8 or 3.9.
+- Core ``ska`` module requires Python 3.6, 3.7, 3.8, 3.9 or 3.10.
 - Django ``ska`` module (``ska.contrib.django.ska``) requires the mentioned
   above plus Django 2.2, 3.0, 3.1 or 3.2. Additionally, certain
   versions of `django-constance` and `djangorestframework` are required.
@@ -114,6 +114,18 @@ Past
 - Dropping support of Python 2.6 and 3.3 has been announced in version 1.6.
   As of 1.6 everything is still backwards compatible (as much as it's possible
   within this package) with mentioned versions.
+
+Eco-system
+==========
+Need ``ska`` for other languages? Check the following affiliated projects:
+
+- `skajs <https://github.com/barseghyanartur/skajs>`_: ``ska`` implementation
+  for NodeJS (both CommonJS and ESM are supported, Node >= 14).
+- `skaphp <https://github.com/barseghyanartur/skaphp>`_: ``ska`` implementation
+  for PHP (>= 7.2).
+
+Generated signatures are intercompatible between Python, NodeJS and PHP
+implementations.
 
 Installation
 ============
