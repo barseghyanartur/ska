@@ -1,7 +1,0 @@
-#!/usr/bin/env python
-
-# We should have absolute imports here
-from ska.generate_signed_url import main
-
-if __name__ == "__main__":
-    main()
