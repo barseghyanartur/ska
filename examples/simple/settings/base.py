@@ -2,6 +2,8 @@
 import os
 import sys
 
+from django_nine import versions
+
 from .core import PROJECT_DIR
 
 DEBUG = False
@@ -173,6 +175,11 @@ INSTALLED_APPS = (
     "ska.contrib.django.ska.integration.constance_integration",
     "foo",  # Our example app
 )
+
+if versions.DJANGO_GTE_3_2:
+    INSTALLED_APPS += (
+        "constance.backends.database",
+    )  # Only if ``DatabaseBackend`` is used
 
 # ***************************************************************************
 # ************************** ska config *************************************
