@@ -51,6 +51,7 @@ distlib==0.3.7
 django==4.2.4
     # via
     #   -r django_4_2.in
+    #   django-nine
     #   django-picklefield
     #   djangorestframework
     #   drf-jwt
@@ -58,6 +59,8 @@ django-constance==3.1.0
     # via -r constance_django_4_2.in
 django-json-widget==1.1.1
     # via -r constance_django_4_2.in
+django-nine==0.2.7
+    # via -r django_4_2.in
 django-picklefield==3.1
     # via
     #   -r constance_django_4_2.in
@@ -128,6 +131,7 @@ packaging==23.1
     # via
     #   black
     #   build
+    #   django-nine
     #   pyproject-api
     #   pytest
     #   tox

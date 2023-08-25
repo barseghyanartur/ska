@@ -33,6 +33,7 @@ distlib==0.3.7
 django==3.2.20
     # via
     #   -r django_3_2.in
+    #   django-nine
     #   django-picklefield
     #   djangorestframework
     #   drf-jwt
@@ -40,6 +41,8 @@ django-constance==2.8.0
     # via -r constance_django_3_2.in
 django-json-widget==1.1.1
     # via -r constance_django_3_2.in
+django-nine==0.2.7
+    # via -r django_3_2.in
 django-picklefield==3.0.1
     # via -r constance_django_3_2.in
 djangorestframework==3.12.4
@@ -85,6 +88,7 @@ outcome==1.2.0
     # via trio
 packaging==23.1
     # via
+    #   django-nine
     #   pyproject-api
     #   pytest
     #   tox
@@ -127,8 +131,6 @@ pytz==2023.3
     # via django
 pyyaml==6.0.1
     # via libcst
-radar==0.3
-    # via -r test.in
 redis==3.0.1
     # via -r constance_django_3_2.in
 selenium==4.11.2

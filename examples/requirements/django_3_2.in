@@ -4,3 +4,4 @@
 -r rest_framework_django_3_2.in
 
 Django>=3.2,<4.0
+django-nine
