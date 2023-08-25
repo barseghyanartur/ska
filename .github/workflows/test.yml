@@ -21,7 +21,7 @@ jobs:
           - python-version: '3.10'
             requirements: django_3_2
             tox_env: py310-django32
-          - python-version: '3.11`'
+          - python-version: '3.11'
             requirements: django_3_2
             tox_env: py311-django32
 
