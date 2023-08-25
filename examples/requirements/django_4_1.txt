@@ -127,6 +127,8 @@ pytest-ordering==0.6
     # via -r test.in
 python-dateutil==2.8.2
     # via faker
+pytz==2023.3
+    # via -r django_4_1.in
 pyyaml==6.0.1
     # via libcst
 redis==3.0.1
