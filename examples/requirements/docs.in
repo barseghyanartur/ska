@@ -2,4 +2,4 @@ Jinja2
 MarkupSafe
 Sphinx
 docutils
-rstcheck==3.3.1
+rstcheck

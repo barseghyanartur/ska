@@ -1,8 +1,7 @@
 import json
 
-from factory import DjangoModelFactory
-
-from constance.backends.database.models import Constance
+from constance.models import Constance
+from factory.django import DjangoModelFactory
 
 from .factory_faker import Faker
 

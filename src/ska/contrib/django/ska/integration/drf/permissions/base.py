@@ -1,5 +1,5 @@
-from typing import Dict, Optional, Union
 import logging
+from typing import Dict, Optional, Union
 
 from django.db.models import Model
 from rest_framework import permissions
@@ -8,15 +8,13 @@ from rest_framework.viewsets import GenericViewSet
 
 from ....... import validate_signed_request_data
 from .......defaults import (
-    DEFAULT_SIGNATURE_PARAM,
     DEFAULT_AUTH_USER_PARAM,
-    DEFAULT_VALID_UNTIL_PARAM,
     DEFAULT_EXTRA_PARAM,
+    DEFAULT_SIGNATURE_PARAM,
+    DEFAULT_VALID_UNTIL_PARAM,
 )
 from .......exceptions import ImproperlyConfigured, InvalidData
-
 from ....utils import get_provider_data
-
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2013-2021 Artur Barseghyan"

@@ -1,17 +1,16 @@
 from django.http import Http404
 from django.shortcuts import render
-from django.views.generic.base import View
 from django.urls import reverse
+from django.views.generic.base import View
+from foo.models import FooItem
 
 from ska import sign_url
 from ska.contrib.django.ska.decorators import (
-    validate_signed_request,
     m_validate_signed_request,
+    validate_signed_request,
 )
-from ska.contrib.django.ska.settings import SECRET_KEY, PROVIDERS
+from ska.contrib.django.ska.settings import PROVIDERS, SECRET_KEY
 from ska.defaults import DEFAULT_PROVIDER_PARAM
-
-from foo.models import FooItem
 
 
 def browse_view(request, template_name="foo/browse.html"):

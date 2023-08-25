@@ -21,8 +21,9 @@ sys.path.insert(0, os.path.abspath("../src"))
 sys.path.insert(0, os.path.abspath("../examples"))
 sys.path.insert(0, os.path.abspath(os.path.join("..", "examples", "simple")))
 try:
-    import ska
     from simple import settings as docs_settings
+
+    import ska
 
     version = ska.__version__
     project = ska.__title__

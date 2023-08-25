@@ -4,10 +4,10 @@ from __future__ import unicode_literals
 import uuid
 
 from factory import Faker as OriginalFaker
-from faker.providers.phone_number import Provider as PhoneNumberProvider
+from faker.providers.company import Provider as CompanyProvider
 from faker.providers.internet import Provider as InternetProvider
 from faker.providers.person import Provider as PersonProvider
-from faker.providers.company import Provider as CompanyProvider
+from faker.providers.phone_number import Provider as PhoneNumberProvider
 
 localized = True
 

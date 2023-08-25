@@ -15,6 +15,16 @@ are used for versioning (schema follows below):
   0.3.4 to 0.4).
 - All backwards incompatible changes are mentioned in this document.
 
+1.10
+----
+2023-08-17
+
+- Tested against Python 3.11.
+- Mark `django-nine` as optional dependency.
+- Drop support for Python < 3.7.
+- Drop support for Django < 2.2, 3.0 and 3.1.
+- Tested against Django 4.1 and 4.2.
+
 1.9.1
 -----
 2021-11-18

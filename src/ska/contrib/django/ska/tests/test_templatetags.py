@@ -1,9 +1,7 @@
+import factories
 from bs4 import BeautifulSoup
-
 from django.test import Client, TransactionTestCase, override_settings
 from django.urls import reverse
-
-import factories
 
 from .helpers import log_info
 

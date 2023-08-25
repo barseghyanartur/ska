@@ -1,14 +1,8 @@
+import factories
+import pytest
 from django.test import Client, TransactionTestCase
 
-import pytest
-
-import factories
-
-from .helpers import (
-    generate_data,
-    log_info,
-    NUM_ITEMS,
-)
+from .helpers import NUM_ITEMS, generate_data, log_info
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2013-2021 Artur Barseghyan"

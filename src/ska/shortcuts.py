@@ -1,6 +1,6 @@
-from typing import Dict, Optional, Type, Union, Callable
+from typing import Callable, Dict, Optional, Type, Union
 
-from .base import SignatureValidationResult, AbstractSignature
+from .base import AbstractSignature, SignatureValidationResult
 from .defaults import (
     DEFAULT_AUTH_USER_PARAM,
     DEFAULT_EXTRA_PARAM,

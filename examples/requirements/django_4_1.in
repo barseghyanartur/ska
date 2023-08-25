@@ -1,0 +1,6 @@
+-r common.in
+-r test.in
+-r constance_django_4_1.in
+-r rest_framework_django_4_1.in
+
+Django>=4.1,<4.2

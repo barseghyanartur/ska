@@ -1,11 +1,8 @@
 import random
 
 from django.contrib.auth.models import Group
-
-from factory import (
-    DjangoModelFactory,
-    LazyAttribute,
-)
+from factory import LazyAttribute
+from factory.django import DjangoModelFactory
 from faker import Faker as OriginalFaker
 
 from .factory_faker import Faker

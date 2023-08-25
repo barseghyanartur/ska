@@ -4,18 +4,17 @@ Testing Django REST Framework permissions for ska.
 
 import logging
 
+import factories
+import pytest
 from constance import config
 from django.test import TransactionTestCase, override_settings
 from django.urls import reverse
-import pytest
 from rest_framework import status
 from rest_framework.test import APIClient
 
 from ska import sign_url
-from ska.contrib.django.ska.settings import SECRET_KEY, PROVIDERS
+from ska.contrib.django.ska.settings import PROVIDERS, SECRET_KEY
 from ska.defaults import DEFAULT_PROVIDER_PARAM
-
-import factories
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2013-2021 Artur Barseghyan"
@@ -168,9 +167,7 @@ class DRFIntegrationPermissionsTestCase(BaseDRFIntegrationPermissionsTestCase):
 
         :return:
         """
-        self._test_permissions_request_not_signed_fail(
-            self.provider_detail_url
-        )
+        self._test_permissions_request_not_signed_fail(self.provider_detail_url)
 
     def test_permissions_list_request_not_signed_fail(self):
         """Fail test permissions list request not signed.

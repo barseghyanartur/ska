@@ -1,25 +1,23 @@
-from copy import copy
 import datetime
-from decimal import Decimal
 import unittest
+from copy import copy
+from decimal import Decimal
 
 from .. import (
-    Signature,
-    RequestHelper,
     HMACMD5Signature,
     HMACSHA1Signature,
     HMACSHA224Signature,
     HMACSHA256Signature,
     HMACSHA384Signature,
     HMACSHA512Signature,
-)
-from .. import (
-    sign_url,
-    validate_signed_request_data,
-    signature_to_dict,
+    RequestHelper,
+    Signature,
     error_codes,
+    sign_url,
+    signature_to_dict,
+    validate_signed_request_data,
 )
-from .base import log_info, timestamp_to_human_readable, parse_url_params
+from .base import log_info, parse_url_params, timestamp_to_human_readable
 
 __title__ = "ska.tests.test_core"
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
@@ -300,9 +298,7 @@ class SignatureTest(unittest.TestCase):
         self.assertIsInstance(validation_result.errors, list)
         self.assertIsInstance(validation_result.message, str)
         self.assertIsInstance(" ".join(validation_result.reason), str)
-        self.assertIsInstance(
-            " ".join(map(str, validation_result.errors)), str
-        )
+        self.assertIsInstance(" ".join(map(str, validation_result.errors)), str)
 
         flow.append(validation_result.message)
 
@@ -382,9 +378,7 @@ class URLHelperTest(unittest.TestCase):
         """Signature test."""
         flow = []
         for signature_cls in self.signature_classes:
-            flow += self.__test_01_signature_to_url(
-                signature_cls=signature_cls
-            )
+            flow += self.__test_01_signature_to_url(signature_cls=signature_cls)
         return flow
 
     @log_info

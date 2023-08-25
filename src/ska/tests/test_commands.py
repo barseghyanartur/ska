@@ -1,7 +1,6 @@
-import unittest
-
 import shlex
 import subprocess
+import unittest
 from urllib import parse
 
 from ..shortcuts import validate_signed_request_data

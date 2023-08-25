@@ -1,6 +1,6 @@
 import hashlib
 import hmac
-from typing import Union, Optional, Dict, Callable
+from typing import Callable, Dict, Optional, Union
 
 from ..base import AbstractSignature
 
