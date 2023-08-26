@@ -17,13 +17,15 @@ are used for versioning (schema follows below):
 
 1.10
 ----
-2023-08-17
+2023-08-27
 
 - Tested against Python 3.11.
 - Mark `django-nine` as optional dependency.
 - Drop support for Python < 3.7.
-- Drop support for Django < 2.2, 3.0 and 3.1.
+- Drop support for Django < 3.2 and 4.0.
 - Tested against Django 4.1 and 4.2.
+- Upgrade relevant contrib code to support both ``django-constance`` >= 2.8.x and
+  3.x.
 
 1.9.1
 -----
