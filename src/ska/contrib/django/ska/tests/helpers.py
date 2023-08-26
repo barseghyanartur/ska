@@ -2,9 +2,8 @@ import logging
 import os
 import random
 
-import pytest
-
 import factories
+import pytest
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2013-2021 Artur Barseghyan"

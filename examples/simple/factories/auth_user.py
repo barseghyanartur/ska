@@ -1,19 +1,18 @@
 import random
 
 from django.conf import settings
-
 from factory import (
-    DjangoModelFactory,
+    LazyAttribute,
     PostGenerationMethodCall,
     Sequence,
+    SubFactory,
     post_generation,
-    LazyAttribute,
 )
+from factory.django import DjangoModelFactory
 from faker import Faker as OriginalFaker
-from factory import SubFactory
 
-from .factory_faker import Faker
 from .auth_group import LimitedGroupFactory
+from .factory_faker import Faker
 
 __all__ = (
     "AbstractUserFactory",

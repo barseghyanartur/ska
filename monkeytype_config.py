@@ -1,6 +1,6 @@
 import os
-from contextlib import contextmanager
 import sys
+from contextlib import contextmanager
 from typing import Iterator
 
 from monkeytype.config import DefaultConfig

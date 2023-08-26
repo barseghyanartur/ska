@@ -1,24 +1,19 @@
 import datetime
 import time
 
+import factories
+import mock
+import pytest
 from constance import config
 from constance.test import override_config
-
 from django.core import mail
 from django.core.management import call_command
 from django.test import Client, TransactionTestCase, override_settings
 
-import mock
-
-import pytest
-
 from ska import sign_url
-from ska.contrib.django.ska.models import Signature
 from ska.contrib.django.ska import settings as ska_settings
-
+from ska.contrib.django.ska.models import Signature
 from ska.defaults import DEFAULT_PROVIDER_PARAM
-
-import factories
 
 from .helpers import log_info
 
@@ -353,9 +348,7 @@ class SkaAuthenticationConstanceBackendTest(TransactionTestCase):
 
         # Manually set valid_until to no longer valid so that we can
         # test
-        invalid_until = datetime.datetime.now() - datetime.timedelta(
-            minutes=20
-        )
+        invalid_until = datetime.datetime.now() - datetime.timedelta(minutes=20)
         Signature.objects.update(valid_until=invalid_until)
 
         # Call purge command

@@ -3,7 +3,7 @@ import argparse
 from .shortcuts import sign_url
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
-__copyright__ = "2013-2021 Artur Barseghyan"
+__copyright__ = "2013-2023 Artur Barseghyan"
 __license__ = "GPL 2.0/LGPL 2.1"
 __all__ = ("main",)
 
@@ -13,11 +13,19 @@ def main():
 
     :example:
 
-        python src/ska/generate_signature.py -au user -sk test
+        python src/ska/generate_signature.py -u http://example.com -au user -sk test
+
+    :example:
+
+        ska-sign-url -u http://example.com -au user -sk test
     """
     parser = argparse.ArgumentParser(
         description="""
     Generates signed URL.
+    
+    Example:
+
+        ska-sign-url -u http://example.com -au user -sk test
     """
     )
 
@@ -125,7 +133,3 @@ def main():
         print(signed_url)
     except Exception as err:
         print(err)
-
-
-if __name__ == "__main__":
-    main()

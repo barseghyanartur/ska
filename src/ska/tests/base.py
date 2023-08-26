@@ -1,6 +1,6 @@
 import datetime
 import logging
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import parse_qs, urlparse
 
 from .. import TIMESTAMP_FORMAT
 

@@ -5,19 +5,17 @@ Testing Django REST Framework JWT token view for ska.
 import logging
 import unittest
 
-from constance import config
-from django.urls import reverse
-from django.test import TransactionTestCase, override_settings
-
+import factories
 import pytest
+from constance import config
+from django.test import TransactionTestCase, override_settings
+from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
 from ska import sign_url
-from ska.contrib.django.ska.settings import SECRET_KEY, PROVIDERS
+from ska.contrib.django.ska.settings import PROVIDERS, SECRET_KEY
 from ska.defaults import DEFAULT_PROVIDER_PARAM
-
-import factories
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2013-2021 Artur Barseghyan"

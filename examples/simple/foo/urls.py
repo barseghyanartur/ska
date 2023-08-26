@@ -1,14 +1,13 @@
 from django.urls import include, re_path as url
-
 from rest_framework.routers import DefaultRouter
 
 from .views import (
     FooDetailView,
-    browse_view,
     authenticate_view,
+    browse_view,
+    detail_view,
     drf_view,
     logged_in_view,
-    detail_view,
 )
 from .viewsets import (
     FooItemConstanceProviderSignedRequestRequiredViewSet,

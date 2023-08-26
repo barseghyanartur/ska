@@ -12,7 +12,6 @@ class FooItemSerializer(serializers.ModelSerializer):
     """FooItem model serializer."""
 
     class Meta(object):
-
         model = FooItem
         fields = (
             "title",

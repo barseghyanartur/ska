@@ -1,4 +1,4 @@
-from typing import Optional, Type, Dict, Union
+from typing import Dict, Optional, Type, Union
 
 from django import template
 from django.core.exceptions import ImproperlyConfigured
@@ -16,8 +16,7 @@ from .....defaults import (
     SIGNATURE_LIFETIME,
 )
 from .....signatures import Signature
-from ..settings import SECRET_KEY, PROVIDERS
-
+from ..settings import PROVIDERS, SECRET_KEY
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2013-2021 Artur Barseghyan"

@@ -1,4 +1,5 @@
 from typing import Any, Dict, Optional, Union
+
 from django.http import HttpRequest
 from rest_framework.request import Request
 
@@ -15,9 +16,7 @@ class SkaAuthenticationBackend(BaseSkaAuthenticationBackend):
 
     def get_settings(
         self,
-        request_data: Optional[
-            Dict[str, Union[bytes, str, float, int]]
-        ] = None,
+        request_data: Optional[Dict[str, Union[bytes, str, float, int]]] = None,
         request: Optional[Union[Request, HttpRequest]] = None,
         **kwargs,
     ) -> Dict[Any, Any]:
@@ -29,9 +28,7 @@ class SkaAuthenticationBackend(BaseSkaAuthenticationBackend):
 
     def get_secret_key(
         self,
-        request_data: Optional[
-            Dict[str, Union[bytes, str, float, int]]
-        ] = None,
+        request_data: Optional[Dict[str, Union[bytes, str, float, int]]] = None,
         request: Optional[Union[Request, HttpRequest]] = None,
         **kwargs,
     ) -> None:

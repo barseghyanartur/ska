@@ -2,6 +2,8 @@
 import os
 import sys
 
+from django_nine import versions
+
 from .core import PROJECT_DIR
 
 DEBUG = False
@@ -163,7 +165,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     # For django-constance
     "constance",
-    "constance.backends.database",  # Only if ``DatabaseBackend`` is used
+    # "constance.backends.database",  # Only if ``DatabaseBackend`` is used
     "django_json_widget",
     # For djangorestframework
     "rest_framework",
@@ -173,6 +175,11 @@ INSTALLED_APPS = (
     "ska.contrib.django.ska.integration.constance_integration",
     "foo",  # Our example app
 )
+
+if versions.DJANGO_GTE_3_2:
+    INSTALLED_APPS += (
+        "constance.backends.database",
+    )  # Only if ``DatabaseBackend`` is used
 
 # ***************************************************************************
 # ************************** ska config *************************************
@@ -265,55 +272,31 @@ LOGGING = {
     "filters": {
         "require_debug_false": {"()": "django.utils.log.RequireDebugFalse"}
     },
+    "root": {
+        "level": "INFO",
+        "handlers": ["console"],
+    },
     "formatters": {
         "verbose": {
-            "format": "%(levelname)s %(asctime)s [%(pathname)s:%(lineno)s] "
+            "format": "\n%(levelname)s %(asctime)s [%(pathname)s:%(lineno)s] "
             "%(message)s"
         },
-        "simple": {"format": "%(levelname)s %(message)s"},
     },
     "handlers": {
-        "mail_admins": {
-            "level": "ERROR",
-            "filters": ["require_debug_false"],
-            "class": "django.utils.log.AdminEmailHandler",
-        },
         "console": {
-            "level": "DEBUG",
+            "level": "INFO",
             "class": "logging.StreamHandler",
-            "formatter": "verbose",
-        },
-        "django_log": {
-            "level": "DEBUG",
-            "class": "logging.handlers.RotatingFileHandler",
-            "filename": PROJECT_DIR("../../logs/django.log"),
-            "maxBytes": 1048576,
-            "backupCount": 99,
-            "formatter": "verbose",
-        },
-        "ska_log": {
-            "level": "DEBUG",
-            "class": "logging.handlers.RotatingFileHandler",
-            "filename": PROJECT_DIR("../../logs/ska.log"),
-            "maxBytes": 1048576,
-            "backupCount": 99,
             "formatter": "verbose",
         },
     },
     "loggers": {
-        "django": {
-            "handlers": ["django_log"],
-            "level": "ERROR",
-            "propagate": True,
-        },
-        "ska": {
-            "handlers": ["console", "ska_log"],
+        "": {
+            "handlers": ["console"],
             "level": "DEBUG",
-            "propagate": True,
+            "propagate": False,
         },
     },
 }
-
 
 # Do not put any settings below this line
 try:

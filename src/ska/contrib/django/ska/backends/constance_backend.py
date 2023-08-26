@@ -2,7 +2,6 @@ import json
 from typing import Dict, Optional, Union
 
 from constance import config
-
 from django.conf import settings
 from django.http import HttpRequest
 from rest_framework.request import Request
@@ -20,9 +19,7 @@ class SkaAuthenticationConstanceBackend(BaseSkaAuthenticationBackend):
 
     def get_settings(
         self,
-        request_data: Optional[
-            Dict[str, Union[bytes, str, float, int]]
-        ] = None,
+        request_data: Optional[Dict[str, Union[bytes, str, float, int]]] = None,
         request: Optional[Union[Request, HttpRequest]] = None,
         **kwargs,
     ) -> Dict[str, Dict[str, str]]:
@@ -43,9 +40,7 @@ class SkaAuthenticationConstanceBackend(BaseSkaAuthenticationBackend):
 
     def get_secret_key(
         self,
-        request_data: Optional[
-            Dict[str, Union[bytes, str, float, int]]
-        ] = None,
+        request_data: Optional[Dict[str, Union[bytes, str, float, int]]] = None,
         request: Optional[Union[Request, HttpRequest]] = None,
         **kwargs,
     ) -> str:

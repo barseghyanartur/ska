@@ -1,10 +1,9 @@
 import random
 
 from django.utils.text import slugify
-
-from factory import DjangoModelFactory, LazyAttribute
+from factory import LazyAttribute
+from factory.django import DjangoModelFactory
 from factory.fuzzy import FuzzyChoice
-
 from foo.models import FooItem
 
 from .factory_faker import Faker

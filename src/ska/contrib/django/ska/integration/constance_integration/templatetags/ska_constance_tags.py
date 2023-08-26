@@ -1,10 +1,9 @@
-from typing import Optional, Type, Union, Dict
+from typing import Dict, Optional, Type, Union
 
+from constance import config
 from django import template
 from django.core.exceptions import ImproperlyConfigured
 from django.template.context import RequestContext
-
-from constance import config
 
 from ....... import sign_url as ska_sign_url
 from .......base import AbstractSignature

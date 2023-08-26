@@ -1,18 +1,16 @@
 import unittest
 
-from .. import Signature, HMACSHA256Signature, HMACSHA512Signature
+from .. import HMACSHA256Signature, HMACSHA512Signature, Signature
 from ..helpers import (
-    sorted_urlencode,
     javascript_quoter,
     javascript_value_dumper,
+    sorted_urlencode,
 )
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2013-2021 Artur Barseghyan"
 __license__ = "GPL 2.0/LGPL 2.1"
-__all__ = (
-    "IntegrationTest",
-)
+__all__ = ("IntegrationTest",)
 
 SECRET_KEY = "UxuhnPaO4vKA"
 
@@ -52,19 +50,13 @@ class IntegrationTest(unittest.TestCase):
         """
 
         # Test case 1
-        base1 = signature_cls.get_base(
-            AUTH_USER,
-            VALID_UNTIL,
-            {}
-        )
+        base1 = signature_cls.get_base(AUTH_USER, VALID_UNTIL, {})
         expected_base1 = b"1628717009.0_me@example.com"
         self.assertEqual(base1, expected_base1)
 
         # Test case 2
         base2 = signature_cls.get_base(
-            AUTH_USER,
-            VALID_UNTIL,
-            {"one": "1", "two": "2"}
+            AUTH_USER, VALID_UNTIL, {"one": "1", "two": "2"}
         )
         expected_base2 = b"1628717009.0_me@example.com_one%3D1%26two%3D2"
         self.assertEqual(base2, expected_base2)
@@ -75,7 +67,7 @@ class IntegrationTest(unittest.TestCase):
             VALID_UNTIL,
             {"one": "â"},
             value_dumper=javascript_value_dumper,
-            quoter=javascript_quoter
+            quoter=javascript_quoter,
         )
         expected_base3 = b"1628717009.0_me@example.com_one%3D%C3%A2"
         self.assertEqual(base3, expected_base3)
@@ -86,7 +78,7 @@ class IntegrationTest(unittest.TestCase):
             VALID_UNTIL,
             {"one": {"value": "â"}},
             value_dumper=javascript_value_dumper,
-            quoter=javascript_quoter
+            quoter=javascript_quoter,
         )
         expected_base4 = b"1628717009.0_me@example.com_one%3D%7B%22value%22%3A%22%5Cu00e2%22%7D"
         self.assertEqual(base4, expected_base4)

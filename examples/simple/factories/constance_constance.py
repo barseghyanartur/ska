@@ -1,10 +1,13 @@
 import json
 
-from factory import DjangoModelFactory
-
-from constance.backends.database.models import Constance
+from factory.django import DjangoModelFactory
 
 from .factory_faker import Faker
+
+try:
+    from constance.models import Constance  # noqa
+except ImportError:
+    from constance.backends.database.models import Constance  # noqa
 
 __all__ = (
     "ConstanceFactory",

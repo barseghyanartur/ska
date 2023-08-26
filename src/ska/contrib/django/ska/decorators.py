@@ -32,26 +32,25 @@
   :param str valid_until_param: Name of the GET param name which would hold
       the ``valid_until`` value.
 """
-from typing import Callable, Dict, Union, Optional
+from typing import Callable, Dict, Optional, Union
 
 from django.http import HttpRequest
 from django.shortcuts import render
 from django.utils.translation import gettext, gettext_lazy as _
 
-from .... import validate_signed_request_data, sign_url as ska_sign_url
+from .... import sign_url as ska_sign_url, validate_signed_request_data
 from ....defaults import (
-    SIGNATURE_LIFETIME,
-    DEFAULT_URL_SUFFIX,
-    DEFAULT_SIGNATURE_PARAM,
     DEFAULT_AUTH_USER_PARAM,
-    DEFAULT_VALID_UNTIL_PARAM,
     DEFAULT_EXTRA_PARAM,
+    DEFAULT_SIGNATURE_PARAM,
+    DEFAULT_URL_SUFFIX,
+    DEFAULT_VALID_UNTIL_PARAM,
+    SIGNATURE_LIFETIME,
 )
-
 from .http import HttpResponseUnauthorized
 from .settings import (
-    SECRET_KEY,
     AUTH_USER,
+    SECRET_KEY,
     UNAUTHORISED_REQUEST_ERROR_MESSAGE,
     UNAUTHORISED_REQUEST_ERROR_TEMPLATE,
 )

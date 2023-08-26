@@ -1,11 +1,10 @@
 from typing import Optional
 
 from django.contrib.auth import authenticate
-
-from rest_framework.views import APIView
+from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.views import APIView
 from rest_framework_jwt.settings import api_settings
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER

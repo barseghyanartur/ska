@@ -1,23 +1,22 @@
 import logging
 from typing import Dict, Optional, Union
 
-from django.core.exceptions import PermissionDenied
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
+from django.core.exceptions import PermissionDenied
 from django.db import IntegrityError
 from django.http import HttpRequest
 from rest_framework.request import Request
 
 from ..... import Signature, extract_signed_request_data
-from .....helpers import get_callback_func
 from .....defaults import (
-    DEFAULT_SIGNATURE_PARAM,
     DEFAULT_AUTH_USER_PARAM,
-    DEFAULT_VALID_UNTIL_PARAM,
     DEFAULT_EXTRA_PARAM,
+    DEFAULT_SIGNATURE_PARAM,
+    DEFAULT_VALID_UNTIL_PARAM,
 )
 from .....exceptions import ImproperlyConfigured, InvalidData
-
+from .....helpers import get_callback_func
 from ..models import Signature as SignatureModel
 from ..settings import (
     DB_PERFORM_SIGNATURE_CHECK,

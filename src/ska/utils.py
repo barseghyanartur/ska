@@ -1,15 +1,15 @@
-from typing import Dict, Optional, Union, Type, Callable
+from typing import Callable, Dict, Optional, Type, Union
 from urllib.parse import urlencode
 
 from .base import AbstractSignature, SignatureValidationResult
 from .defaults import (
-    DEFAULT_URL_SUFFIX,
+    DEFAULT_AUTH_USER_PARAM,
     DEFAULT_EXTRA_PARAM,
     DEFAULT_SIGNATURE_PARAM,
-    DEFAULT_AUTH_USER_PARAM,
+    DEFAULT_URL_SUFFIX,
     DEFAULT_VALID_UNTIL_PARAM,
 )
-from .exceptions import InvalidData, ImproperlyConfigured
+from .exceptions import ImproperlyConfigured, InvalidData
 from .helpers import dict_keys, extract_signed_data as extract_signed_data
 from .signatures import Signature
 

@@ -4,16 +4,8 @@ from django.db.models import Model
 from rest_framework.request import Request
 from rest_framework.viewsets import GenericViewSet
 
-from ....settings import (
-    SECRET_KEY,
-    PROVIDERS,
-)
-
-from .base import (
-    BaseProviderSignedRequestRequired,
-    BaseSignedRequestRequired,
-)
-
+from ....settings import PROVIDERS, SECRET_KEY
+from .base import BaseProviderSignedRequestRequired, BaseSignedRequestRequired
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2013-2021 Artur Barseghyan"

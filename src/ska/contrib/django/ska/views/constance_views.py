@@ -1,5 +1,4 @@
 from constance import config
-
 from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login
 from django.http import HttpResponseForbidden, HttpResponseRedirect

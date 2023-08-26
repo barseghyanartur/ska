@@ -27,8 +27,8 @@ validating) dictionaries and URLs.
    :target: https://github.com/barseghyanartur/ska/#License
    :alt: GPL-2.0-only OR LGPL-2.1-or-later
 
-.. image:: https://coveralls.io/repos/github/barseghyanartur/ska/badge.svg?branch=master&service=github
-    :target: https://coveralls.io/github/barseghyanartur/ska?branch=master
+.. image:: https://coveralls.io/repos/github/barseghyanartur/ska/badge.svg?branch=main&service=github
+    :target: https://coveralls.io/github/barseghyanartur/ska?branch=main
     :alt: Coverage
 
 Key concepts
@@ -87,13 +87,13 @@ Prerequisites
 =============
 Present
 -------
-- Core ``ska`` module requires Python 3.6, 3.7, 3.8, 3.9 or 3.10.
+- Core ``ska`` module requires Python 3.8, 3.9, 3.10 and 3.11.
 - Django ``ska`` module (``ska.contrib.django.ska``) requires the mentioned
-  above plus Django 2.2, 3.0, 3.1 or 3.2. Additionally, certain
+  above plus Django 3.2, 4.1 or 4.2. Additionally, certain
   versions of `django-constance` and `djangorestframework` are required.
   Specific version requirement primarily depends on the used Django version.
   Check the `example requirements
-  <https://github.com/barseghyanartur/ska/tree/master/examples/requirements>`_
+  <https://github.com/barseghyanartur/ska/tree/main/examples/requirements>`_
   to find out which versions of `django-constance` and `djangorestframework`
   have been tested with specific Django versions.
 
@@ -104,10 +104,15 @@ Past
     In future releases (any time) compatibility with no-longer-supported
     versions might/will be wiped out.
 
+- Dropping support of Python 3.6 and 3.7 has been announced in version 1.10.
+  As of 1.9.1 everything still worked.
 - Dropping support of Python 2.7 and 3.5 has been announced in version 1.8.
   As of 1.7.5 everything still worked.
 - Dropping support of Python 3.4 has been announced in version 1.6.8. As of
   1.6.8 everything still worked.
+- Dropping support of Django 2.2, 3.0, 3.1 and 4.0 has been announced in
+  version 1.10. As of 1.9.1 everything is still backwards compatible with
+  mentioned versions.
 - Dropping support of Django 1.5, 1.6 and 1.7 has been announced in version
   1.6. As of 1.6 everything is still backwards compatible with mentioned
   versions.
@@ -124,7 +129,7 @@ Need ``ska`` for other languages? Check the following affiliated projects:
 - `skaphp <https://github.com/barseghyanartur/skaphp>`_: ``ska`` implementation
   for PHP (>= 7.2).
 
-Generated signatures are intercompatible between Python, NodeJS and PHP
+Generated signatures are inter-compatible between Python, NodeJS and PHP
 implementations.
 
 Installation
@@ -139,7 +144,7 @@ or latest development version from GitHub.
 
 .. code-block:: sh
 
-    pip install https://github.com/barseghyanartur/ska/archive/master.tar.gz
+    pip install https://github.com/barseghyanartur/ska/archive/main.tar.gz
 
 Usage examples
 ==============
@@ -1073,7 +1078,7 @@ Relies on dynamic settings functionality provided by
 .. note::
 
     Additional requirements shall be installed. See the `constance.txt
-    <https://github.com/barseghyanartur/ska/blob/master/examples/requirements/constance.txt>`_
+    <https://github.com/barseghyanartur/ska/blob/main/examples/requirements/constance.txt>`_
     file for additional requirements (``django-constance``,
     ``django-json-widget``, ``django-picklefield``, ``jsonfield2`` and
     ``redis``).
@@ -1215,9 +1220,9 @@ urls.py
 ^^^^^^^
 ``django-constance`` specific views and urls are used. See
 `ska.contrib.django.ska.views.constance_views
-<https://github.com/barseghyanartur/ska/blob/master/src/ska/contrib/django/ska/views/constance_views.py>`_
+<https://github.com/barseghyanartur/ska/blob/main/src/ska/contrib/django/ska/views/constance_views.py>`_
 and `ska.contrib.django.ska.urls.constance_urls
-<https://github.com/barseghyanartur/ska/blob/master/src/ska/contrib/django/ska/urls/constance_urls.py>`_
+<https://github.com/barseghyanartur/ska/blob/main/src/ska/contrib/django/ska/urls/constance_urls.py>`_
 for the reference.
 
 .. code-block:: python
