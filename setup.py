@@ -18,7 +18,6 @@ setup(
     classifiers=[
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
@@ -44,7 +43,7 @@ setup(
         "Bug Tracker": "https://github.com/barseghyanartur/ska/issues",
         "Documentation": "https://ska.readthedocs.io/",
         "Source Code": "https://github.com/barseghyanartur/ska",
-        "Changelog": "https://ska.readthedocs.io/" "en/latest/changelog.html",
+        "Changelog": "https://ska.readthedocs.io/en/latest/changelog.html",
     },
     license="GPL-2.0-only OR LGPL-2.1-or-later",
     entry_points={
