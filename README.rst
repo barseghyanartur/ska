@@ -1456,7 +1456,9 @@ GPL-2.0-only OR LGPL-2.1-or-later
 
 Support
 =======
-For any issues contact me at the e-mail given in the `Author`_ section.
+For security issues contact me at the e-mail given in the `Author`_ section.
+
+For overall issues, go to `GitHub <https://github.com/barseghyanartur/ska/issues>`_.
 
 Author
 ======
