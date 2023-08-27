@@ -5,13 +5,13 @@ from urllib.parse import parse_qs, urlparse
 from .. import TIMESTAMP_FORMAT
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
-__copyright__ = "2013-2021 Artur Barseghyan"
-__license__ = "GPL 2.0/LGPL 2.1"
+__copyright__ = "2013-2023 Artur Barseghyan"
+__license__ = "GPL-2.0-only OR LGPL-2.1-or-later"
 __all__ = (
     "LOG_INFO",
     "log_info",
-    "timestamp_to_human_readable",
     "parse_url_params",
+    "timestamp_to_human_readable",
 )
 
 

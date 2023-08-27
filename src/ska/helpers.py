@@ -8,19 +8,19 @@ from urllib.parse import quote
 from .defaults import SIGNATURE_LIFETIME
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
-__copyright__ = "2013-2021 Artur Barseghyan"
-__license__ = "GPL 2.0/LGPL 2.1"
+__copyright__ = "2013-2023 Artur Barseghyan"
+__license__ = "GPL-2.0-only OR LGPL-2.1-or-later"
 __all__ = (
+    "default_quoter",
     "default_value_dumper",
     "dict_keys",
     "dict_to_ordered_list",
     "extract_signed_data",
     "get_callback_func",
+    "javascript_quoter",
     "javascript_value_dumper",
     "make_valid_until",
     "sorted_urlencode",
-    "default_quoter",
-    "javascript_quoter",
 )
 
 

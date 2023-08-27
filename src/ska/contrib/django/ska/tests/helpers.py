@@ -6,19 +6,19 @@ import factories
 import pytest
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
-__copyright__ = "2013-2021 Artur Barseghyan"
-__license__ = "GPL 2.0/LGPL 2.1"
+__copyright__ = "2013-2023 Artur Barseghyan"
+__license__ = "GPL-2.0-only OR LGPL-2.1-or-later"
 __all__ = (
+    "LOG_INFO",
+    "NUM_ITEMS",
+    "PROJECT_DIR",
+    "SKA_TEST_USER_PASSWORD",
+    "SKA_TEST_USER_USERNAME",
     "change_date",
     "create_admin_user",
     "generate_data",
-    "LOG_INFO",
     "log_info",
-    "NUM_ITEMS",
-    "PROJECT_DIR",
     "project_dir",
-    "SKA_TEST_USER_PASSWORD",
-    "SKA_TEST_USER_USERNAME",
 )
 
 LOGGER = logging.getLogger(__name__)

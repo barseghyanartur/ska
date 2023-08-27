@@ -22,20 +22,20 @@ Application defaults.
 """
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
-__copyright__ = "2013-2021 Artur Barseghyan"
-__license__ = "GPL 2.0/LGPL 2.1"
+__copyright__ = "2013-2023 Artur Barseghyan"
+__license__ = "GPL-2.0-only OR LGPL-2.1-or-later"
 __all__ = (
-    "TIMESTAMP_FORMAT",
-    "SIGNATURE_LIFETIME",
-    "DEFAULT_SIGNATURE_PARAM",
+    "DEBUG",
     "DEFAULT_AUTH_USER_PARAM",
-    "DEFAULT_VALID_UNTIL_PARAM",
-    "DEFAULT_TIME_ZONE_PARAM",
     "DEFAULT_EXTRA_PARAM",
     "DEFAULT_PROVIDER_PARAM",
-    "DEFAULT_URL_SUFFIX",
     "DEFAULT_RESERVED_PARAMS",
-    "DEBUG",
+    "DEFAULT_SIGNATURE_PARAM",
+    "DEFAULT_TIME_ZONE_PARAM",
+    "DEFAULT_URL_SUFFIX",
+    "DEFAULT_VALID_UNTIL_PARAM",
+    "SIGNATURE_LIFETIME",
+    "TIMESTAMP_FORMAT",
 )
 
 TIMESTAMP_FORMAT = "%Y-%m-%dT%H:%M:%S"
