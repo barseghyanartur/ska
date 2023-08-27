@@ -1,2 +1,2 @@
 .. include:: ../README.rst
-.. include:: documentation.rst.distrib
+.. include:: documentation.rst

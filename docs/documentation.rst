@@ -10,4 +10,7 @@ Contents:
 
    index
    changelog
+   security
+   code_of_conduct
+   contributor_guidelines
    package
