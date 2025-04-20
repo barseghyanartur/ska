@@ -95,7 +95,9 @@ def sign_url(
     if not extra:
         extra = {}
 
-    assert isinstance(lifetime, int)
+    # assert isinstance(lifetime, int)
+    if not isinstance(lifetime, int):
+        raise TypeError("The 'lifetime' argument must be an integer")
 
     signature = signature_cls.generate_signature(
         auth_user=auth_user,
@@ -183,7 +185,9 @@ def signature_to_dict(
     if not extra:
         extra = {}
 
-    assert isinstance(lifetime, int)
+    # assert isinstance(lifetime, int)
+    if not isinstance(lifetime, int):
+        raise TypeError("The 'lifetime' argument must be an integer")
 
     signature = signature_cls.generate_signature(
         auth_user=auth_user,
