@@ -60,6 +60,7 @@ setup(
         "factory_boy",
         "faker",
         "pytest",
+        "pytest-codeblock",
         "pytest-django",
         "mock",
         "beautifulsoup4",

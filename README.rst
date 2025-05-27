@@ -161,12 +161,15 @@ Signing URLs is as simple as follows.
 Required imports.
 
 .. code-block:: python
+    :name: test_signing_urls
 
     from ska import sign_url
 
 Producing a signed URL.
 
+.. continue: test_signing_urls
 .. code-block:: python
+    :name: test_signing_urls_sign_url_function
 
     signed_url = sign_url(
         auth_user='user',
@@ -200,7 +203,9 @@ set its' value to empty string.
 
 With all customisations, it would look as follows:
 
+.. continue: test_signing_urls
 .. code-block:: python
+    :name: test_signing_urls_customisations
 
     from ska import HMACSHA512Signature  # Use HMAC SHA-512 algorithm
 
@@ -220,7 +225,9 @@ It's also possible to add additional data to the signature by providing a
 If request is somehow tampered (values vary from originally provided ones),
 signature becomes invalid.
 
+.. continue: test_signing_urls
 .. code-block:: python
+    :name: test_signing_urls_additional_data
 
     sign_url(
         auth_user='user',
@@ -247,6 +254,7 @@ dictionary back, in order to append it to the POST data later.
 Required imports.
 
 .. code-block:: python
+    :name: test_signing_dicts
 
     from ska import signature_to_dict
 
@@ -254,7 +262,9 @@ Producing a dictionary containing the signature data, ready to be put into
 the request (for example POST) data. All customisations mentioned above for
 the ``sign_url`` function, also apply to the ``signature_to_dict``:
 
+.. continue: test_signing_dicts
 .. code-block:: python
+    :name: test_signing_dicts_signature_to_dict
 
     signature_dict = signature_to_dict(
         auth_user='user',
@@ -271,7 +281,9 @@ the ``sign_url`` function, also apply to the ``signature_to_dict``:
 
 Adding of additional data to the signature works in the same way:
 
+.. continue: test_signing_dicts
 .. code-block:: python
+    :name: test_signing_dicts_signature_to_dict_additional_data
 
     signature_dict = signature_to_dict(
         auth_user='user',
@@ -305,6 +317,7 @@ Validating the signed request data is as simple as follows.
 Required imports.
 
 .. code-block:: python
+    :name: test_validate_signed_request_data
 
     from ska import validate_signed_request_data
 
@@ -405,12 +418,15 @@ Sender side
 Required imports.
 
 .. code-block:: python
+    :name: test_signature_generate_signature
 
-    from ska import Signature, RequestHelper
+    from ska import Signature
 
 Generate a signature.
 
+.. continue: test_signature_generate_signature
 .. code-block:: python
+    :name: test_signature_generate_signature_part_2
 
     signature = Signature.generate_signature(
         auth_user='user',
@@ -421,7 +437,9 @@ Default lifetime of a signature is 10 minutes (600 seconds). If you want it to
 be different, provide a ``lifetime`` argument to ``generate_signature``
 method.
 
+.. continue: test_signature_generate_signature
 .. code-block:: python
+    :name: test_signature_generate_signature_part_3
 
     signature = Signature.generate_signature(
         auth_user='user',
@@ -432,7 +450,9 @@ method.
 Adding of additional data to the signature works in the same way as in
 ``sign_url``.
 
+.. continue: test_signature_generate_signature
 .. code-block:: python
+    :name: test_signature_generate_signature_part_4
 
     signature = Signature.generate_signature(
         auth_user='user',
@@ -446,7 +466,9 @@ Adding of additional data to the signature works in the same way as in
 
 For HMAC SHA-384 algorithm it would look as follows.
 
+.. continue: test_signature_generate_signature
 .. code-block:: python
+    :name: test_signature_generate_signature_part_5
 
     from ska import HMACSHA384Signature
 
@@ -460,7 +482,23 @@ signature params into the URL. In order to have the job done in an easy way,
 create a request helper. Feed names of the (GET) params to the request helper
 and let it make a signed endpoint URL for you.
 
+Required imports.
+
 .. code-block:: python
+    :name: test_request_helper
+
+    from ska import RequestHelper, Signature
+
+Initialise the `RequestHelper`.
+
+.. continue: test_request_helper
+.. code-block:: python
+    :name: test_request_helper_part_2
+
+    signature = Signature.generate_signature(
+        auth_user='user',
+        secret_key='your-secret-key'
+    )
 
     request_helper = RequestHelper(
         signature_param='signature',
@@ -470,7 +508,9 @@ and let it make a signed endpoint URL for you.
 
 Append signature params to the endpoint URL.
 
+.. continue: test_request_helper
 .. code-block:: python
+    :name: test_request_helper_signature_to_url
 
     signed_url = request_helper.signature_to_url(
         signature=signature,
@@ -491,7 +531,9 @@ Make a request.
 
 For HMAC SHA-384 algorithm it would look as follows.
 
+.. continue: test_request_helper
 .. code-block:: python
+    :name: test_request_helper_hmac_sha_384_signature
 
     from ska import HMACSHA384Signature
 
@@ -512,6 +554,7 @@ Recipient side
 Required imports.
 
 .. code-block:: python
+    :name: test_recipient_side_request_helper
 
     from ska import RequestHelper
 
@@ -519,7 +562,9 @@ Create a request helper. Your endpoint operates with certain param names. In
 order to have the job done in an easy way, we feed those params to the
 request helper and let it extract data from signed request for us.
 
+.. continue: test_recipient_side_request_helper
 .. code-block:: python
+    :name: test_recipient_side_request_helper_part_2
 
     request_helper = RequestHelper(
         signature_param='signature',
@@ -552,6 +597,9 @@ You can also just validate the signature by calling ``validate_signature``
 method of the ``ska.Signature``.
 
 .. code-block:: python
+    :name: test_signature_validate_signature
+
+    from ska import Signature
 
     Signature.validate_signature(
         signature='EBS6ipiqRLa6TY5vxIvZU30FpnM=',
