@@ -12,9 +12,9 @@ jobs:
       matrix:
         include:
 
-          - python-version: '3.8'
-            requirements: django_3_2
-            tox_env: py38-django32
+#          - python-version: '3.8'
+#            requirements: django_3_2
+#            tox_env: py38-django32
           - python-version: '3.9'
             requirements: django_3_2
             tox_env: py39-django32
@@ -25,9 +25,9 @@ jobs:
             requirements: django_3_2
             tox_env: py311-django32
 
-          - python-version: '3.8'
-            requirements: django_4_1
-            tox_env: py38-django41
+#          - python-version: '3.8'
+#            requirements: django_4_1
+#            tox_env: py38-django41
           - python-version: '3.9'
             requirements: django_4_1
             tox_env: py39-django41
@@ -38,9 +38,9 @@ jobs:
             requirements: django_4_1
             tox_env: py311-django41
 
-          - python-version: '3.8'
-            requirements: django_4_2
-            tox_env: py38-django42
+#          - python-version: '3.8'
+#            requirements: django_4_2
+#            tox_env: py38-django42
           - python-version: '3.9'
             requirements: django_4_2
             tox_env: py39-django42

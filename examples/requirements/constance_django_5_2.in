@@ -1,0 +1,4 @@
+django-constance
+django-json-widget
+django-picklefield
+redis
