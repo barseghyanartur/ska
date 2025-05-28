@@ -68,6 +68,7 @@ jobs:
         pip install -r examples/requirements/${{ matrix.requirements }}.txt
         uv pip compile pyproject.toml examples/requirements/test.in --all-extras -o examples/requirements/test.txt
         pip install -r examples/requirements/test.txt
+        pip list
     - name: Run Tests
       run: tox -e ${{ matrix.tox_env }}
     - name: Coveralls
