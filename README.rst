@@ -649,6 +649,7 @@ Configuration
 Secret key (``str``) must be defined in ``settings`` module of your project.
 
 .. code-block:: python
+        :name: test_django_integration_config
 
     SKA_SECRET_KEY = 'my-secret-key'
 
@@ -704,6 +705,7 @@ example below. Note, that keys of the ``SKA_PROVIDERS`` ("client_1",
 "client_2", etc.) are the provider keys.
 
 .. code-block:: python
+    :name: test_django_integration_config_multiple_secret_keys
 
     SKA_PROVIDERS = {
         # ********************************************************
@@ -765,6 +767,7 @@ When making a signed URL on the sender side, you should be providing the
 would do it for ``client_1.power_users``.
 
 .. code-block:: python
+    :name: test_django_integration_sign_url
 
     from ska import sign_url
     from ska.defaults import DEFAULT_PROVIDER_PARAM
@@ -899,6 +902,7 @@ the ``ska.contrib.django.ska.integration.constance_integration`` line to
 your``INSTALLED_APPS``:
 
 .. code-block:: python
+    :name: test_django_integration_settings_installed_apps
 
     INSTALLED_APPS = (
         # ...
@@ -996,6 +1000,7 @@ authenticated (log in). On the recipient side the following shall be present.
 settings.py
 ***********
 .. code-block:: python
+    :name: test_django_integration_settings_config
 
     AUTHENTICATION_BACKENDS = (
         'ska.contrib.django.ska.backends.SkaAuthenticationBackend',
@@ -1067,6 +1072,7 @@ module.
 Example:
 
 .. code-block:: python
+    :name: test_django_integration_config_callbacks
 
     SKA_USER_GET_CALLBACK = 'my_app.ska_callbacks.my_get_callback'
     SKA_USER_CREATE_CALLBACK = 'my_app.ska_callbacks.my_create_callback'
@@ -1083,6 +1089,7 @@ signed using ``ska`` (for example, using ``sign_url`` function). The
 ``auth_user`` param would be used as a Django username. See the example below.
 
 .. code-block:: python
+    :name: test_django_integration_config_sign_url_sender_side
 
     from ska import sign_url
     from ska.contrib.django.ska.settings import SECRET_KEY
