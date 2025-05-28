@@ -81,8 +81,8 @@ include = ["src"]
 exclude = ["**/node_modules",
     "**/__pycache__",
     "tmp",
-    "src/faker_file.egg-info",
-    "src/faker_file/tests"
+    "src/ska.egg-info",
+    "src/ska/tests"
 ]
 ignore = ["src/oldstuff"]
 defineConstant = { DEBUG = true }

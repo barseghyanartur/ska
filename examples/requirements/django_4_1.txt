@@ -116,10 +116,13 @@ pysocks==1.7.1
 pytest==8.3.5
     # via
     #   -r test.in
+    #   pytest-codeblock
     #   pytest-cov
     #   pytest-django
     #   pytest-monkeytype
     #   pytest-ordering
+pytest-codeblock==0.1.8
+    # via -r test.in
 pytest-cov==6.1.1
     # via -r test.in
 pytest-django==4.11.1
@@ -132,7 +135,7 @@ pytz==2025.2
     # via -r django_4_1.in
 pyyaml==6.0.2
     # via libcst
-redis==6.1.0
+redis==6.2.0
     # via -r constance_django_4_1.in
 selenium==4.33.0
     # via -r test.in

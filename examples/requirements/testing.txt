@@ -174,10 +174,13 @@ pysocks==1.7.1
 pytest==8.3.5
     # via
     #   -r test.in
+    #   pytest-codeblock
     #   pytest-cov
     #   pytest-django
     #   pytest-monkeytype
     #   pytest-ordering
+pytest-codeblock==0.1.8
+    # via -r test.in
 pytest-cov==6.1.1
     # via -r test.in
 pytest-django==4.11.1
@@ -194,7 +197,7 @@ pyyaml==6.0.2
     #   pre-commit
 readme-renderer==36.0
     # via restview
-redis==6.1.0
+redis==6.2.0
     # via -r constance_django_4_2.in
 restview==3.0.2
     # via -r style_checkers.in
