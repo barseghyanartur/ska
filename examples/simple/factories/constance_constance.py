@@ -34,11 +34,7 @@ class ConstanceFactory(BaseConstanceFactory):
     """Constance factory."""
 
 
-class SkaProvidersConstanceFactory(ConstanceFactory):
-    """Ska providers constance factory."""
-
-    key = "SKA_PROVIDERS"
-    value = {
+SKA_PROVIDERS_VALUE = {
         # Client 1, group users
         "client_1.users": {
             "SECRET_KEY": "client-1-users-secret-key-constance",
@@ -60,17 +56,29 @@ class SkaProvidersConstanceFactory(ConstanceFactory):
         },
     }
 
+
+class SkaProvidersConstanceFactory(ConstanceFactory):
+    """Ska providers constance factory."""
+
+    key = "SKA_PROVIDERS"
+    value = json.dumps(SKA_PROVIDERS_VALUE)
+    # value = SKA_PROVIDERS_VALUE
+
     class Meta(object):
         """Meta class."""
 
         django_get_or_create = ("key",)
 
 
+SKA_SECRET_KEY_VALUE = "global-secret-key-constance"
+
+
 class SkaSecretKeyConstanceFactory(ConstanceFactory):
     """Ska secret key constance factory."""
 
     key = "SKA_SECRET_KEY"
-    value = "global-secret-key-constance"
+    # value = "global-secret-key-constance"
+    value = json.dumps(SKA_SECRET_KEY_VALUE)
 
     class Meta(object):
         """Meta class."""
