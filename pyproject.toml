@@ -38,12 +38,127 @@ known_first_party = "faker_file"
 known_third_party = ["django", "factory"]
 skip = ["wsgi.py",]
 
+[tool.pyright]
+include = ["src"]
+exclude = ["**/node_modules",
+    "**/__pycache__",
+    "tmp",
+    "src/ska.egg-info",
+    "src/ska/tests"
+]
+ignore = ["src/oldstuff"]
+defineConstant = { DEBUG = true }
+stubPath = "src/stubs"
+
+reportMissingImports = true
+reportMissingTypeStubs = false
+
+pythonVersion = "3.10"
+pythonPlatform = "Linux"
+verboseOutput = true
+
+[tool.mypy]
+check_untyped_defs = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_unused_configs = true
+
+[tool.pytest.ini_options]
+addopts = [
+    "-ra",
+    "-vvv",
+    "-q",
+   "--cov=ska",
+   "--ignore=.tox",
+   "--ignore=requirements",
+   "--ignore=release",
+   "--ignore=examples",
+   "--ignore=tmp",
+   "--cov-report=html",
+   "--cov-report=term",
+   "--cov-report=annotate",
+   "--cov-append",
+   "--capture=no",
+]
+#testpaths = []
+pythonpath = [
+    "src",
+    "examples/simple",
+]
+norecursedirs = [
+    ".git",
+    "examples",
+    "build",
+    "dist",
+]
+DJANGO_SETTINGS_MODULE = "settings.testing"
+
+[tool.coverage.run]
+relative_files = true
+omit = [
+    "src/ska/contrib/django/ska/migrations/*",
+    "src/ska/contrib/django/ska/tests/*",
+    "src/ska/contrib/django/ska/south_migrations/*",
+    "src/ska/tests/*",
+    "example/example/settings/*",
+    "example/example/wsgi.py",
+    ".tox/*",
+]
+
+[tool.coverage.report]
+show_missing = true
+exclude_lines = [
+    "pragma: no cover",
+    "@overload",
+    "raise NotImplementedError",
+]
+
+[tool.doc8]
+ignore-path = [
+    "docs/requirements.txt",
+    "ska.py.egg-info/SOURCES.txt",
+]
+
 [tool.ruff]
 line-length = 80
 
 # Enable Pyflakes `E` and `F` codes by default.
-select = ["E", "F"]
-ignore = []
+lint.select = [
+#    "ANN",  # Annotations: missing (return) types
+    "B",  # Bugbear: common bug patterns or design problems
+    "C4",  # Complexity: McCabe complexity checker
+    "E",  # Pycodesyle: Style guide enforcement
+    "F",  # Pyflakes: Source files errors
+    "G",  # Logging format: Basic logging format errors
+    "I",  # Isort: import sorting
+    "ISC",  # Naming: Variable naming convention
+    "INP",  # Implicit namespace packages: Check if __init__.py is present
+    "N",  # Naming: Variable naming convention
+    "PERF",  # Perflint: Performance linting
+    "Q",
+    "SIM",  # Simplify: Helps simplify your code
+    "TD",  # TO DO: Format TO DO comments
+]
+lint.ignore = [
+    "G004",  # Allow use of f-string in logging
+    "ISC003",  # Allow explicitly concatenated strings
+#    "N805",  # Allow first argument of a method be named other than `self`
+    "TD002",  # Allow to do without author
+    "TD003",  # Allow to do without URL
+]
+# Enable autofix for formatting and import sorting
+fix = true
+src = [
+    "examples/customisation",
+    "examples/dataclasses",
+    "examples/django",
+    "examples/hypothesis",
+    "examples/lazyfuzzy",
+    "examples/pydantic",
+    "examples/sqlalchemy",
+    "examples/sqlmodel",
+    "examples/tortoise",
+]
 
 # Exclude a variety of commonly ignored directories.
 exclude = [
@@ -66,31 +181,30 @@ exclude = [
     "dist",
     "node_modules",
     "venv",
+    "docs",
     "examples/django_example/project/wsgi.py",
 ]
-per-file-ignores = {}
 
 # Allow unused variables when underscore-prefixed.
-dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+lint.dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
-# Assume Python 3.10.
-target-version = "py310"
+# Assume Python 3.9.
+target-version = "py39"
 
-[tool.pyright]
-include = ["src"]
-exclude = ["**/node_modules",
-    "**/__pycache__",
-    "tmp",
-    "src/ska.egg-info",
-    "src/ska/tests"
+[tool.ruff.lint.per-file-ignores]
+"conftest.py" = [
+    "PERF203"  # Allow `try`-`except` within a loop incurs performance overhead
 ]
-ignore = ["src/oldstuff"]
-defineConstant = { DEBUG = true }
-stubPath = "src/stubs"
 
-reportMissingImports = true
-reportMissingTypeStubs = false
-
-pythonVersion = "3.10"
-pythonPlatform = "Linux"
-verboseOutput = true
+[tool.ruff.lint.isort]
+known-first-party = [
+    "address",
+    "article",
+    "band",
+    "config",
+    "data",
+    "fake_address",
+    "fake_band",
+    "override_default_data",
+]
+known-third-party = []

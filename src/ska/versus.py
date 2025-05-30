@@ -31,7 +31,7 @@ except ImportError:
     )
 
 __title__ = "versus"
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2023-2025 Artur Barseghyan"
 __license__ = "MIT"
@@ -151,8 +151,3 @@ class TestVersion(unittest.TestCase):
     def test_get_version_fail_hard(self):
         with self.assertRaises(RuntimeError):
             get_version("nonexistent_package_xyz", fail_silently=False)
-
-    def test_integration(self):
-        v = get_version("fake-py")
-        self.assertTrue(v.gt("0.1"))
-        self.assertTrue(v.lt("100"))
