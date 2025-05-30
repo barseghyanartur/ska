@@ -2,6 +2,7 @@ import json
 
 from factory.django import DjangoModelFactory
 
+from ska.versus import get_version
 from .factory_faker import Faker
 
 try:
@@ -14,6 +15,8 @@ __all__ = (
     "SkaProvidersConstanceFactory",
     "SkaSecretKeyConstanceFactory",
 )
+
+DJANGO_CONSTANCE_VERSION = get_version("django-constance")
 
 
 class BaseConstanceFactory(DjangoModelFactory):
@@ -61,8 +64,11 @@ class SkaProvidersConstanceFactory(ConstanceFactory):
     """Ska providers constance factory."""
 
     key = "SKA_PROVIDERS"
-    value = json.dumps(SKA_PROVIDERS_VALUE)
-    # value = SKA_PROVIDERS_VALUE
+
+    if DJANGO_CONSTANCE_VERSION.gte("4.0"):
+        value = json.dumps(SKA_PROVIDERS_VALUE)
+    else:
+        value = SKA_PROVIDERS_VALUE
 
     class Meta(object):
         """Meta class."""
@@ -77,8 +83,10 @@ class SkaSecretKeyConstanceFactory(ConstanceFactory):
     """Ska secret key constance factory."""
 
     key = "SKA_SECRET_KEY"
-    # value = "global-secret-key-constance"
-    value = json.dumps(SKA_SECRET_KEY_VALUE)
+    if DJANGO_CONSTANCE_VERSION.gte("4.0"):
+        value = json.dumps(SKA_SECRET_KEY_VALUE)
+    else:
+        value = SKA_SECRET_KEY_VALUE
 
     class Meta(object):
         """Meta class."""
