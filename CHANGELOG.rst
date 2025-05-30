@@ -17,7 +17,7 @@ are used for versioning (schema follows below):
 
 1.11
 ----
-2025-05-30
+2025-05-31
 
 - Tested against Python 3.12 and 3.13.
 - Drop support for Python 3.8.

@@ -7,7 +7,7 @@ try:
 except:
     readme = ""
 
-version = "1.10"
+version = "1.11"
 
 setup(
     name="ska",
@@ -18,10 +18,11 @@ setup(
     classifiers=[
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
         "Topic :: Security :: Cryptography",
         "Environment :: Web Environment",
         "Intended Audience :: Developers",
@@ -52,9 +53,9 @@ setup(
     install_requires=[],
     extras_require={
         "django": ["django-nine>=0.2.4"],
-        "django-constance": ["django-constance", "django-nine>=0.2.4"],
-        "djangorestframework": ["djangorestframework", "django-nine>=0.2.4"],
-        "drf-jwt": ["drf-jwt", "django-nine>=0.2.4"],
+        "django-constance": ["django-constance"],
+        "djangorestframework": ["djangorestframework"],
+        "drf-jwt": ["drf-jwt"],
     },
     tests_require=[
         "factory_boy",
