@@ -13,12 +13,6 @@ uv pip compile ../../pyproject.toml deployment.in --all-extras -o deployment.txt
 echo "pip-compile dev.in"
 uv pip compile ../../pyproject.toml dev.in --all-extras -o dev.txt --upgrade "$@"
 
-#echo "pip-compile django_3_2.in"
-#uv pip compile ../../pyproject.toml django_3_2.in --all-extras -o django_3_2.txt --upgrade "$@"
-#
-#echo "pip-compile django_4_1.in"
-#uv pip compile ../../pyproject.toml django_4_1.in --all-extras -o django_4_1.txt --upgrade "$@"
-
 echo "pip-compile django_4_2.in"
 uv pip compile ../../pyproject.toml django_4_2.in --all-extras -o django_4_2.txt --upgrade "$@"
 
