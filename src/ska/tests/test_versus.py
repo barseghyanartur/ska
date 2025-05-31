@@ -1,1 +1,1 @@
-from ..versus import TestVersion  # noqa
+from ..versus import *  # noqa
