@@ -19,25 +19,19 @@ Usage:
 import logging
 import re
 import unittest
+from importlib.metadata import version as get_installed_version
 from typing import Optional
 
-try:
-    # Python 3.8+
-    from importlib.metadata import version as get_installed_version
-except ImportError:
-    # Older fallback (not needed for Python ≥3.9)
-    from importlib_metadata import (
-        version as get_installed_version,  # type: ignore
-    )
-
 __title__ = "versus"
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
-__copyright__ = "2023-2025 Artur Barseghyan"
+__copyright__ = "2025 Artur Barseghyan"
 __license__ = "MIT"
 __all__ = (
-    "get_version",
+    "TestVersus",
     "Version",
+    "get_version",
+    "normalise_package_name",
 )
 
 LOGGER = logging.getLogger(__name__)
@@ -114,7 +108,7 @@ def get_version(
 # ----------------------------------------------------------------------------
 
 
-class TestVersion(unittest.TestCase):
+class TestVersus(unittest.TestCase):
 
     def test_version_str_and_repr(self):
         v = Version("1.2.3")
@@ -139,10 +133,12 @@ class TestVersion(unittest.TestCase):
         self.assertTrue(v2.gt("1.2.3-alpha"))
 
     def test_get_version_success(self):
-        # Assuming sys module always exists
-        v = get_version("sys")
+        # Assuming `pip` package always exists
+        v = get_version("pip")
         if v is not None:
             self.assertIsInstance(v, Version)
+            self.assertTrue(v.gt("0.1"))
+            self.assertTrue(v.lt("1000"))
 
     def test_get_version_fail_silently(self):
         v = get_version("nonexistent_package_xyz", fail_silently=True)
