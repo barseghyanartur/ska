@@ -23,6 +23,10 @@ validating) dictionaries and URLs.
     :target: http://ska.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
+.. image:: https://img.shields.io/badge/docs-llms.txt-blue
+    :target: https://ska.readthedocs.io/en/latest/llms.txt
+    :alt: llms.txt - documentation for LLMs
+
 .. image:: https://img.shields.io/badge/license-GPL--2.0--only%20OR%20LGPL--2.1--or--later-blue.svg
    :target: https://github.com/barseghyanartur/ska/#License
    :alt: GPL-2.0-only OR LGPL-2.1-or-later
@@ -87,9 +91,9 @@ Prerequisites
 =============
 Present
 -------
-- Core ``ska`` module requires Python 3.8, 3.9, 3.10 and 3.11.
+- Core ``ska`` module requires Python 3.9, 3.10, 3.11, 3.12 or 3.13.
 - Django ``ska`` module (``ska.contrib.django.ska``) requires the mentioned
-  above plus Django 3.2, 4.1 or 4.2. Additionally, certain
+  above plus Django 4.2, 5.1 or 5.2. Additionally, certain
   versions of `django-constance` and `djangorestframework` are required.
   Specific version requirement primarily depends on the used Django version.
   Check the `example requirements
@@ -104,12 +108,17 @@ Past
     In future releases (any time) compatibility with no-longer-supported
     versions might/will be wiped out.
 
+- Dropping support of Python 3.8 has been announced in version 1.11.
+  As of 1.10 everything still worked.
 - Dropping support of Python 3.6 and 3.7 has been announced in version 1.10.
   As of 1.9.1 everything still worked.
 - Dropping support of Python 2.7 and 3.5 has been announced in version 1.8.
   As of 1.7.5 everything still worked.
 - Dropping support of Python 3.4 has been announced in version 1.6.8. As of
   1.6.8 everything still worked.
+- Dropping support of Django 3.1, 3.2 and 4.1 has been announced in
+  version 1.11. As of 1.10 everything is still backwards compatible with
+  mentioned versions.
 - Dropping support of Django 2.2, 3.0, 3.1 and 4.0 has been announced in
   version 1.10. As of 1.9.1 everything is still backwards compatible with
   mentioned versions.
@@ -161,12 +170,15 @@ Signing URLs is as simple as follows.
 Required imports.
 
 .. code-block:: python
+    :name: test_signing_urls
 
     from ska import sign_url
 
 Producing a signed URL.
 
+.. continue: test_signing_urls
 .. code-block:: python
+    :name: test_signing_urls_sign_url_function
 
     signed_url = sign_url(
         auth_user='user',
@@ -200,7 +212,9 @@ set its' value to empty string.
 
 With all customisations, it would look as follows:
 
+.. continue: test_signing_urls
 .. code-block:: python
+    :name: test_signing_urls_customisations
 
     from ska import HMACSHA512Signature  # Use HMAC SHA-512 algorithm
 
@@ -220,7 +234,9 @@ It's also possible to add additional data to the signature by providing a
 If request is somehow tampered (values vary from originally provided ones),
 signature becomes invalid.
 
+.. continue: test_signing_urls
 .. code-block:: python
+    :name: test_signing_urls_additional_data
 
     sign_url(
         auth_user='user',
@@ -247,6 +263,7 @@ dictionary back, in order to append it to the POST data later.
 Required imports.
 
 .. code-block:: python
+    :name: test_signing_dicts
 
     from ska import signature_to_dict
 
@@ -254,7 +271,9 @@ Producing a dictionary containing the signature data, ready to be put into
 the request (for example POST) data. All customisations mentioned above for
 the ``sign_url`` function, also apply to the ``signature_to_dict``:
 
+.. continue: test_signing_dicts
 .. code-block:: python
+    :name: test_signing_dicts_signature_to_dict
 
     signature_dict = signature_to_dict(
         auth_user='user',
@@ -271,7 +290,9 @@ the ``sign_url`` function, also apply to the ``signature_to_dict``:
 
 Adding of additional data to the signature works in the same way:
 
+.. continue: test_signing_dicts
 .. code-block:: python
+    :name: test_signing_dicts_signature_to_dict_additional_data
 
     signature_dict = signature_to_dict(
         auth_user='user',
@@ -305,6 +326,7 @@ Validating the signed request data is as simple as follows.
 Required imports.
 
 .. code-block:: python
+    :name: test_validate_signed_request_data
 
     from ska import validate_signed_request_data
 
@@ -405,12 +427,15 @@ Sender side
 Required imports.
 
 .. code-block:: python
+    :name: test_signature_generate_signature
 
-    from ska import Signature, RequestHelper
+    from ska import Signature
 
 Generate a signature.
 
+.. continue: test_signature_generate_signature
 .. code-block:: python
+    :name: test_signature_generate_signature_part_2
 
     signature = Signature.generate_signature(
         auth_user='user',
@@ -421,7 +446,9 @@ Default lifetime of a signature is 10 minutes (600 seconds). If you want it to
 be different, provide a ``lifetime`` argument to ``generate_signature``
 method.
 
+.. continue: test_signature_generate_signature
 .. code-block:: python
+    :name: test_signature_generate_signature_part_3
 
     signature = Signature.generate_signature(
         auth_user='user',
@@ -432,7 +459,9 @@ method.
 Adding of additional data to the signature works in the same way as in
 ``sign_url``.
 
+.. continue: test_signature_generate_signature
 .. code-block:: python
+    :name: test_signature_generate_signature_part_4
 
     signature = Signature.generate_signature(
         auth_user='user',
@@ -446,7 +475,9 @@ Adding of additional data to the signature works in the same way as in
 
 For HMAC SHA-384 algorithm it would look as follows.
 
+.. continue: test_signature_generate_signature
 .. code-block:: python
+    :name: test_signature_generate_signature_part_5
 
     from ska import HMACSHA384Signature
 
@@ -460,7 +491,23 @@ signature params into the URL. In order to have the job done in an easy way,
 create a request helper. Feed names of the (GET) params to the request helper
 and let it make a signed endpoint URL for you.
 
+Required imports.
+
 .. code-block:: python
+    :name: test_request_helper
+
+    from ska import RequestHelper, Signature
+
+Initialise the `RequestHelper`.
+
+.. continue: test_request_helper
+.. code-block:: python
+    :name: test_request_helper_part_2
+
+    signature = Signature.generate_signature(
+        auth_user='user',
+        secret_key='your-secret-key'
+    )
 
     request_helper = RequestHelper(
         signature_param='signature',
@@ -470,7 +517,9 @@ and let it make a signed endpoint URL for you.
 
 Append signature params to the endpoint URL.
 
+.. continue: test_request_helper
 .. code-block:: python
+    :name: test_request_helper_signature_to_url
 
     signed_url = request_helper.signature_to_url(
         signature=signature,
@@ -491,7 +540,9 @@ Make a request.
 
 For HMAC SHA-384 algorithm it would look as follows.
 
+.. continue: test_request_helper
 .. code-block:: python
+    :name: test_request_helper_hmac_sha_384_signature
 
     from ska import HMACSHA384Signature
 
@@ -512,6 +563,7 @@ Recipient side
 Required imports.
 
 .. code-block:: python
+    :name: test_recipient_side_request_helper
 
     from ska import RequestHelper
 
@@ -519,7 +571,9 @@ Create a request helper. Your endpoint operates with certain param names. In
 order to have the job done in an easy way, we feed those params to the
 request helper and let it extract data from signed request for us.
 
+.. continue: test_recipient_side_request_helper
 .. code-block:: python
+    :name: test_recipient_side_request_helper_part_2
 
     request_helper = RequestHelper(
         signature_param='signature',
@@ -552,6 +606,9 @@ You can also just validate the signature by calling ``validate_signature``
 method of the ``ska.Signature``.
 
 .. code-block:: python
+    :name: test_signature_validate_signature
+
+    from ska import Signature
 
     Signature.validate_signature(
         signature='EBS6ipiqRLa6TY5vxIvZU30FpnM=',
@@ -601,6 +658,7 @@ Configuration
 Secret key (``str``) must be defined in ``settings`` module of your project.
 
 .. code-block:: python
+    :name: test_django_integration_config
 
     SKA_SECRET_KEY = 'my-secret-key'
 
@@ -656,6 +714,7 @@ example below. Note, that keys of the ``SKA_PROVIDERS`` ("client_1",
 "client_2", etc.) are the provider keys.
 
 .. code-block:: python
+    :name: test_django_integration_config_multiple_secret_keys
 
     SKA_PROVIDERS = {
         # ********************************************************
@@ -717,6 +776,7 @@ When making a signed URL on the sender side, you should be providing the
 would do it for ``client_1.power_users``.
 
 .. code-block:: python
+    :name: test_django_integration_sign_url
 
     from ska import sign_url
     from ska.defaults import DEFAULT_PROVIDER_PARAM
@@ -851,6 +911,7 @@ the ``ska.contrib.django.ska.integration.constance_integration`` line to
 your``INSTALLED_APPS``:
 
 .. code-block:: python
+    :name: test_django_integration_settings_installed_apps
 
     INSTALLED_APPS = (
         # ...
@@ -948,6 +1009,7 @@ authenticated (log in). On the recipient side the following shall be present.
 settings.py
 ***********
 .. code-block:: python
+    :name: test_django_integration_settings_config
 
     AUTHENTICATION_BACKENDS = (
         'ska.contrib.django.ska.backends.SkaAuthenticationBackend',
@@ -1019,6 +1081,7 @@ module.
 Example:
 
 .. code-block:: python
+    :name: test_django_integration_config_callbacks
 
     SKA_USER_GET_CALLBACK = 'my_app.ska_callbacks.my_get_callback'
     SKA_USER_CREATE_CALLBACK = 'my_app.ska_callbacks.my_create_callback'
@@ -1035,6 +1098,7 @@ signed using ``ska`` (for example, using ``sign_url`` function). The
 ``auth_user`` param would be used as a Django username. See the example below.
 
 .. code-block:: python
+    :name: test_django_integration_config_sign_url_sender_side
 
     from ska import sign_url
     from ska.contrib.django.ska.settings import SECRET_KEY
