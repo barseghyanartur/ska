@@ -28,10 +28,12 @@ try:
     version = ska.__version__
     project = ska.__title__
     copyright = ska.__copyright__
+    author = ska.__author__
 except Exception as e:
     version = "0.1"
     project = "ska"
-    copyright = "2014-2021, Artur Barseghyan <artur.barseghyan@gmail.com>"
+    copyright = "2014-2025, Artur Barseghyan <artur.barseghyan@gmail.com>"
+    author = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 
 # -- Django configuration ------------------------------------------------------
 os.environ["DJANGO_SETTINGS_MODULE"] = "settings.docs"
@@ -46,7 +48,12 @@ django.setup()
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ["sphinx.ext.autodoc", "sphinx.ext.viewcode"]
+extensions = [
+    "sphinx.ext.autodoc",
+    "sphinx.ext.viewcode",
+    "sphinx.ext.todo",
+    "sphinx_no_pragma",
+]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -113,7 +120,7 @@ pygments_style = "sphinx"
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = "default"
+html_theme = "sphinx_rtd_theme"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -143,6 +150,25 @@ html_theme = "default"
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
+
+prismjs_base = "//cdnjs.cloudflare.com/ajax/libs/prism/1.29.0"
+
+html_css_files = [
+    f"{prismjs_base}/themes/prism.min.css",
+    f"{prismjs_base}/plugins/toolbar/prism-toolbar.min.css",
+    # "https://cdn.jsdelivr.net/gh/barseghyanartur/jsphinx@1.3.4/src/css/sphinx_rtd_theme.css",
+    "https://cdn.jsdelivr.net/gh/barseghyanartur/jsphinx/src/css/sphinx_rtd_theme.css",
+]
+
+html_js_files = [
+    f"{prismjs_base}/prism.min.js",
+    f"{prismjs_base}/plugins/autoloader/prism-autoloader.min.js",
+    f"{prismjs_base}/plugins/toolbar/prism-toolbar.min.js",
+    f"{prismjs_base}/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js",
+    # "https://cdn.jsdelivr.net/gh/barseghyanartur/jsphinx@1.3.4/src/js/download_adapter.js",
+    "https://cdn.jsdelivr.net/gh/barseghyanartur/jsphinx/src/js/download_adapter.js",
+]
+
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
@@ -284,10 +310,13 @@ texinfo_documents = [
 # -- Options for Epub output ---------------------------------------------------
 
 # Bibliographic Dublin Core info.
-epub_title = "ska"
-epub_author = "Artur Barseghyan <artur.barseghyan@gmail.com>"
-epub_publisher = "Artur Barseghyan <artur.barseghyan@gmail.com>"
-epub_copyright = "2014-2021, Artur Barseghyan <artur.barseghyan@gmail.com>"
+epub_title = project
+epub_author = author
+epub_publisher = "GitHub"
+epub_copyright = copyright
+epub_identifier = "https://github.com/barseghyanartur/ska"  # URL or ISBN
+epub_scheme = "URL"  # or "ISBN"
+epub_uid = "https://github.com/barseghyanartur/ska"
 
 # The language of the text. It defaults to the language option
 # or en if the language is not set.

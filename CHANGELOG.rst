@@ -17,13 +17,21 @@ are used for versioning (schema follows below):
 
 1.11
 ----
-2025-05-31
+2025-06-02
+
+.. note::
+
+    Release is dedicated to my beloved son Raffi. Get well soon my dear!
 
 - Tested against Python 3.12 and 3.13.
 - Drop support for Python 3.8.
 - Tested against Django 5.1 and 5.2.
 - Stop testing against Django 3.1, 3.2 and 4.1.
 - Improve documentation tests.
+- Migrate to a single Makefile instead of tons of scripts.
+- Introduce llms.txt.
+- Migrate to pyproject.toml from setup.py.
+- Migrate to pyproject.toml for all configs (black, ruff, pytest, mypy, etc).
 
 1.10
 ----

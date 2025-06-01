@@ -30,3 +30,4 @@ monkeytype.sqlite3
 /examples/simple/tmp/
 monkeytype.sqlite3
 tmp/
+docs/_build/

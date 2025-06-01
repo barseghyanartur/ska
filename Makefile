@@ -23,7 +23,7 @@ build_docs_pdf:
 	$(MAKE) -C docs/ latexpdf
 
 auto_build_docs:
-	source $(VENV) && sphinx-autobuild docs docs/_build/html
+	source $(VENV) && sphinx-autobuild docs docs/_build/html --port 5001
 
 pre-commit:
 	pre-commit run --all-files
