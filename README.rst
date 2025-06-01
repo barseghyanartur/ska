@@ -654,7 +654,7 @@ Configuration
 Secret key (``str``) must be defined in ``settings`` module of your project.
 
 .. code-block:: python
-        :name: test_django_integration_config
+    :name: test_django_integration_config
 
     SKA_SECRET_KEY = 'my-secret-key'
 
