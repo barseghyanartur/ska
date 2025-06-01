@@ -12,35 +12,6 @@ jobs:
       matrix:
         include:
 
-          - python-version: '3.8'
-            requirements: django_3_2
-            tox_env: py38-django32
-          - python-version: '3.9'
-            requirements: django_3_2
-            tox_env: py39-django32
-          - python-version: '3.10'
-            requirements: django_3_2
-            tox_env: py310-django32
-          - python-version: '3.11'
-            requirements: django_3_2
-            tox_env: py311-django32
-
-          - python-version: '3.8'
-            requirements: django_4_1
-            tox_env: py38-django41
-          - python-version: '3.9'
-            requirements: django_4_1
-            tox_env: py39-django41
-          - python-version: '3.10'
-            requirements: django_4_1
-            tox_env: py310-django41
-          - python-version: '3.11'
-            requirements: django_4_1
-            tox_env: py311-django41
-
-          - python-version: '3.8'
-            requirements: django_4_2
-            tox_env: py38-django42
           - python-version: '3.9'
             requirements: django_4_2
             tox_env: py39-django42
@@ -50,6 +21,38 @@ jobs:
           - python-version: '3.11'
             requirements: django_4_2
             tox_env: py311-django42
+          - python-version: '3.12'
+            requirements: django_4_2
+            tox_env: py312-django42
+          - python-version: '3.13'
+            requirements: django_4_2
+            tox_env: py313-django42
+
+          - python-version: '3.10'
+            requirements: django_5_1
+            tox_env: py310-django51
+          - python-version: '3.11'
+            requirements: django_5_1
+            tox_env: py311-django51
+          - python-version: '3.12'
+            requirements: django_5_1
+            tox_env: py312-django51
+          - python-version: '3.13'
+            requirements: django_5_1
+            tox_env: py313-django51
+
+          - python-version: '3.10'
+            requirements: django_5_2
+            tox_env: py310-django52
+          - python-version: '3.11'
+            requirements: django_5_2
+            tox_env: py311-django52
+          - python-version: '3.12'
+            requirements: django_5_2
+            tox_env: py312-django52
+          - python-version: '3.13'
+            requirements: django_5_2
+            tox_env: py313-django52
 
     steps:
     - uses: actions/checkout@v4
@@ -60,11 +63,14 @@ jobs:
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pip-tools
-        pip-compile examples/requirements/${{ matrix.requirements }}.in
+        pip install uv
+        uv pip compile pyproject.toml examples/requirements/${{ matrix.requirements }}.in --all-extras -o examples/requirements/${{ matrix.requirements }}.txt 
         pip install -r examples/requirements/${{ matrix.requirements }}.txt
-        pip-compile examples/requirements/test.in
+        uv pip compile pyproject.toml examples/requirements/test.in --all-extras -o examples/requirements/test.txt
         pip install -r examples/requirements/test.txt
+    - name: List Dependencies
+      run: |
+        pip list
     - name: Run Tests
       run: tox -e ${{ matrix.tox_env }}
     - name: Coveralls
