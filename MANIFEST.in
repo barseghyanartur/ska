@@ -1,3 +1,5 @@
+# Include license and metadata files:
+include pyproject.toml
 include README.rst
 include LICENSE_GPL2.0.txt
 include LICENSE_LGPL_2.1.txt
@@ -6,3 +8,35 @@ include src/ska/contrib/django/ska/templates/ska/401.html
 recursive-include src/ska/contrib/django/ska/locale/hy *
 recursive-include src/ska/contrib/django/ska/locale/nl *
 recursive-include src/ska/contrib/django/ska/locale/ru *
+
+# Exclude anything under docs/ and examples/:
+prune docs
+prune examples
+prune .github
+
+# Exclude specific files
+exclude .env
+exclude .coveralls.yml
+exclude .gitignore
+exclude .hgignore
+exclude .pre-commit-config.yaml
+exclude .readthedocs.yaml
+exclude .secrets.baseline
+exclude CODE_OF_CONDUCT.rst
+exclude CODE_OF_CONDUCT.md
+exclude conftest.py
+exclude CONTRIBUTING.rst
+exclude CREDITS.rst
+exclude Makefile
+exclude monkeytype_config.py
+exclude SECURITY.md
+exclude SECURITY.rst
+exclude shell.py
+exclude TODOS.rst
+exclude tox.ini
+
+# Exclude any hidden directories:
+prune __pycache__
+
+# Drop bytecode, etc.
+-global-exclude *.py[cod]
