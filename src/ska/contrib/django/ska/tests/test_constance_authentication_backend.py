@@ -1,4 +1,5 @@
 import datetime
+import json
 import time
 
 import factories
@@ -94,6 +95,12 @@ OVERRIDE_SETTINGS_DB_STORE_SIGNATURES_KWARGS = {
     "SKA_DB_STORE_SIGNATURES": True,
     "SKA_DB_PERFORM_SIGNATURE_CHECK": True,
 }
+
+
+# def get_provider_secret_key_value(config_ska_providers, provider_name, secret_key_name):
+#     if isinstance(config_ska_providers, str):
+#         config_ska_providers = json.loads(config_ska_providers)
+#     return config_ska_providers[provider_name][secret_key_name]
 
 
 @pytest.mark.django_db
@@ -227,6 +234,7 @@ class SkaAuthenticationConstanceBackendTest(TransactionTestCase):
     def test_02_provider_login(self):
         """Test auth using ``SECRET_KEY`` defined in ``PROVIDERS``."""
         secret_key = config.SKA_PROVIDERS[self.PROVIDER_NAME]["SECRET_KEY"]
+        # secret_key = get_provider_secret_key_value(config.SKA_PROVIDERS, self.PROVIDER_NAME, "SECRET_KEY")
 
         # Authenticate for the first time. There shall be 2 emails
         # for `create` and `info` callbacks.

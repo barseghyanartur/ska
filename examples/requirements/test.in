@@ -8,6 +8,7 @@ coverage
 factory_boy
 py
 pytest-cov
+pytest-codeblock
 pytest-monkeytype
 pytest-django
 pytest-ordering

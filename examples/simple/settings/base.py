@@ -2,9 +2,11 @@
 import os
 import sys
 
-from django_nine import versions
+from ska.versus import get_version
 
 from .core import PROJECT_DIR
+
+DJANGO_VERSION = get_version("django")
 
 DEBUG = False
 DEBUG_TOOLBAR = False
@@ -176,7 +178,7 @@ INSTALLED_APPS = (
     "foo",  # Our example app
 )
 
-if versions.DJANGO_GTE_3_2:
+if DJANGO_VERSION.gte("3.2"):
     INSTALLED_APPS += (
         "constance.backends.database",
     )  # Only if ``DatabaseBackend`` is used

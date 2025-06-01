@@ -26,9 +26,9 @@ from .signatures import (
 from .utils import RequestHelper
 
 __title__ = "ska"
-__version__ = "1.10"
+__version__ = "1.11"
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
-__copyright__ = "2013-2023 Artur Barseghyan"
+__copyright__ = "2013-2025 Artur Barseghyan"
 __license__ = "GPL-2.0-only OR LGPL-2.1-or-later"
 __all__ = (
     "HMACMD5Signature",
