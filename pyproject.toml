@@ -1,9 +1,100 @@
-# Example configuration for Black.
+[project]
+name = "ska"
+version = "1.11"
+description = "Sign- and validate- data (dictionaries, strings) using symmetric-key algorithm."
+readme = "README.rst"
+license = "GPL-2.0-only OR LGPL-2.1-or-later"
+keywords = [
+    "sign data",
+    "sign (HTTP) request",
+    "symmetric-key algorithm encryption",
+    "sign URL",
+    "python",
+    "django",
+    "password-less login django",
+    "password-less authentication backend django",
+]
+classifiers = [
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Security :: Cryptography",
+    "Environment :: Web Environment",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Development Status :: 5 - Production/Stable",
+]
 
-# NOTE: you have to use single-quoted strings in TOML for regular expressions.
-# It's the equivalent of r-strings in Python.  Multiline strings are treated as
-# verbose regular expressions by Black.  Use [ ] to denote a significant space
-# character.
+authors = [
+    { name = "Artur Barseghyan", email = "artur.barseghyan@gmail.com" },
+]
+# Not explicitly specified; omitting `requires-python`
+
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/barseghyanartur/ska"
+Repository = "https://github.com/barseghyanartur/ska"
+Issues = "https://github.com/barseghyanartur/ska/issues"
+Documentation = "https://ska.readthedocs.io/"
+Changelog = "https://ska.readthedocs.io/en/latest/changelog.html"
+
+[project.optional-dependencies]
+all = ["ska[dev,test,docs,build,django,django-constance,djangorestframework,drf-jwt]"]
+common = ["ska[dev,test,docs,build]"]
+django = ["django-nine>=0.2.4"]
+"django-constance" = ["django-constance"]
+djangorestframework = ["djangorestframework"]
+"drf-jwt" = ["drf-jwt"]
+dev = [
+    "detect-secrets",
+    "doc8",
+    "ipython",
+    "mypy",
+    "pydoclint",
+    "ruff",
+    "uv",
+]
+test = [
+    "factory_boy",
+    "faker",
+    "pytest",
+    "pytest-codeblock",
+    "pytest-django",
+    "mock",
+    "beautifulsoup4",
+    "soupsieve",
+    "coverage",
+]
+docs = [
+    "sphinx<6.0",
+    "sphinx-autobuild",
+    "sphinx-rtd-theme>=1.3.0",
+    "sphinx-no-pragma",
+]
+build = [
+    "build",
+    "twine",
+    "wheel",
+]
+
+[project.scripts]
+ska-sign-url = "ska.generate_signed_url:main"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["ska", "ska.*"]
+
+[build-system]
+requires = ["setuptools>=61.0", "setuptools-scm", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [tool.black]
 line-length = 80
@@ -18,12 +109,6 @@ extend-exclude = '''
   | migrations
 )/
 '''
-
-# Build system information below.
-# NOTE: You don't need this in your own Black configuration.
-[build-system]
-requires = ["setuptools>=41.0", "setuptools-scm", "wheel"]
-build-backend = "setuptools.build_meta"
 
 [tool.isort]
 profile = "black"
