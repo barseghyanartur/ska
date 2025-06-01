@@ -105,10 +105,34 @@ clean:
 	rm -rf examples/logs/
 
 compile-requirements:
-	source $(VENV) && uv pip compile --all-extras -o docs/requirements.txt pyproject.toml
+	#source $(VENV) && uv pip compile --all-extras -o docs/requirements.txt pyproject.toml
+	source $(VENV) && uv pip compile pyproject.toml examples/requirements/common.in --all-extras -o examples/requirements/common.txt
+	source $(VENV) && uv pip compile pyproject.toml examples/requirements/debug.in --all-extras -o examples/requirements/debug.txt
+	source $(VENV) && uv pip compile pyproject.toml examples/requirements/deployment.in --all-extras -o examples/requirements/deployment.txt
+	source $(VENV) && uv pip compile pyproject.toml examples/requirements/dev.in --all-extras -o examples/requirements/dev.txt
+	source $(VENV) && uv pip compile pyproject.toml examples/requirements/django_4_2.in --all-extras -o examples/requirements/django_4_2.txt
+	source $(VENV) && uv pip compile pyproject.toml examples/requirements/django_5_1.in --all-extras -o examples/requirements/django_5_1.txt
+	source $(VENV) && uv pip compile pyproject.toml examples/requirements/django_5_2.in --all-extras -o examples/requirements/django_5_2.txt
+	source $(VENV) && uv pip compile pyproject.toml examples/requirements/docs.in --all-extras -o examples/requirements/docs.txt
+	source $(VENV) && uv pip compile pyproject.toml examples/requirements/documentation.in --all-extras -o examples/requirements/documentation.txt
+	source $(VENV) && uv pip compile pyproject.toml examples/requirements/style_checkers.in --all-extras -o examples/requirements/style_checkers.txt
+	source $(VENV) && uv pip compile pyproject.toml examples/requirements/test.in --all-extras -o examples/requirements/test.txt
+	source $(VENV) && uv pip compile pyproject.toml examples/requirements/testing.in --all-extras -o examples/requirements/testing.txt
 
 compile-requirements-upgrade:
-	source $(VENV) && uv pip compile --all-extras -o docs/requirements.txt pyproject.toml --upgrade
+	#source $(VENV) && uv pip compile --all-extras -o docs/requirements.txt pyproject.toml --upgrade
+	source $(VENV) && uv pip compile pyproject.toml examples/requirements/common.in --all-extras -o examples/requirements/common.txt --upgrade
+	source $(VENV) && uv pip compile pyproject.toml examples/requirements/debug.in --all-extras -o examples/requirements/debug.txt --upgrade
+	source $(VENV) && uv pip compile pyproject.toml examples/requirements/deployment.in --all-extras -o examples/requirements/deployment.txt --upgrade
+	source $(VENV) && uv pip compile pyproject.toml examples/requirements/dev.in --all-extras -o examples/requirements/dev.txt --upgrade
+	source $(VENV) && uv pip compile pyproject.toml examples/requirements/django_4_2.in --all-extras -o examples/requirements/django_4_2.txt --upgrade
+	source $(VENV) && uv pip compile pyproject.toml examples/requirements/django_5_1.in --all-extras -o examples/requirements/django_5_1.txt --upgrade
+	source $(VENV) && uv pip compile pyproject.toml examples/requirements/django_5_2.in --all-extras -o examples/requirements/django_5_2.txt --upgrade
+	source $(VENV) && uv pip compile pyproject.toml examples/requirements/docs.in --all-extras -o examples/requirements/docs.txt --upgrade
+	source $(VENV) && uv pip compile pyproject.toml examples/requirements/documentation.in --all-extras -o examples/requirements/documentation.txt --upgrade
+	source $(VENV) && uv pip compile pyproject.toml examples/requirements/style_checkers.in --all-extras -o examples/requirements/style_checkers.txt --upgrade
+	source $(VENV) && uv pip compile pyproject.toml examples/requirements/test.in --all-extras -o examples/requirements/test.txt --upgrade
+	source $(VENV) && uv pip compile pyproject.toml examples/requirements/testing.in --all-extras -o examples/requirements/testing.txt --upgrade
 
 update-version:
 	@echo "Updating version in pyproject.toml and src/ska/__init__.py"
@@ -119,6 +143,10 @@ update-version:
 		sed -i 's/version = "[0-9.]\+"/version = "$(VERSION)"/' pyproject.toml; \
 		sed -i 's/__version__ = "[0-9.]\+"/__version__ = "$(VERSION)"/' src/ska/__init__.py; \
 	fi
+
+make_pypi_long_description:
+	source $(VENV) && python setup.py --long-description | rst2html.py > builddocs/pypi.html
+	source $(VENV) && python setup.py --long-description | rst2html.py | cat
 
 build:
 	source $(VENV) && python -m build .
