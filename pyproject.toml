@@ -1,6 +1,6 @@
 [project]
 name = "ska"
-version = "1.11"
+version = "1.11.1"
 description = "Sign- and validate- data (dictionaries, strings) using symmetric-key algorithm."
 readme = "README.rst"
 license = "GPL-2.0-only OR LGPL-2.1-or-later"
@@ -32,7 +32,6 @@ classifiers = [
 authors = [
     { name = "Artur Barseghyan", email = "artur.barseghyan@gmail.com" },
 ]
-# Not explicitly specified; omitting `requires-python`
 
 dependencies = []
 
@@ -60,8 +59,7 @@ dev = [
     "uv",
 ]
 test = [
-    "factory_boy",
-    "faker",
+    "fake.py",
     "pytest",
     "pytest-codeblock",
     "pytest-django",
@@ -283,13 +281,11 @@ target-version = "py39"
 
 [tool.ruff.lint.isort]
 known-first-party = [
-    "address",
-    "article",
-    "band",
-    "config",
-    "data",
-    "fake_address",
-    "fake_band",
-    "override_default_data",
+    "settings",
+    "urls",
+    "constance_urls",
+    "factories",
+    "foo",
+    "jsonfield2_addons",
 ]
 known-third-party = []

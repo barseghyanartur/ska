@@ -2,19 +2,17 @@ import datetime
 import logging
 import time
 
-import factories
 import mock
 import pytest
 from django.core import mail
 from django.core.management import call_command
 from django.test import Client, TransactionTestCase, override_settings
 
+import factories
 from ska import sign_url
 from ska.contrib.django.ska import settings as ska_settings
 from ska.contrib.django.ska.models import Signature
 from ska.defaults import DEFAULT_PROVIDER_PARAM
-
-from .helpers import log_info
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2013-2023 Artur Barseghyan"
@@ -34,7 +32,7 @@ OVERRIDE_SETTINGS_DB_STORE_SIGNATURES_KWARGS = {
 # *********************************************************************
 
 SKA_TEST_USER_USERNAME = factories.TEST_ADMIN_USERNAME
-SKA_TEST_USER_PASSWORD = factories.TEST_PASSWORD
+SKA_TEST_USER_PASSWORD = factories.TEST_ADMIN_PASSWORD
 
 
 @pytest.mark.django_db
@@ -73,7 +71,7 @@ class SkaAuthenticationBackendTest(TransactionTestCase):
         :param do_signature_check: It's a tuple. The second code is
             used only if both `DB_STORE_SIGNATURES` and
             `DB_PERFORM_SIGNATURE_CHECK` values are True, which means
-            that users can't use same signatures twice.
+            that users can't use the same signatures twice.
         :param auth_user:
         :param auth_user_email:
         :return:
@@ -126,7 +124,7 @@ class SkaAuthenticationBackendTest(TransactionTestCase):
             self.__logout()
 
         # If both `DB_STORE_SIGNATURES` and `DB_PERFORM_SIGNATURE_CHECK`
-        # are set to True, second login attempt shall not be successful.
+        # are set to True, a second login attempt shall not be successful.
         if (
             ska_settings.DB_STORE_SIGNATURES
             and ska_settings.DB_PERFORM_SIGNATURE_CHECK
@@ -140,7 +138,7 @@ class SkaAuthenticationBackendTest(TransactionTestCase):
             self.assertIn(response_status_code, (second_response_code,))
             flow.append(
                 (
-                    "Response status " "code for signed URL",
+                    "Response status code for signed URL",
                     response_status_code,
                 )
             )
@@ -153,7 +151,6 @@ class SkaAuthenticationBackendTest(TransactionTestCase):
         """Log out."""
         self._client.logout()
 
-    @log_info
     def test_01_login(self):
         """Test auth using general ``SECRET_KEY``."""
         return self.__test_login(
@@ -163,7 +160,6 @@ class SkaAuthenticationBackendTest(TransactionTestCase):
             debug_info="test_01_login",
         )
 
-    @log_info
     def test_02_provider_login(self):
         """Test auth using ``SECRET_KEY`` defined in ``PROVIDERS``."""
         secret_key = ska_settings.PROVIDERS[self.PROVIDER_NAME]["SECRET_KEY"]
@@ -185,7 +181,7 @@ class SkaAuthenticationBackendTest(TransactionTestCase):
             debug_info="test_02_provider_login::first time",
         )
 
-        # Sleep for just one second between first and the second tests.
+        # Sleep for just one second between the first and the second tests.
         time.sleep(1)
 
         # Authenticate for the second time. There shall be still 2 emails
@@ -215,9 +211,8 @@ class SkaAuthenticationBackendTest(TransactionTestCase):
             debug_info="test_02_provider_login::second time",
         )
 
-    @log_info
     def test_03_login_fail_wrong_secret_key(self):
-        """Fail test auth using general ``SECRET_KEY``.
+        """Fail test auth using a general ``SECRET_KEY``.
 
         Fail test auth using general ``SECRET_KEY`` providing wrong
         secret key.
@@ -229,7 +224,6 @@ class SkaAuthenticationBackendTest(TransactionTestCase):
             debug_info="test_03_login_fail_wrong_secret_key",
         )
 
-    @log_info
     def test_04_provider_login_fail_wrong_secret_key(self):
         """Fail test authentication.
 
@@ -241,12 +235,11 @@ class SkaAuthenticationBackendTest(TransactionTestCase):
             secret_key + "wrong", [403, 403], self.PROVIDER_NAME, logout=True
         )
 
-    @log_info
     def test_05_provider_login_fail_wrong_provider(self):
         """Test provider login fail wrong provider.
 
         Fail test authentication using ``SECRET_KEY`` defined in
-        ``PROVIDERS``, providing wrong provider name.
+        ``PROVIDERS``, providing the wrong provider name.
         """
         secret_key = ska_settings.PROVIDERS[self.PROVIDER_NAME]["SECRET_KEY"]
         return self.__test_login(
@@ -257,7 +250,6 @@ class SkaAuthenticationBackendTest(TransactionTestCase):
             debug_info="test_05_provider_login_fail_wrong_provider",
         )
 
-    @log_info
     @override_settings(**OVERRIDE_SETTINGS_DB_STORE_SIGNATURES_KWARGS)
     @mock.patch("ska.contrib.django.ska.settings.DB_STORE_SIGNATURES", True)
     @mock.patch(
@@ -296,7 +288,6 @@ class SkaAuthenticationBackendTest(TransactionTestCase):
         # All old records shall be gone
         self.assertEqual(Signature.objects.all().count(), 0)
 
-    @log_info
     def test_07_provider_login_forbidden_email(self):
         """Test auth using ``SECRET_KEY`` defined in ``PROVIDERS``."""
         secret_key = ska_settings.PROVIDERS[self.PROVIDER_NAME]["SECRET_KEY"]
@@ -313,7 +304,6 @@ class SkaAuthenticationBackendTest(TransactionTestCase):
             debug_info="test_07_provider_login_forbidden_email",
         )
 
-    @log_info
     def test_08_provider_login_forbidden_username(self):
         """Test auth using ``SECRET_KEY`` defined in ``PROVIDERS``."""
         secret_key = ska_settings.PROVIDERS[self.PROVIDER_NAME]["SECRET_KEY"]

@@ -1,5 +1,4 @@
 import pytest
-
 from pytest_codeblock.constants import CODEBLOCK_MARK
 
 

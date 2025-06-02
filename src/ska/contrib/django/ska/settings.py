@@ -2,7 +2,7 @@
 - `UNAUTHORISED_REQUEST_ERROR_MESSAGE` (str): Plain text error message.
   Defaults to "Unauthorised request. {0}".
 - `UNAUTHORISED_REQUEST_ERROR_TEMPLATE` (str): Path to 401 template that
-  should be rendered in case of 401 responses. Defaults to empty string (not
+  should be rendered in case of 401 responses. Default to empty string (not
   provided).
 - `AUTH_USER` (str): Default ``auth_user`` for ``ska.sign_url`` function.
   Defaults to "ska-auth-user".
@@ -63,13 +63,13 @@ AUTH_USER = get_setting("AUTH_USER")
 
 try:
     SECRET_KEY = settings.SKA_SECRET_KEY
-except Exception:
+except Exception as err:
     raise ImproperlyConfigured(
         _(
             "You should define a variable ``SKA_SECRET_KEY`` in your "
             "`settings` module!"
         )
-    )
+    ) from err
 
 USER_VALIDATE_CALLBACK = get_setting("USER_VALIDATE_CALLBACK")
 USER_GET_CALLBACK = get_setting("USER_GET_CALLBACK")
@@ -89,9 +89,9 @@ def validate_providers():
         if "SECRET_KEY" not in data:
             raise ImproperlyConfigured(
                 _(
-                    "You should defined a key ``SECRET_KEY`` for each provider "
-                    "in your `settings module`!"
-                )
+                    "You should defined a key ``SECRET_KEY`` for each "
+                    "provider in your `settings module`! It's missing for {0}."
+                ).format(uid)
             )
 
 

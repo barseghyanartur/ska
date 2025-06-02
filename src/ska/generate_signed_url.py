@@ -13,7 +13,8 @@ def main():
 
     :example:
 
-        python src/ska/generate_signature.py -u http://example.com -au user -sk test
+        python src/ska/generate_signature.py \
+            -u http://example.com -au user -sk test
 
     :example:
 

@@ -1,5 +1,5 @@
-from .constance_views import *
-from .default_views import *
+from .constance_views import constance_login
+from .default_views import login
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2013-2023 Artur Barseghyan"

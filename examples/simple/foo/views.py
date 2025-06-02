@@ -2,8 +2,6 @@ from django.http import Http404
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic.base import View
-from foo.models import FooItem
-
 from ska import sign_url
 from ska.contrib.django.ska.decorators import (
     m_validate_signed_request,
@@ -11,6 +9,8 @@ from ska.contrib.django.ska.decorators import (
 )
 from ska.contrib.django.ska.settings import PROVIDERS, SECRET_KEY
 from ska.defaults import DEFAULT_PROVIDER_PARAM
+
+from foo.models import FooItem
 
 
 def browse_view(request, template_name="foo/browse.html"):
@@ -121,7 +121,9 @@ def authenticate_view(request, template_name="foo/authenticate.html"):
     context = {
         "remote_ska_login_urls": remote_ska_login_urls,
         "remote_ska_login_urls_by_provider": remote_ska_login_urls_by_provider,
-        "fail_only_remote_ska_login_urls_by_provider": fail_only_remote_ska_login_urls_by_provider,
+        "fail_only_remote_ska_login_urls_by_provider": (
+            fail_only_remote_ska_login_urls_by_provider
+        ),
     }
 
     return render(request, template_name, context)
@@ -235,7 +237,9 @@ def drf_view(request, template_name="foo/drf.html"):
     context = {
         "drf_remote_ska_list_urls": drf_remote_ska_list_urls,
         "drf_remote_ska_provider_list_url": drf_remote_ska_list_urls_provider,
-        "drf_remote_ska_jwt_token_urls_provider": drf_remote_ska_jwt_token_urls_provider,
+        "drf_remote_ska_jwt_token_urls_provider": (
+            drf_remote_ska_jwt_token_urls_provider
+        ),
         "drf_remote_ska_jwt_token_urls": drf_remote_ska_jwt_token_urls,
     }
 
@@ -253,8 +257,8 @@ def detail_view(request, slug, template_name="foo/detail.html"):
     """
     try:
         item = FooItem._default_manager.get(slug=slug)
-    except Exception as e:
-        raise Http404
+    except Exception as err:
+        raise Http404 from err
 
     context = {"item": item}
 
@@ -269,8 +273,8 @@ class FooDetailView(View):
         """Get."""
         try:
             item = FooItem._default_manager.get(slug=slug)
-        except Exception as e:
-            raise Http404
+        except Exception as err:
+            raise Http404 from err
 
         context = {"item": item}
 

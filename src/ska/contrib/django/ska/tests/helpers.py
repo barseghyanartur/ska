@@ -2,8 +2,9 @@ import logging
 import os
 import random
 
-import factories
 import pytest
+
+import factories
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2013-2023 Artur Barseghyan"
@@ -35,7 +36,7 @@ LOG_INFO = True
 
 NUM_ITEMS = 5
 SKA_TEST_USER_USERNAME = factories.TEST_ADMIN_USERNAME
-SKA_TEST_USER_PASSWORD = factories.TEST_PASSWORD
+SKA_TEST_USER_PASSWORD = factories.TEST_ADMIN_PASSWORD
 
 
 def log_info(func):
@@ -73,8 +74,9 @@ def create_admin_user():
     TODO: At the moment an admin account is being tested. Automated tests
     with diverse accounts are to be implemented.
     """
-    user = factories.TestAdminUsernameSuperAdminUserFactory(
-        email="admin@dev.django-ska.com"
+    factories.UserFactory(
+        email="admin@dev.django-ska.com",
+        is_admin_user=True,
     )
 
 

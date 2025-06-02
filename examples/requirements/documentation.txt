@@ -116,13 +116,12 @@ exceptiongroup==1.3.0
 executing==2.2.0
     # via stack-data
 factory-boy==3.3.3
-    # via
-    #   -r examples/requirements/test.in
-    #   ska (pyproject.toml)
+    # via -r examples/requirements/test.in
+fake-py==0.11.8
+    # via ska (pyproject.toml)
 faker==37.3.0
     # via
     #   -r examples/requirements/test.in
-    #   ska (pyproject.toml)
     #   factory-boy
 filelock==3.18.0
     # via
@@ -244,6 +243,7 @@ pygments==2.19.1
     # via
     #   doc8
     #   ipython
+    #   pytest
     #   readme-renderer
     #   rich
     #   sphinx
@@ -255,7 +255,7 @@ pyproject-hooks==1.2.0
     # via build
 pysocks==1.7.1
     # via urllib3
-pytest==8.3.5
+pytest==8.4.0
     # via
     #   -r examples/requirements/test.in
     #   ska (pyproject.toml)
@@ -305,9 +305,9 @@ rich==14.0.0
     # via
     #   twine
     #   typer
-rstcheck==6.2.4
+rstcheck==6.2.5
     # via -r examples/requirements/docs.in
-rstcheck-core==1.2.1
+rstcheck-core==1.2.2
     # via rstcheck
 ruff==0.11.12
     # via ska (pyproject.toml)

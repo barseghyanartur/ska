@@ -1,8 +1,6 @@
 import datetime
-import json
 import time
 
-import factories
 import mock
 import pytest
 from constance import config
@@ -11,12 +9,11 @@ from django.core import mail
 from django.core.management import call_command
 from django.test import Client, TransactionTestCase, override_settings
 
+import factories
 from ska import sign_url
 from ska.contrib.django.ska import settings as ska_settings
 from ska.contrib.django.ska.models import Signature
 from ska.defaults import DEFAULT_PROVIDER_PARAM
-
-from .helpers import log_info
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2013-2023 Artur Barseghyan"
@@ -28,62 +25,10 @@ __all__ = ("SkaAuthenticationConstanceBackendTest",)
 # *********************************************************************
 
 SKA_TEST_USER_USERNAME = factories.TEST_ADMIN_USERNAME
-SKA_TEST_USER_PASSWORD = factories.TEST_PASSWORD
+SKA_TEST_USER_PASSWORD = factories.TEST_ADMIN_PASSWORD
 
-OVERRIDE_CONSTANCE_KWARGS = {
-    # 'SKA_PROVIDERS': {
-    #     # Client 1, group users
-    #     'client_1.users': {
-    #         'SECRET_KEY': 'client-1-users-secret-key',
-    #     },
-    #
-    #     # Client 1, group power_users
-    #     'client_1.power_users': {
-    #         'SECRET_KEY': 'client-1-power-users-secret-key',
-    #         'USER_CREATE_CALLBACK': 'foo.ska_callbacks.'
-    #                                 'client1_power_users_create',
-    #     },
-    #
-    #     # Client 1, group admins
-    #     'client_1.admins': {
-    #         'SECRET_KEY': 'client-1-admins-secret-key',
-    #         'USER_CREATE_CALLBACK': 'foo.ska_callbacks.'
-    #                                 'client1_admins_create',
-    #         'USER_GET_CALLBACK': 'foo.ska_callbacks.'
-    #                              'client1_admins_get',
-    #         'USER_INFO_CALLBACK': 'foo.ska_callbacks.'
-    #                               'client1_admins_info_constance',
-    #         'REDIRECT_AFTER_LOGIN': '/admin/'
-    #     },
-    # }
-}
+OVERRIDE_CONSTANCE_KWARGS = {}
 OVERRIDE_SETTINGS_KWARGS = {
-    # 'INSTALLED_APPS': (
-    #     'django.contrib.auth',
-    #     'django.contrib.contenttypes',
-    #     'django.contrib.sessions',
-    #     'django.contrib.sites',
-    #     'django.contrib.messages',
-    #     'django.contrib.staticfiles',
-    #     # Uncomment the next line to enable the admin:
-    #     'django.contrib.admin',
-    #     # Uncomment the next line to enable admin documentation:
-    #     # 'django.contrib.admindocs',
-    #
-    #     # For django-constance
-    #     'constance',
-    #     'constance.backends.database',  # Only if ``DatabaseBackend`` is used
-    #     'django_json_widget',
-    #
-    #     # For djangorestframework
-    #     'rest_framework',
-    #     'rest_framework_jwt',
-    #
-    #     # ska, django-ska and example/testing app
-    #     'ska.contrib.django.ska',
-    #     'ska.contrib.django.ska.integration.constance_integration',
-    #     'foo',  # Our example app
-    # ),
     "AUTHENTICATION_BACKENDS": (
         "ska.contrib.django.ska.backends.constance_backend.SkaAuthenticationConstanceBackend",
         "django.contrib.auth.backends.ModelBackend",
@@ -95,12 +40,6 @@ OVERRIDE_SETTINGS_DB_STORE_SIGNATURES_KWARGS = {
     "SKA_DB_STORE_SIGNATURES": True,
     "SKA_DB_PERFORM_SIGNATURE_CHECK": True,
 }
-
-
-# def get_provider_secret_key_value(config_ska_providers, provider_name, secret_key_name):
-#     if isinstance(config_ska_providers, str):
-#         config_ska_providers = json.loads(config_ska_providers)
-#     return config_ska_providers[provider_name][secret_key_name]
 
 
 @pytest.mark.django_db
@@ -141,7 +80,7 @@ class SkaAuthenticationConstanceBackendTest(TransactionTestCase):
         :param do_signature_check: It's a tuple. The second code is
             used only if both `DB_STORE_SIGNATURES` and
             `DB_PERFORM_SIGNATURE_CHECK` values are True, which means
-            that users can't use same signatures twice.
+            that users can't use the same signatures twice.
         :return:
         """
         flow = []
@@ -187,7 +126,7 @@ class SkaAuthenticationConstanceBackendTest(TransactionTestCase):
             self.__logout()
 
         # If both `DB_STORE_SIGNATURES` and `DB_PERFORM_SIGNATURE_CHECK`
-        # are set to True, second login attempt shall not be successful.
+        # are set to True, a second login attempt shall not be successful.
         if (
             ska_settings.DB_STORE_SIGNATURES
             and ska_settings.DB_PERFORM_SIGNATURE_CHECK
@@ -201,7 +140,7 @@ class SkaAuthenticationConstanceBackendTest(TransactionTestCase):
             self.assertIn(response_status_code, (second_response_code,))
             flow.append(
                 (
-                    "Response status " "code for signed URL",
+                    "Response status code for signed URL",
                     response_status_code,
                 )
             )
@@ -216,7 +155,6 @@ class SkaAuthenticationConstanceBackendTest(TransactionTestCase):
         """Log out."""
         self._client.logout()
 
-    @log_info
     @override_settings(**OVERRIDE_SETTINGS_KWARGS)
     @override_config(**OVERRIDE_CONSTANCE_KWARGS)
     def test_01_login(self):
@@ -228,13 +166,11 @@ class SkaAuthenticationConstanceBackendTest(TransactionTestCase):
             debug_info="test_01_login",
         )
 
-    @log_info
     @override_settings(**OVERRIDE_SETTINGS_KWARGS)
     @override_config(**OVERRIDE_CONSTANCE_KWARGS)
     def test_02_provider_login(self):
         """Test auth using ``SECRET_KEY`` defined in ``PROVIDERS``."""
         secret_key = config.SKA_PROVIDERS[self.PROVIDER_NAME]["SECRET_KEY"]
-        # secret_key = get_provider_secret_key_value(config.SKA_PROVIDERS, self.PROVIDER_NAME, "SECRET_KEY")
 
         # Authenticate for the first time. There shall be 2 emails
         # for `create` and `info` callbacks.
@@ -252,7 +188,7 @@ class SkaAuthenticationConstanceBackendTest(TransactionTestCase):
             debug_info="test_02_provider_login::first time",
         )
 
-        # Sleep for just one second between first and the second tests.
+        # Sleep for just one second between the first and the second tests.
         time.sleep(1)
 
         # Authenticate for the second time. There shall be still 2 emails
@@ -275,7 +211,6 @@ class SkaAuthenticationConstanceBackendTest(TransactionTestCase):
             debug_info="test_02_provider_login::second time",
         )
 
-    @log_info
     @override_settings(**OVERRIDE_SETTINGS_KWARGS)
     @override_config(**OVERRIDE_CONSTANCE_KWARGS)
     def test_03_login_fail_wrong_secret_key(self):
@@ -291,28 +226,26 @@ class SkaAuthenticationConstanceBackendTest(TransactionTestCase):
             debug_info="test_03_login_fail_wrong_secret_key",
         )
 
-    @log_info
     @override_settings(**OVERRIDE_SETTINGS_KWARGS)
     @override_config(**OVERRIDE_CONSTANCE_KWARGS)
     def test_04_provider_login_fail_wrong_secret_key(self):
         """Fail test authentication.
 
         Fail test authentication using ``SECRET_KEY`` defined in `
-        `PROVIDERS``, providing wrong secret key.
+        `PROVIDERS``, providing a wrong secret key.
         """
         secret_key = config.SKA_PROVIDERS[self.PROVIDER_NAME]["SECRET_KEY"]
         return self.__test_login(
             secret_key + "wrong", [403, 403], self.PROVIDER_NAME, logout=True
         )
 
-    @log_info
     @override_settings(**OVERRIDE_SETTINGS_KWARGS)
     @override_config(**OVERRIDE_CONSTANCE_KWARGS)
     def test_05_provider_login_fail_wrong_provider(self):
         """Test provider login fail wrong provider.
 
         Fail test authentication using ``SECRET_KEY`` defined in
-        ``PROVIDERS``, providing wrong provider name.
+        ``PROVIDERS``, providing the wrong provider name.
         """
         secret_key = config.SKA_PROVIDERS[self.PROVIDER_NAME]["SECRET_KEY"]
         return self.__test_login(
@@ -323,7 +256,6 @@ class SkaAuthenticationConstanceBackendTest(TransactionTestCase):
             debug_info="test_05_provider_login_fail_wrong_provider",
         )
 
-    @log_info
     @override_settings(**OVERRIDE_SETTINGS_KWARGS)
     @override_settings(**OVERRIDE_SETTINGS_DB_STORE_SIGNATURES_KWARGS)
     @override_config(**OVERRIDE_CONSTANCE_KWARGS)

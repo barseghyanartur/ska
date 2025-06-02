@@ -1,5 +1,4 @@
 from django.core.management.base import BaseCommand
-
 from ska.contrib.django.ska.tests import create_admin_user, generate_data
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
