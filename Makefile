@@ -1,5 +1,5 @@
 # Update version ONLY here
-VERSION := 1.11
+VERSION := 1.11.1
 SHELL := /bin/bash
 # Makefile for project
 VENV := ~/.virtualenvs/ska/bin/activate

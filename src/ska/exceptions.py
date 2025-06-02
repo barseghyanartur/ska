@@ -8,7 +8,7 @@ __all__ = (
 )
 
 
-class BaseSkaException(Exception):
+class BaseSkaException(Exception):  # noqa
     """Base exception."""
 
 

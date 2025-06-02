@@ -21,8 +21,8 @@ class JSONFieldMixin(object):
                 try:
                     value = value.replace("'", '"')
                     return json.loads(value, **self.load_kwargs)
-                except ValueError:
-                    raise ValidationError(_("Enter valid JSON."))
+                except ValueError as err:
+                    raise ValidationError(_("Enter valid JSON.")) from err
         return value
 
     def clean(self, value):
@@ -32,8 +32,8 @@ class JSONFieldMixin(object):
         # Trap cleaning errors & bubble them up as JSON errors
         try:
             return super(JSONFieldMixin, self).clean(value)
-        except TypeError:
-            raise ValidationError(_("Enter valid JSON."))
+        except TypeError as err:
+            raise ValidationError(_("Enter valid JSON.")) from err
 
 
 class JSONField(JSONFieldMixin, fields.CharField):

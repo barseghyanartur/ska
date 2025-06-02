@@ -1,6 +1,7 @@
 # Django settings for example project.
 import os
 import sys
+from contextlib import suppress
 
 from ska.versus import get_version
 
@@ -301,10 +302,9 @@ LOGGING = {
 }
 
 # Do not put any settings below this line
-try:
-    from .local_settings import *
-except:
-    pass
+with suppress(Exception):
+    from .local_settings import *  # noqa
+
 
 if DEBUG and DEBUG_TOOLBAR:
     # debug_toolbar
@@ -320,7 +320,6 @@ if DEBUG and DEBUG_TOOLBAR:
 # Make the `ska` package available without installation.
 if DEV:
     ska_source_path = os.environ.get("SKA_SOURCE_PATH", "src")
-    # sys.path.insert(0, os.path.abspath('src'))
     sys.path.insert(0, os.path.abspath(ska_source_path))
 
 MIDDLEWARE = _MIDDLEWARE

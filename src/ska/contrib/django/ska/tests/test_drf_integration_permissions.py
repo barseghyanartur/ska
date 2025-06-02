@@ -4,7 +4,6 @@ Testing Django REST Framework permissions for ska.
 
 import logging
 
-import factories
 import pytest
 from constance import config
 from django.test import TransactionTestCase, override_settings
@@ -12,6 +11,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
+import factories
 from ska import sign_url
 from ska.contrib.django.ska.settings import PROVIDERS, SECRET_KEY
 from ska.defaults import DEFAULT_PROVIDER_PARAM

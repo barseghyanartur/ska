@@ -36,9 +36,10 @@ from typing import Callable, Dict, Optional, Union
 
 from django.http import HttpRequest
 from django.shortcuts import render
-from django.utils.translation import gettext, gettext_lazy as _
+from django.utils.translation import gettext
 
-from .... import sign_url as ska_sign_url, validate_signed_request_data
+from .... import sign_url as ska_sign_url
+from .... import validate_signed_request_data
 from ....defaults import (
     DEFAULT_AUTH_USER_PARAM,
     DEFAULT_EXTRA_PARAM,

@@ -1,8 +1,9 @@
-import factories
 import pytest
 from django.test import Client, TransactionTestCase
 
-from .helpers import NUM_ITEMS, generate_data, log_info
+import factories
+
+from .helpers import NUM_ITEMS, generate_data
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2013-2023 Artur Barseghyan"
@@ -15,12 +16,12 @@ __all__ = ("SkaDecoratorsTest",)
 # *********************************************************************
 
 SKA_TEST_USER_USERNAME = factories.TEST_ADMIN_USERNAME
-SKA_TEST_USER_PASSWORD = factories.TEST_PASSWORD
+SKA_TEST_USER_PASSWORD = factories.TEST_ADMIN_PASSWORD
 
 
 @pytest.mark.django_db
 class SkaDecoratorsTest(TransactionTestCase):
-    """Testing model- and view- decorators."""
+    """Testing model- and view-decorators."""
 
     pytestmark = pytest.mark.django_db
 
@@ -30,7 +31,6 @@ class SkaDecoratorsTest(TransactionTestCase):
         # Testing the URLs
         self.item = items[0]
 
-    @log_info
     def test_01_model_decorator(self):
         """Test the ``ska.contrib.django.ska.decorators.sign_url``."""
         # Testing signed URLs
@@ -38,7 +38,6 @@ class SkaDecoratorsTest(TransactionTestCase):
         self.assertIsNotNone(signed_absolute_url)
         return signed_absolute_url
 
-    @log_info
     def test_02_view_decorator_with_signed_url(self):
         """Test view decorator with signed URL.
 
@@ -62,7 +61,6 @@ class SkaDecoratorsTest(TransactionTestCase):
 
         return flow
 
-    @log_info
     def test_03_view_decorator_with_unsigned_url(self):
         """Test view decorator with unsigned URL.
 
@@ -90,7 +88,6 @@ class SkaDecoratorsTest(TransactionTestCase):
 
         return flow
 
-    @log_info
     def test_04_class_based_view_decorator_with_signed_url(self):
         """Test class based view decorator with signed URL.
 
@@ -114,7 +111,6 @@ class SkaDecoratorsTest(TransactionTestCase):
 
         return flow
 
-    @log_info
     def test_05_class_based_view_decorator_with_unsigned_url(self):
         """Test class based view decorator with unsigned URL.
 

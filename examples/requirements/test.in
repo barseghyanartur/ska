@@ -3,9 +3,8 @@ beautifulsoup4
 mock
 soupsieve
 
-Faker
+fake.py
 coverage
-factory_boy
 py
 pytest-cov
 pytest-codeblock

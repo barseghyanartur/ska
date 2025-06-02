@@ -1,5 +1,11 @@
 Release history and notes
 =========================
+.. External references
+
+.. _Faker: https://faker.readthedocs.io/
+.. _factory_boy: https://factoryboy.readthedocs.io/
+.. _fake.py: https://fakepy.readthedocs.io/
+
 `Sequence based identifiers
 <http://en.wikipedia.org/wiki/Software_versioning#Sequence-based_identifiers>`_
 are used for versioning (schema follows below):
@@ -14,6 +20,13 @@ are used for versioning (schema follows below):
   release notes carefully before upgrading (for example, when upgrading from
   0.3.4 to 0.4).
 - All backwards incompatible changes are mentioned in this document.
+
+1.11.1
+------
+2025-06-03
+
+- Replace `Faker`_ and `factory_boy`_ with a single `fake.py`_.
+- Code clean-up.
 
 1.11
 ----

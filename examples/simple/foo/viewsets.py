@@ -1,10 +1,9 @@
 from rest_framework.viewsets import ModelViewSet
-
 from ska.contrib.django.ska.integration.drf.permissions import (
     ProviderSignedRequestRequired,
     SignedRequestRequired,
 )
-from ska.contrib.django.ska.integration.drf.permissions.constance_permissions import (
+from ska.contrib.django.ska.integration.drf.permissions.constance_permissions import (  # noqa
     ConstanceProviderSignedRequestRequired,
     ConstanceSignedRequestRequired,
 )

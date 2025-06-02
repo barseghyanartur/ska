@@ -128,12 +128,12 @@ class BaseSkaAuthenticationBackend(object):
         # the incoming authentication requests. The main purpose is to provide
         # a flexible way of raising exceptions if the incoming authentication
         # request shall be blocked (for instance, email or username is in
-        # black-list or right the opposite - not in the white list). The only
+        # blacklist or right the opposite - not in the whitelist). The only
         # aim of the `USER_VALIDATE_CALLBACK` is to raise a
         # ``django.core.PermissionDenied`` exception if request data is
         # invalid. In that case, the authentication flow will halt. All
         # other exceptions would simply be ignored (but logged) and if no
-        # exception raised, the normal flow would be continued.
+        # exception was raised, the normal flow would be continued.
         user_validate_callback = provider_data.get(
             "USER_VALIDATE_CALLBACK", USER_VALIDATE_CALLBACK
         )
@@ -141,7 +141,7 @@ class BaseSkaAuthenticationBackend(object):
             callback_func = get_callback_func(user_validate_callback)
             if callback_func:
                 try:
-                    user_validate_callback_resp = callback_func(
+                    user_validate_callback_resp = callback_func(  # noqa
                         request=request,
                         signed_request_data=signed_request_data,
                     )
@@ -165,11 +165,11 @@ class BaseSkaAuthenticationBackend(object):
                     # Token has already been used. Do not authenticate.
                     return None
 
-        # Try to get user. If doesn't exist - create.
+        # Try to get user. If it doesn't exist - create.
         try:
             user = User._default_manager.get(username=auth_user)
 
-            # User get callback
+            # User-get callback
             user_get_callback = provider_data.get(
                 "USER_GET_CALLBACK", USER_GET_CALLBACK
             )
@@ -177,7 +177,7 @@ class BaseSkaAuthenticationBackend(object):
                 callback_func = get_callback_func(user_get_callback)
                 if callback_func:
                     try:
-                        user_get_callback_resp = callback_func(
+                        user_get_callback_resp = callback_func(  # noqa
                             user,
                             request=request,
                             signed_request_data=signed_request_data,
@@ -195,7 +195,7 @@ class BaseSkaAuthenticationBackend(object):
             )
             user.save()
 
-            # User create callback
+            # User-create callback
             user_create_callback = provider_data.get(
                 "USER_CREATE_CALLBACK", USER_CREATE_CALLBACK
             )
@@ -203,7 +203,7 @@ class BaseSkaAuthenticationBackend(object):
                 callback_func = get_callback_func(user_create_callback)
                 if callback_func:
                     try:
-                        user_create_callback_resp = callback_func(
+                        user_create_callback_resp = callback_func(  # noqa
                             user,
                             request=request,
                             signed_request_data=signed_request_data,
@@ -211,7 +211,7 @@ class BaseSkaAuthenticationBackend(object):
                     except Exception as err:
                         LOGGER.debug(str(err))
 
-        # User info callback
+        # User-info callback
         user_info_callback = provider_data.get(
             "USER_INFO_CALLBACK", USER_INFO_CALLBACK
         )
@@ -229,7 +229,7 @@ class BaseSkaAuthenticationBackend(object):
 
         return user
 
-    def get_user(self, user_id: int) -> User:
+    def get_user(self, user_id: int) -> Optional[User]:
         """Get user in the ``django.contrib.auth.models.User`` if exists.
 
         :param int user_id:
