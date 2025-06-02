@@ -3,9 +3,7 @@ Testing Django REST Framework JWT token view for ska.
 """
 
 import logging
-import unittest
 
-import factories
 import pytest
 from constance import config
 from django.test import TransactionTestCase, override_settings
@@ -13,6 +11,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
+import factories
 from ska import sign_url
 from ska.contrib.django.ska.settings import PROVIDERS, SECRET_KEY
 from ska.defaults import DEFAULT_PROVIDER_PARAM
@@ -110,9 +109,6 @@ class BaseDRFIntegrationViewJwtTokenTestCase(TransactionTestCase):
             auth_user=auth_user, secret_key=secret_key, url=url, extra=extra
         )
 
-        # if debug_info:
-        #     signed_url = '{}&debug_info={}'.format(signed_url, debug_info)
-
         data = {}
 
         if not isinstance(expected_response_code, (tuple, list)):
@@ -164,7 +160,7 @@ class DRFIntegrationViewJwtTokenTestCase(
     def test_obtain_jwt_token_provider_request_signed_wrong_secret_key_fail(
         self,
     ):
-        """Test provider obtain JWT token signed request wrong secret key.
+        """Test provider obtains JWT token signed request wrong secret key.
 
         :return:
         """

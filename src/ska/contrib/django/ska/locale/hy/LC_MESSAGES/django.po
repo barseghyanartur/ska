@@ -57,7 +57,7 @@ msgid "You should define a variable ``SKA_SECRET_KEY`` in your `settings` module
 msgstr ""
 
 #: settings.py:63
-msgid "You should defined a key ``SECRET_KEY`` for each provider in your `settings module`!"
+msgid "You should defined a key ``SECRET_KEY`` for each provider in your `settings module`! It's missing for {0}."
 msgstr ""
 
 #: views.py:36

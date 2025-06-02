@@ -60,7 +60,7 @@ def get_provider_data(
     """
     if not settings or not isinstance(settings, dict):
         settings = PROVIDERS
-    provider = data.get(DEFAULT_PROVIDER_PARAM, None)
+    provider = data.get(DEFAULT_PROVIDER_PARAM)
     if provider:
         return settings.get(provider, None)
     return {}

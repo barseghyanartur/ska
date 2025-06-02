@@ -10,7 +10,8 @@ from .defaults import (
     DEFAULT_VALID_UNTIL_PARAM,
 )
 from .exceptions import ImproperlyConfigured, InvalidData
-from .helpers import dict_keys, extract_signed_data as extract_signed_data
+from .helpers import dict_keys
+from .helpers import extract_signed_data as extract_signed_data
 from .signatures import Signature
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"

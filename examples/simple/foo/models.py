@@ -1,7 +1,6 @@
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-
 from ska.contrib.django.ska.decorators import sign_url
 
 __all__ = (

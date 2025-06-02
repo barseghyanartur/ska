@@ -43,7 +43,9 @@ def get_callback_func(
             module_path, class_name = func.rsplit(".", 1)
         except ValueError as err:
             if not fail_silently:
-                raise ImportError(f"{func} doesn't look like a module path")
+                raise ImportError(
+                    f"{func} doesn't look like a module path"
+                ) from err
             return None
 
         module = import_module(module_path)
@@ -55,7 +57,10 @@ def get_callback_func(
                 raise ImportError(
                     f'Module "{module_path}" does not define a "{class_name}" '
                     f"attribute/class"
-                )
+                ) from err
+            return None
+
+    return None
 
 
 def dict_keys(
@@ -96,12 +101,12 @@ def dict_to_ordered_dict(obj):
     if isinstance(obj, dict):
         obj = dict(sorted(obj.items()))
         for k, v in obj.items():
-            if isinstance(v, dict) or isinstance(v, list):
+            if isinstance(v, dict) or isinstance(v, list):  # noqa
                 obj[k] = dict_to_ordered_dict(v)
 
     if isinstance(obj, list):
         for i, v in enumerate(obj):
-            if isinstance(v, dict) or isinstance(v, list):
+            if isinstance(v, dict) or isinstance(v, list):  # noqa
                 obj[i] = dict_to_ordered_dict(v)
         # obj = sorted(obj, key=lambda x: json.dumps(x))
 
@@ -150,7 +155,9 @@ def sorted_urlencode(
     if not quoter:
         quoter = default_quoter
 
-    # _sorted = [f"{k}={value_dumper(v)}" for k, v in dict_to_ordered_list(data)]
+    # _sorted = [
+    #     f"{k}={value_dumper(v)}" for k, v in dict_to_ordered_list(data)
+    # ]
     _sorted = [
         f"{k}={value_dumper(v)}" for k, v in dict_to_ordered_dict(data).items()
     ]
@@ -163,14 +170,14 @@ def sorted_urlencode(
 def extract_signed_data(
     data: Dict[str, Union[bytes, str, float, int]], extra: List[str]
 ) -> Dict[str, Union[bytes, str, float, int]]:
-    """Filters out non-white-listed items from the ``extra`` dictionary given.
+    """Filters out non-whitelisted items from the ``extra`` dictionary given.
 
     :param data:
     :param extra:
     :return:
     """
     extracted_extra = dict(data)
-    for key, value in data.items():
+    for key in data:
         if key not in extra:
             extracted_extra.pop(key)
 

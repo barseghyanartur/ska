@@ -1,5 +1,5 @@
-from .base import *
-from .default_backends import *
+from .base import BaseSkaAuthenticationBackend
+from .default_backends import SkaAuthenticationBackend
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2013-2023 Artur Barseghyan"

@@ -1,44 +1,18 @@
-import random
-
-from django.utils.text import slugify
-from factory import LazyAttribute
-from factory.django import DjangoModelFactory
-from factory.fuzzy import FuzzyChoice
-from foo.models import FooItem
-
-from .factory_faker import Faker
-
-__all__ = (
-    "FooItemFactory",
-    "LimitedFooItemFactory",
+from fake import (
+    FACTORY,
+    DjangoModelFactory,
 )
 
+from foo.models import FooItem
 
-class BaseFooItemFactory(DjangoModelFactory):
-    """Base FooItem factory."""
+__all__ = ("FooItemFactory",)
 
-    title = Faker("text", max_nb_chars=100)
-    slug = LazyAttribute(lambda obj: slugify(obj.title))
-    body = Faker("text")
 
-    class Meta(object):
-        """Meta class."""
+class FooItemFactory(DjangoModelFactory):
+    title = FACTORY.sentence()
+    slug = FACTORY.slug()
+    body = FACTORY.text()
 
+    class Meta:
         model = FooItem
-        abstract = True
-        django_get_or_create = ("title",)
-
-
-class FooItemFactory(BaseFooItemFactory):
-    """FooItem factory."""
-
-
-class LimitedFooItemFactory(BaseFooItemFactory):
-    """FooItem factory, but limited to 20 records."""
-
-    id = LazyAttribute(lambda __x: random.randint(1, 20))
-
-    class Meta(object):
-        """Meta class."""
-
-        django_get_or_create = ("id",)
+        get_or_create = ("title",)

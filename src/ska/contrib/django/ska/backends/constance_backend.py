@@ -34,7 +34,7 @@ class SkaAuthenticationConstanceBackend(BaseSkaAuthenticationBackend):
             try:
                 _settings = json.loads(config.SKA_PROVIDERS)
                 return _settings
-            except ValueError as err:
+            except ValueError:
                 pass
         return config.SKA_PROVIDERS
 
