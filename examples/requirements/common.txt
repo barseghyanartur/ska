@@ -172,7 +172,7 @@ pytest==8.4.0
     #   ska (pyproject.toml)
     #   pytest-codeblock
     #   pytest-django
-pytest-codeblock==0.1.8
+pytest-codeblock==0.3
     # via ska (pyproject.toml)
 pytest-django==4.11.1
     # via ska (pyproject.toml)

@@ -232,7 +232,7 @@ pytest==8.4.0
     #   pytest-django
     #   pytest-monkeytype
     #   pytest-ordering
-pytest-codeblock==0.1.8
+pytest-codeblock==0.3
     # via
     #   -r examples/requirements/test.in
     #   ska (pyproject.toml)
