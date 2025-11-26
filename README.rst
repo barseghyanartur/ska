@@ -325,19 +325,22 @@ Validating the signed request data is as simple as follows.
 
 Required imports.
 
+.. pytestfixture: http_request
 .. code-block:: python
     :name: test_validate_signed_request_data
 
     from ska import validate_signed_request_data
 
 Validating the signed request data. Note, that ``data`` value is expected to
-be a dictionary; ``request.GET`` is given as an example. It will most likely
+be a dictionary; ``http_request.GET`` is given as an example. It will most likely
 vary from what's used in your framework (unless you use Django).
 
+.. continue: test_validate_signed_request_data
 .. code-block:: python
+    :name: test_validate_signed_request_data_2
 
     validation_result = validate_signed_request_data(
-        data=request.GET,  # Note, that ``request.GET`` is given as example.
+        data=http_request.GET,  # Note: `http_request.GET` is given as example
         secret_key='your-secret_key'
     )
 
@@ -361,14 +364,16 @@ Default name of the (GET) param holding the ``valid_until`` value is
 ``valid_until_param`` argument to ``validate_signed_request_data`` function.
 
 With all customisations, it would look as follows. Note, that
-``request.GET`` is given as example.
+``http_request.GET`` is given as example.
 
+.. continue: test_validate_signed_request_data
 .. code-block:: python
+    :name: test_validate_signed_request_data_3
 
     from ska import HMACSHA256Signature  # Use HMAC SHA-256 algorithm
 
     validation_result = validate_signed_request_data(
-        data=request.GET,
+        data=http_request.GET,
         secret_key='your-secret_key',
         signature_param='signature',
         auth_user_param='auth_user',
@@ -537,7 +542,6 @@ Make a request.
     import requests
     r = requests.get(signed_url)
 
-
 For HMAC SHA-384 algorithm it would look as follows.
 
 .. continue: test_request_helper
@@ -562,6 +566,8 @@ Recipient side
 ~~~~~~~~~~~~~~
 Required imports.
 
+.. pytestfixture: http_request
+.. pytestfixture: Http404
 .. code-block:: python
     :name: test_recipient_side_request_helper
 
@@ -581,13 +587,15 @@ request helper and let it extract data from signed request for us.
         valid_until_param='valid_until'
     )
 
-Validate the request data. Note, that ``request.GET`` is given just as an
+Validate the request data. Note, that ``http_request.GET`` is given just as an
 example.
 
+.. continue: test_recipient_side_request_helper
 .. code-block:: python
+    :name: test_recipient_side_request_helper_part_3
 
     validation_result = request_helper.validate_request_data(
-        data=request.GET,
+        data=http_request.GET,
         secret_key='your-secret-key'
     )
 
@@ -596,10 +604,9 @@ Your implementation further depends on you, but may look as follows.
 .. code-block:: python
 
     if validation_result.result:
-        # Validated, proceed further
-        # ...
+        ... # Validated, proceed further
     else:
-        # Validation not passed.
+        ... # Validation not passed.
         raise Http404(validation_result.reason)
 
 You can also just validate the signature by calling ``validate_signature``

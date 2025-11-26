@@ -121,7 +121,7 @@ pytest==8.3.5
     #   pytest-django
     #   pytest-monkeytype
     #   pytest-ordering
-pytest-codeblock==0.1.8
+pytest-codeblock==0.3
     # via -r test.in
 pytest-cov==6.1.1
     # via -r test.in
