@@ -1,18 +1,45 @@
 from datetime import datetime
 from typing import Dict, Optional, Union
 
+from django.conf import settings
+from django.shortcuts import resolve_url
+from django.utils.http import url_has_allowed_host_and_scheme
+
 from ....defaults import DEFAULT_PROVIDER_PARAM
 from .models import Signature
-from .settings import PROVIDERS, SECRET_KEY
+from .settings import PROVIDERS, REDIRECT_AFTER_LOGIN, SECRET_KEY
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2013-2023 Artur Barseghyan"
 __license__ = "GPL-2.0-only OR LGPL-2.1-or-later"
 __all__ = (
     "get_provider_data",
+    "get_safe_redirect_target",
     "get_secret_key",
     "purge_signature_data",
 )
+
+
+def get_safe_redirect_target(request, target):
+    """
+    Return a safe redirect target:
+      - If target is a safe relative URL or an allowed-host absolute URL -> return it.
+      - Otherwise return a resolved fallback (REDIRECT_AFTER_LOGIN, settings.LOGIN_REDIRECT_URL, or '/').
+    """
+    allowed_hosts = {request.get_host()} | set(
+        getattr(settings, "ALLOWED_HOSTS", [])
+    )
+    require_https = request.is_secure()
+
+    if target and url_has_allowed_host_and_scheme(
+        target, allowed_hosts=allowed_hosts, require_https=require_https
+    ):
+        return target
+
+    fallback = REDIRECT_AFTER_LOGIN or getattr(
+        settings, "LOGIN_REDIRECT_URL", "/"
+    )
+    return resolve_url(fallback)
 
 
 def purge_signature_data() -> None:

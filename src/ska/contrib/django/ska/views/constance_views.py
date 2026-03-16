@@ -7,7 +7,7 @@ from django.utils.translation import gettext
 from django.utils.translation import gettext_lazy as _
 
 from ..settings import REDIRECT_AFTER_LOGIN
-from ..utils import get_provider_data
+from ..utils import get_provider_data, get_safe_redirect_target
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2013-2023 Artur Barseghyan"
@@ -42,6 +42,7 @@ def constance_login(request):
         auth_login(request, user)
         name = user.first_name or user.username
         messages.info(request, gettext(f"Login succeeded. Welcome, {name}."))
-        return HttpResponseRedirect(next_url)
+        safe_target = get_safe_redirect_target(request, next_url)
+        return HttpResponseRedirect(safe_target)
     else:
         return HttpResponseForbidden(_("Authentication error!"))

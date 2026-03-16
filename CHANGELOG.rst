@@ -21,6 +21,13 @@ are used for versioning (schema follows below):
   0.3.4 to 0.4).
 - All backwards incompatible changes are mentioned in this document.
 
+1.11.2
+------
+2026-03-16
+
+- Modernise setup. Minor fixes.
+- Drop Python 3.9 support.
+
 1.11.1
 ------
 2025-06-03
