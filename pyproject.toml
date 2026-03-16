@@ -168,7 +168,12 @@ addopts = [
    "--cov-append",
    "--capture=no",
 ]
-#testpaths = []
+testpaths = [
+    "src",
+    ".",
+    "**/*.rst",
+    "**/*.md",
+]
 pythonpath = [
     "src",
     "examples/simple",
@@ -179,6 +184,11 @@ norecursedirs = [
     "build",
     "dist",
 ]
+markers = [
+    "slow: mark a test that takes a long time to run.",
+    "documentation: mark test as a documentation test",
+]
+
 DJANGO_SETTINGS_MODULE = "settings.testing"
 
 [tool.coverage.run]

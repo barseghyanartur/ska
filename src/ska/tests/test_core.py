@@ -1,4 +1,5 @@
 import datetime
+import logging
 import unittest
 from copy import copy
 from decimal import Decimal
@@ -17,7 +18,7 @@ from .. import (
     signature_to_dict,
     validate_signed_request_data,
 )
-from .base import log_info, parse_url_params, timestamp_to_human_readable
+from .base import parse_url_params, timestamp_to_human_readable
 
 __title__ = "ska.tests.test_core"
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
@@ -29,6 +30,8 @@ __all__ = (
     "SignatureTest",
     "URLHelperTest",
 )
+
+LOGGER = logging.getLogger(__name__)
 
 
 class SignatureTest(unittest.TestCase):
@@ -47,27 +50,24 @@ class SignatureTest(unittest.TestCase):
             HMACSHA512Signature,
         )
 
-    @log_info
     def __test_01_signature_test(self, signature_cls=Signature):
         """Signature test."""
-        flow = []
-
-        flow.append(("Signature class", signature_cls))
+        LOGGER.debug(("Signature class", signature_cls))
 
         # Generate signature
         sig = signature_cls.generate_signature(
             auth_user=self.auth_user, secret_key=self.secret_key
         )
 
-        flow.append(("Valid until used", sig.valid_until))
-        flow.append(
+        LOGGER.debug(("Valid until used", sig.valid_until))
+        LOGGER.debug(
             (
                 "Valid until (human readable)",
                 timestamp_to_human_readable(sig.valid_until),
             )
         )
-        flow.append(("Signature generated", sig.signature))
-        flow.append(("Signature is expired", sig.is_expired()))
+        LOGGER.debug(("Signature generated", sig.signature))
+        LOGGER.debug(("Signature is expired", sig.is_expired()))
 
         # Check if not expired
         self.assertTrue(not sig.is_expired())
@@ -81,21 +81,16 @@ class SignatureTest(unittest.TestCase):
             return_object=True,
         )
 
-        flow.append(("Signature is valid", validation_result.result))
-        flow.append(("Reason not valid", validation_result.reason))
+        LOGGER.debug(("Signature is valid", validation_result.result))
+        LOGGER.debug(("Reason not valid", validation_result.reason))
 
         self.assertTrue(validation_result.result)
 
-        return flow
-
     def test_01_signature_test(self):
         """Signature test."""
-        flow = []
         for signature_cls in self.signature_classes:
-            flow += self.__test_01_signature_test(signature_cls=signature_cls)
-        return flow
+            self.__test_01_signature_test(signature_cls=signature_cls)
 
-    @log_info
     def __test_02_signature_test_with_positive_time_lapse(
         self, signature_cls=Signature
     ):
@@ -105,16 +100,14 @@ class SignatureTest(unittest.TestCase):
         difference with server. In this particular example, the host time is
         5 minutes ahead the server time.
         """
-        flow = []
-
-        flow.append(("Signature class", signature_cls))
+        LOGGER.debug(("Signature class", signature_cls))
 
         datetime_time_lapse = signature_cls.datetime_to_unix_timestamp(
             datetime.datetime.now() + datetime.timedelta(seconds=300)
         )
 
-        flow.append(("Valid until used", datetime_time_lapse))
-        flow.append(
+        LOGGER.debug(("Valid until used", datetime_time_lapse))
+        LOGGER.debug(
             (
                 "Valid until used (human readable)",
                 timestamp_to_human_readable(datetime_time_lapse),
@@ -128,8 +121,8 @@ class SignatureTest(unittest.TestCase):
             valid_until=datetime_time_lapse,
         )
 
-        flow.append(("Signature generated", sig.signature))
-        flow.append(("Signature is expired", sig.is_expired()))
+        LOGGER.debug(("Signature generated", sig.signature))
+        LOGGER.debug(("Signature is expired", sig.is_expired()))
 
         # Check if not expired
         self.assertTrue(not sig.is_expired())
@@ -143,12 +136,10 @@ class SignatureTest(unittest.TestCase):
             return_object=True,
         )
 
-        flow.append(("Signature is valid", validation_result.result))
-        flow.append(("Reason not valid", validation_result.reason))
+        LOGGER.debug(("Signature is valid", validation_result.result))
+        LOGGER.debug(("Reason not valid", validation_result.reason))
 
         self.assertTrue(validation_result.result)
-
-        return flow
 
     def test_02_signature_test_with_positive_time_lapse(self):
         """Signature test with positive time-lapse.
@@ -157,14 +148,13 @@ class SignatureTest(unittest.TestCase):
         difference with server. In this particular example, the host time is
         5 minutes ahead the server time.
         """
-        flow = []
         for signature_cls in self.signature_classes:
-            flow += self.__test_02_signature_test_with_positive_time_lapse(
-                signature_cls=signature_cls
+            LOGGER.debug(
+                self.__test_02_signature_test_with_positive_time_lapse(
+                    signature_cls=signature_cls
+                )
             )
-        return flow
 
-    @log_info
     def __test_03_signature_test_with_negative_time_lapse(
         self, signature_cls=Signature
     ):
@@ -175,16 +165,14 @@ class SignatureTest(unittest.TestCase):
         5 minutes behind the server time, which exceeds the signature
         lifetime.
         """
-        flow = []
-
-        flow.append(("Signature class", signature_cls))
+        LOGGER.debug(("Signature class", signature_cls))
 
         datetime_time_lapse = signature_cls.datetime_to_unix_timestamp(
             datetime.datetime.now() - datetime.timedelta(seconds=300)
         )
 
-        flow.append(("Valid until used", datetime_time_lapse))
-        flow.append(
+        LOGGER.debug(("Valid until used", datetime_time_lapse))
+        LOGGER.debug(
             (
                 "Valid until used (human readable)",
                 timestamp_to_human_readable(datetime_time_lapse),
@@ -198,8 +186,8 @@ class SignatureTest(unittest.TestCase):
             valid_until=datetime_time_lapse,
         )
 
-        flow.append(("Signature generated", sig.signature))
-        flow.append(("Signature is expired", sig.is_expired()))
+        LOGGER.debug(("Signature generated", sig.signature))
+        LOGGER.debug(("Signature is expired", sig.is_expired()))
 
         # Check if not expired
         self.assertTrue(sig.is_expired())
@@ -213,12 +201,10 @@ class SignatureTest(unittest.TestCase):
             return_object=True,
         )
 
-        flow.append(("Signature is valid", validation_result.result))
-        flow.append(("Reason not valid", validation_result.reason))
+        LOGGER.debug(("Signature is valid", validation_result.result))
+        LOGGER.debug(("Reason not valid", validation_result.reason))
 
         self.assertTrue(not validation_result.result)
-
-        return flow
 
     def test_03_signature_test_with_negative_time_lapse(self):
         """Fail test. Signature test with negative time-lapse.
@@ -228,19 +214,14 @@ class SignatureTest(unittest.TestCase):
         particular example, the host time is 5 minutes behind the server time,
         which exceeds the signature lifetime.
         """
-        flow = []
         for signature_cls in self.signature_classes:
-            flow += self.__test_03_signature_test_with_negative_time_lapse(
+            self.__test_03_signature_test_with_negative_time_lapse(
                 signature_cls=signature_cls
             )
-        return flow
 
-    @log_info
     def __test_04_fail_signature_test(self, signature_cls=Signature):
         """Fail signature tests."""
-        flow = []
-
-        flow.append(("Signature class", signature_cls))
+        LOGGER.debug(("Signature class", signature_cls))
 
         validation_result = signature_cls.validate_signature(
             signature="EBS6ipiqRLa6TY5vxIvZU30FpnM=",
@@ -250,40 +231,33 @@ class SignatureTest(unittest.TestCase):
             return_object=True,
         )
 
-        flow.append(("Valid until used", 1377997396.0))
-        flow.append(
+        LOGGER.debug(("Valid until used", 1377997396.0))
+        LOGGER.debug(
             (
                 "Valid until used (human readable)",
                 timestamp_to_human_readable(1377997396.0),
             )
         )
-        flow.append(("Signature generated", "EBS6ipiqRLa6TY5vxIvZU30FpnM="))
-        flow.append(("Signature is expired", True))
+        LOGGER.debug(("Signature generated", "EBS6ipiqRLa6TY5vxIvZU30FpnM="))
+        LOGGER.debug(("Signature is expired", True))
 
-        flow.append(("Signature is valid", validation_result.result))
-        flow.append(("Reason not valid", validation_result.reason))
+        LOGGER.debug(("Signature is valid", validation_result.result))
+        LOGGER.debug(("Reason not valid", validation_result.reason))
 
         self.assertTrue(not validation_result.result)
 
-        return flow
-
     def test_04_fail_signature_test(self):
         """Fail signature tests."""
-        flow = []
         for signature_cls in self.signature_classes:
-            flow += self.__test_04_fail_signature_test(
+            self.__test_04_fail_signature_test(
                 signature_cls=signature_cls
             )
-        return flow
 
-    @log_info
     def __test_05_fail_signature_test_validation_result_class(
         self, signature_cls=Signature
     ):
         """Fail signature tests for `ValidationResult` class."""
-        flow = []
-
-        flow.append(("Signature class", signature_cls))
+        LOGGER.debug(("Signature class", signature_cls))
 
         validation_result = signature_cls.validate_signature(
             signature="EBS6ipiqRLa6TY5vxIvZU30FpnM=",
@@ -300,23 +274,19 @@ class SignatureTest(unittest.TestCase):
         self.assertIsInstance(" ".join(validation_result.reason), str)
         self.assertIsInstance(" ".join(map(str, validation_result.errors)), str)
 
-        flow.append(validation_result.message)
+        LOGGER.debug(validation_result.message)
 
         self.assertIn(error_codes.INVALID_SIGNATURE, validation_result.errors)
         self.assertIn(
             error_codes.SIGNATURE_TIMESTAMP_EXPIRED, validation_result.errors
         )
 
-        return flow
-
     def test_05_fail_signature_test_validation_result_class(self):
         """Fail signature tests of the `ValidationResult` class."""
-        flow = []
         for signature_cls in self.signature_classes:
-            flow += self.__test_05_fail_signature_test_validation_result_class(
+            self.__test_05_fail_signature_test_validation_result_class(
                 signature_cls=signature_cls
             )
-        return flow
 
 
 class URLHelperTest(unittest.TestCase):
@@ -335,12 +305,9 @@ class URLHelperTest(unittest.TestCase):
             HMACSHA512Signature,
         )
 
-    @log_info
     def __test_01_signature_to_url(self, signature_cls=Signature):
         """Signature test."""
-        flow = []
-
-        flow.append(("Signature class", signature_cls))
+        LOGGER.debug(("Signature class", signature_cls))
 
         # Generate signature
         signature = signature_cls.generate_signature(
@@ -358,7 +325,7 @@ class URLHelperTest(unittest.TestCase):
             signature=signature, endpoint_url="http://dev.example.com/api/"
         )
 
-        flow.append(("URL generated", signed_endpoint_url))
+        LOGGER.debug(("URL generated", signed_endpoint_url))
 
         # Now parsing back the URL params.
         request_data = parse_url_params(signed_endpoint_url)
@@ -367,26 +334,19 @@ class URLHelperTest(unittest.TestCase):
             data=request_data, secret_key=self.secret_key
         )
 
-        flow.append(("Signature is valid", validation_result.result))
-        flow.append(("Reason not valid", validation_result.reason))
+        LOGGER.debug(("Signature is valid", validation_result.result))
+        LOGGER.debug(("Reason not valid", validation_result.reason))
 
         self.assertTrue(validation_result.result)
 
-        return flow
-
     def test_01_signature_to_url(self):
         """Signature test."""
-        flow = []
         for signature_cls in self.signature_classes:
-            flow += self.__test_01_signature_to_url(signature_cls=signature_cls)
-        return flow
+            self.__test_01_signature_to_url(signature_cls=signature_cls)
 
-    @log_info
     def __test_02_signature_to_url_fail(self, signature_cls=Signature):
         """Signature test. Fail test."""
-        flow = []
-
-        flow.append(("Signature class", signature_cls))
+        LOGGER.debug(("Signature class", signature_cls))
 
         datetime_time_lapse = signature_cls.datetime_to_unix_timestamp(
             datetime.datetime.now() - datetime.timedelta(seconds=300)
@@ -410,7 +370,7 @@ class URLHelperTest(unittest.TestCase):
             signature=signature, endpoint_url="http://dev.example.com/api/"
         )
 
-        flow.append(("URL generated", signed_endpoint_url))
+        LOGGER.debug(("URL generated", signed_endpoint_url))
 
         # Now parsing back the URL params.
         request_data = parse_url_params(signed_endpoint_url)
@@ -419,21 +379,17 @@ class URLHelperTest(unittest.TestCase):
             data=request_data, secret_key=self.secret_key
         )
 
-        flow.append(("Signature is valid", validation_result.result))
-        flow.append(("Reason not valid", validation_result.reason))
+        LOGGER.debug(("Signature is valid", validation_result.result))
+        LOGGER.debug(("Reason not valid", validation_result.reason))
 
         self.assertTrue(not validation_result.result)
 
-        return flow
-
     def test_02_signature_to_url_fail(self):
         """Signature test. Fail test."""
-        flow = []
         for signature_cls in self.signature_classes:
-            flow += self.__test_02_signature_to_url_fail(
+            self.__test_02_signature_to_url_fail(
                 signature_cls=signature_cls
             )
-        return flow
 
 
 class ShortcutsTest(unittest.TestCase):
@@ -457,14 +413,11 @@ class ShortcutsTest(unittest.TestCase):
             HMACSHA512Signature,
         )
 
-    @log_info
     def __test_sign_url_validate_signed_request_data(
         self, signature_cls=Signature
     ):
         """Tests for `sign_url` & `validate_signed_request_data`."""
-        flow = []
-
-        flow.append(("Signature class", signature_cls))
+        LOGGER.debug(("Signature class", signature_cls))
 
         signed_url = sign_url(
             auth_user=self.auth_user,
@@ -472,7 +425,7 @@ class ShortcutsTest(unittest.TestCase):
             url=self.endpoint_url,
         )
 
-        flow.append(("URL generated", signed_url))
+        LOGGER.debug(("URL generated", signed_url))
 
         # Now parsing back the URL params and validate the signature data
         request_data = parse_url_params(signed_url)
@@ -481,37 +434,30 @@ class ShortcutsTest(unittest.TestCase):
             data=request_data, secret_key=self.secret_key
         )
 
-        flow.append(("Signature is valid", validation_result.result))
-        flow.append(("Reason not valid", validation_result.reason))
+        LOGGER.debug(("Signature is valid", validation_result.result))
+        LOGGER.debug(("Reason not valid", validation_result.reason))
 
         self.assertTrue(validation_result.result)
 
-        return flow
-
     def test_01_sign_url_and_validate_signed_request_data(self):
         """Tests for ``sign_url`` & ``validate_signed_request_data``."""
-        flow = []
         for signature_cls in self.signature_classes:
-            flow += self.__test_sign_url_validate_signed_request_data(
+            self.__test_sign_url_validate_signed_request_data(
                 signature_cls=signature_cls
             )
-        return flow
 
-    @log_info
     def __test_sign_url_validate_signed_request_data_fail(
         self, signature_cls=Signature
     ):
         """Fail tests for `sign_url` & `validate_signed_request_data`."""
-        flow = []
-
-        flow.append(("Signature class", signature_cls))
+        LOGGER.debug(("Signature class", signature_cls))
 
         datetime_time_lapse = signature_cls.datetime_to_unix_timestamp(
             datetime.datetime.now() - datetime.timedelta(seconds=300)
         )
 
-        flow.append(("Valid until used", datetime_time_lapse))
-        flow.append(
+        LOGGER.debug(("Valid until used", datetime_time_lapse))
+        LOGGER.debug(
             (
                 "Valid until used (human readable)",
                 timestamp_to_human_readable(datetime_time_lapse),
@@ -525,7 +471,7 @@ class ShortcutsTest(unittest.TestCase):
             valid_until=datetime_time_lapse,
         )
 
-        flow.append(("URL generated", signed_url))
+        LOGGER.debug(("URL generated", signed_url))
 
         # Now parsing back the URL params and validate the signature data
         request_data = parse_url_params(signed_url)
@@ -534,31 +480,24 @@ class ShortcutsTest(unittest.TestCase):
             data=request_data, secret_key=self.secret_key
         )
 
-        flow.append(("Signature is valid", validation_result.result))
-        flow.append(("Reason not valid", validation_result.reason))
+        LOGGER.debug(("Signature is valid", validation_result.result))
+        LOGGER.debug(("Reason not valid", validation_result.reason))
 
         self.assertTrue(not validation_result.result)
 
-        return flow
-
     def test_02_sign_url_and_validate_signed_request_data_fail(self):
         """Fail tests for `sign_url` & `validate_signed_request_data`."""
-        flow = []
         for signature_cls in self.signature_classes:
-            flow += self.__test_sign_url_validate_signed_request_data_fail(
+            self.__test_sign_url_validate_signed_request_data_fail(
                 signature_cls=signature_cls
             )
-        return flow
 
-    @log_info
     def __test_signature_to_dict_validate_signed_request_data(
         self, signature_cls=Signature
     ):
         """
         Tests for `signature_to_dict` & `validate_signed_request_data`."""
-        flow = []
-
-        flow.append(("Signature class", signature_cls))
+        LOGGER.debug(("Signature class", signature_cls))
 
         signature_dict = signature_to_dict(
             auth_user=self.auth_user,
@@ -566,7 +505,7 @@ class ShortcutsTest(unittest.TestCase):
             signature_cls=signature_cls,
         )
 
-        flow.append(("Dictionary created", signature_dict))
+        LOGGER.debug(("Dictionary created", signature_dict))
 
         # Now validate the signature data
 
@@ -576,23 +515,18 @@ class ShortcutsTest(unittest.TestCase):
             signature_cls=signature_cls,
         )
 
-        flow.append(("Signature is valid", validation_result.result))
-        flow.append(("Reason not valid", validation_result.reason))
+        LOGGER.debug(("Signature is valid", validation_result.result))
+        LOGGER.debug(("Reason not valid", validation_result.reason))
 
         self.assertTrue(validation_result.result)
 
-        return flow
-
     def test_03_signature_to_dict_and_validate_signed_request_data(self):
         """Tests for `signature_to_dict` & `validate_signed_request_data`."""
-        flow = []
         for signature_cls in self.signature_classes:
-            flow += self.__test_signature_to_dict_validate_signed_request_data(
+            self.__test_signature_to_dict_validate_signed_request_data(
                 signature_cls=signature_cls
             )
-        return flow
 
-    @log_info
     def __test_sig_to_dict_var_types_validate_signed_request_data(
         self, signature_cls=Signature
     ):
@@ -600,9 +534,7 @@ class ShortcutsTest(unittest.TestCase):
         Tests for `signature_to_dict` with complex data &
         `validate_signed_request_data`.
         """
-        flow = []
-
-        flow.append(("Signature class", signature_cls))
+        LOGGER.debug(("Signature class", signature_cls))
 
         signature_dict = signature_to_dict(
             auth_user=self.auth_user,
@@ -618,7 +550,7 @@ class ShortcutsTest(unittest.TestCase):
             },
         )
 
-        flow.append(("Dictionary created", signature_dict))
+        LOGGER.debug(("Dictionary created", signature_dict))
 
         # Now validate the signature data
 
@@ -628,26 +560,21 @@ class ShortcutsTest(unittest.TestCase):
             signature_cls=signature_cls,
         )
 
-        flow.append(("Signature is valid", validation_result.result))
-        flow.append(("Reason not valid", validation_result.reason))
+        LOGGER.debug(("Signature is valid", validation_result.result))
+        LOGGER.debug(("Reason not valid", validation_result.reason))
 
         self.assertTrue(validation_result.result)
-
-        return flow
 
     def test_04_sig_to_dict_var_types_and_validate_signed_request_data(self):
         """Tests for `signature_to_dict` with complex data &
         `validate_signed_request_data`.
         """
-        flow = []
         for signature_cls in self.signature_classes:
-            flow.extend(
+            LOGGER.debug(
                 self.__test_sig_to_dict_var_types_validate_signed_request_data(
                     signature_cls=signature_cls
                 )
             )
-        return flow
-
 
 class ExtraTest(unittest.TestCase):
     """Test for extra data."""
@@ -681,18 +608,15 @@ class ExtraTest(unittest.TestCase):
             signature_cls=signature_cls,
         )
 
-    @log_info
     def __test_sign_url_validate_signed_request_data(
         self, signature_cls=Signature
     ):
         """Tests for `sign_url` & `validate_signed_request_data`."""
-        flow = []
-
-        flow.append(("Signature class", signature_cls))
+        LOGGER.debug(("Signature class", signature_cls))
 
         signed_url = self.__get_signed_url(signature_cls=signature_cls)
 
-        flow.append(("URL generated", signed_url))
+        LOGGER.debug(("URL generated", signed_url))
 
         # Now parsing back the URL params and validate the signature data
         request_data = parse_url_params(signed_url)
@@ -705,23 +629,18 @@ class ExtraTest(unittest.TestCase):
             signature_cls=signature_cls,
         )
 
-        flow.append(("Signature is valid", validation_result.result))
-        flow.append(("Reason not valid", validation_result.reason))
+        LOGGER.debug(("Signature is valid", validation_result.result))
+        LOGGER.debug(("Reason not valid", validation_result.reason))
 
         self.assertTrue(validation_result.result)
 
-        return flow
-
     def test_01_sign_url_and_validate_signed_request_data(self):
         """Tests for ``sign_url`` and ``validate_signed_request_data``."""
-        flow = []
         for signature_cls in self.signature_classes:
-            flow += self.__test_sign_url_validate_signed_request_data(
+            self.__test_sign_url_validate_signed_request_data(
                 signature_cls=signature_cls
             )
-        return flow
 
-    @log_info
     def __t_sign_url_validate_sgnd_req_data_tamper_extra_keys_rm(
         self, signature_cls=Signature
     ):
@@ -730,13 +649,11 @@ class ExtraTest(unittest.TestCase):
         As well as providing the additional data ``extra`` and data tampering
         ``extra`` keys (remove).
         """
-        flow = []
-
-        flow.append(("Signature class", signature_cls))
+        LOGGER.debug(("Signature class", signature_cls))
 
         signed_url = self.__get_signed_url(signature_cls=signature_cls)
 
-        flow.append(("URL generated", signed_url))
+        LOGGER.debug(("URL generated", signed_url))
 
         # Now parsing back the URL params and validate the signature data
         request_data = parse_url_params(signed_url)
@@ -748,8 +665,8 @@ class ExtraTest(unittest.TestCase):
 
         tampered_request_data["extra"] = "provider,first_name"
 
-        flow.append(("Request data", request_data))
-        flow.append(("Tampered request data", tampered_request_data))
+        LOGGER.debug(("Request data", request_data))
+        LOGGER.debug(("Tampered request data", tampered_request_data))
 
         validation_result = validate_signed_request_data(
             data=tampered_request_data,
@@ -757,12 +674,10 @@ class ExtraTest(unittest.TestCase):
             signature_cls=signature_cls,
         )
 
-        flow.append(("Signature is valid", validation_result.result))
-        flow.append(("Reason not valid", validation_result.reason))
+        LOGGER.debug(("Signature is valid", validation_result.result))
+        LOGGER.debug(("Reason not valid", validation_result.reason))
 
         self.assertTrue(not validation_result.result)
-
-        return flow
 
     def test_02_sign_url_validate_signed_req_data_tamper_extra_keys_rm(self):
         """Fail tests for `sign_url` and `validate_signed_request_data`.
@@ -770,16 +685,13 @@ class ExtraTest(unittest.TestCase):
         As well as providing the additional data `extra` and data tampering
         `extra` keys (remove).
         """
-        flow = []
         for signature_cls in self.signature_classes:
-            flow += (
+            LOGGER.debug(
                 self.__t_sign_url_validate_sgnd_req_data_tamper_extra_keys_rm(
                     signature_cls=signature_cls
                 )
             )
-        return flow
 
-    @log_info
     def __t_sgn_url_and_vldt_sgnd_req_data_tamper_extra_keys_add(
         self, signature_cls=Signature
     ):
@@ -788,13 +700,11 @@ class ExtraTest(unittest.TestCase):
         As well as providing the additional data ``extra`` and data tampering
         `extra` keys (add).
         """
-        flow = []
-
-        flow.append(("Signature class", signature_cls))
+        LOGGER.debug(("Signature class", signature_cls))
 
         signed_url = self.__get_signed_url(signature_cls=signature_cls)
 
-        flow.append(("URL generated", signed_url))
+        LOGGER.debug(("URL generated", signed_url))
 
         # Now parsing back the URL params and validate the signature data
         request_data = parse_url_params(signed_url)
@@ -807,8 +717,8 @@ class ExtraTest(unittest.TestCase):
         tampered_request_data["extra"] += ",age"
         tampered_request_data["age"] = 27
 
-        flow.append(("Request data", request_data))
-        flow.append(("Tampered request data", tampered_request_data))
+        LOGGER.debug(("Request data", request_data))
+        LOGGER.debug(("Tampered request data", tampered_request_data))
 
         validation_result = validate_signed_request_data(
             data=tampered_request_data,
@@ -816,12 +726,10 @@ class ExtraTest(unittest.TestCase):
             signature_cls=signature_cls,
         )
 
-        flow.append(("Signature is valid", validation_result.result))
-        flow.append(("Reason not valid", validation_result.reason))
+        LOGGER.debug(("Signature is valid", validation_result.result))
+        LOGGER.debug(("Reason not valid", validation_result.reason))
 
         self.assertTrue(not validation_result.result)
-
-        return flow
 
     def test_03_sign_url_and_validate_signed_req_data_tamper_extra_keys_add(
         self,
@@ -831,16 +739,13 @@ class ExtraTest(unittest.TestCase):
         As well as providing the additional data ``extra`` and data tampering
         `extra` keys (add).
         """
-        flow = []
         for signature_cls in self.signature_classes:
-            flow += (
+            LOGGER.debug(
                 self.__t_sgn_url_and_vldt_sgnd_req_data_tamper_extra_keys_add(
                     signature_cls=signature_cls
                 )
             )
-        return flow
 
-    @log_info
     def __t_sgn_url_prv_and_vldt_sgnd_req_data_tamper_extra_keys_add(
         self, signature_cls=Signature
     ):
@@ -849,9 +754,7 @@ class ExtraTest(unittest.TestCase):
         As well as providing the additional data `extra` and data
         tampering `extra` keys (add) repeated params.
         """
-        flow = []
-
-        flow.append(("Signature class", signature_cls))
+        LOGGER.debug(("Signature class", signature_cls))
 
         signed_url = "{0}&provider=cervice0.example.com".format(
             self.__get_signed_url(signature_cls=signature_cls)
@@ -861,7 +764,7 @@ class ExtraTest(unittest.TestCase):
         # ************************* Tampering *******************************
         # *******************************************************************
 
-        flow.append(("URL generated", signed_url))
+        LOGGER.debug(("URL generated", signed_url))
 
         # Now parsing back the URL params and validate the signature data
         tampered_request_data = parse_url_params(signed_url)
@@ -872,8 +775,8 @@ class ExtraTest(unittest.TestCase):
         even_more_tampered_request_data = copy(tampered_request_data)
         even_more_tampered_request_data["extra"] += ",provider"
 
-        flow.append(("Tampered request data", tampered_request_data))
-        flow.append(
+        LOGGER.debug(("Tampered request data", tampered_request_data))
+        LOGGER.debug(
             (
                 "Even more tampered request data",
                 even_more_tampered_request_data,
@@ -886,12 +789,10 @@ class ExtraTest(unittest.TestCase):
             signature_cls=signature_cls,
         )
 
-        flow.append(("Signature is valid", validation_result.result))
-        flow.append(("Reason not valid", validation_result.reason))
+        LOGGER.debug(("Signature is valid", validation_result.result))
+        LOGGER.debug(("Reason not valid", validation_result.reason))
 
         self.assertTrue(validation_result.result)
-
-        return flow
 
     def test_04_sgn_url_vldt_signed_request_data_tamper_extra_keys_add(self):
         """Tests for `sign_url` and `validate_signed_request_data`.
@@ -899,11 +800,9 @@ class ExtraTest(unittest.TestCase):
         As well as providing the additional data `extra` and data tampering
         `extra` keys (add) repeated params.
         """
-        flow = []
         for signature_cls in self.signature_classes:
-            flow += (
+            LOGGER.debug(
                 self.__t_sgn_url_and_vldt_sgnd_req_data_tamper_extra_keys_add(
                     signature_cls=signature_cls
                 )
             )
-        return flow

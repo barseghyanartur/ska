@@ -1,4 +1,5 @@
 import datetime
+import logging
 import time
 
 import mock
@@ -23,6 +24,8 @@ __all__ = ("SkaAuthenticationConstanceBackendTest",)
 # *********************************************************************
 # *********************************************************************
 # *********************************************************************
+
+LOGGER = logging.getLogger(__name__)
 
 SKA_TEST_USER_USERNAME = factories.TEST_ADMIN_USERNAME
 SKA_TEST_USER_PASSWORD = factories.TEST_ADMIN_PASSWORD
@@ -104,7 +107,7 @@ class SkaAuthenticationConstanceBackendTest(TransactionTestCase):
         )
 
         self.assertIsNotNone(signed_login_url)
-        flow.append(("Signed login URL", signed_login_url))
+        LOGGER.debug(("Signed login URL", signed_login_url))
 
         # Testing view with signed URL
         self._client = Client()
@@ -112,7 +115,7 @@ class SkaAuthenticationConstanceBackendTest(TransactionTestCase):
         response_status_code = getattr(response, "status_code", None)
 
         self.assertIn(response_status_code, (first_response_code,))
-        flow.append(
+        LOGGER.debug(
             ("Response status code for signed URL", response_status_code)
         )
 
@@ -138,7 +141,7 @@ class SkaAuthenticationConstanceBackendTest(TransactionTestCase):
             response = self._client.get(signed_login_url, {})
             response_status_code = getattr(response, "status_code", None)
             self.assertIn(response_status_code, (second_response_code,))
-            flow.append(
+            LOGGER.debug(
                 (
                     "Response status code for signed URL",
                     response_status_code,

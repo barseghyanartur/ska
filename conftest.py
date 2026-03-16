@@ -31,12 +31,6 @@ def Http404():  # noqa
 # Modify test item during collection
 def pytest_collection_modifyitems(config, items):
     for item in items:
-        if item.get_closest_marker(CODEBLOCK_MARK):
-            # All `pytest-codeblock` tests are automatically assigned
-            # a `codeblock` marker, which can be used for customisation.
-            # In the example below we add an additional `documentation`
-            # marker to `pytest-codeblock` tests.
-            item.add_marker(pytest.mark.documentation)
         if item.get_closest_marker("mock_request"):
             ...
 
