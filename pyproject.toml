@@ -1,6 +1,6 @@
 [project]
 name = "ska"
-version = "1.11.1"
+version = "1.11.2"
 description = "Sign- and validate- data (dictionaries, strings) using symmetric-key algorithm."
 readme = "README.rst"
 license = "GPL-2.0-only OR LGPL-2.1-or-later"
@@ -17,7 +17,6 @@ keywords = [
 classifiers = [
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -49,6 +48,7 @@ django = ["django-nine>=0.2.4"]
 "django-constance" = ["django-constance"]
 djangorestframework = ["djangorestframework"]
 "drf-jwt" = ["drf-jwt"]
+
 dev = [
     "detect-secrets",
     "doc8",
@@ -69,10 +69,12 @@ test = [
     "coverage",
 ]
 docs = [
-    "sphinx<6.0",
+    "sphinx",
     "sphinx-autobuild",
     "sphinx-rtd-theme>=1.3.0",
     "sphinx-no-pragma",
+    "sphinx-llms-txt-link",
+    "sphinx-source-tree",
 ]
 build = [
     "build",
@@ -96,7 +98,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.black]
 line-length = 80
-target-version = ['py37', 'py38', 'py39', 'py310', 'py311']
+target-version = ['py39', 'py310', 'py311']
 include = '\.pyi?$'
 extend-exclude = '''
 /(
@@ -123,11 +125,14 @@ skip = ["wsgi.py",]
 
 [tool.pyright]
 include = ["src"]
-exclude = ["**/node_modules",
+exclude = [
+    "**/node_modules",
     "**/__pycache__",
     "tmp",
     "src/ska.egg-info",
-    "src/ska/tests"
+    "src/ska/tests", 
+    "**/.*", 
+    ".venv",
 ]
 ignore = ["src/oldstuff"]
 defineConstant = { DEBUG = true }
@@ -163,7 +168,12 @@ addopts = [
    "--cov-append",
    "--capture=no",
 ]
-#testpaths = []
+testpaths = [
+    "src",
+    ".",
+    "**/*.rst",
+    "**/*.md",
+]
 pythonpath = [
     "src",
     "examples/simple",
@@ -174,6 +184,11 @@ norecursedirs = [
     "build",
     "dist",
 ]
+markers = [
+    "slow: mark a test that takes a long time to run.",
+    "documentation: mark test as a documentation test",
+]
+
 DJANGO_SETTINGS_MODULE = "settings.testing"
 
 [tool.coverage.run]

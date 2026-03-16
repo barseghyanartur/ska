@@ -1,86 +1,89 @@
 # Update version ONLY here
-VERSION := 1.11.1
+VERSION := 1.11.2
 SHELL := /bin/bash
 # Makefile for project
-VENV := ~/.virtualenvs/ska/bin/activate
+VENV := .venv/bin/activate
 UNAME_S := $(shell uname -s)
 
-# Build documentation using Sphinx and zip it
-build_docs:
-	source $(VENV) && sphinx-build -n -b text docs builddocs
-	source $(VENV) && sphinx-build -n -a -b html docs builddocs
+# ----------------------------------------------------------------------------
+# Documentation
+# ----------------------------------------------------------------------------
+
+build-docs:
+	uv run sphinx-build -n -b text docs builddocs
+	uv run sphinx-build -n -a -b html docs builddocs
 	cd builddocs && zip -r ../builddocs.zip . -x ".*" && cd ..
 
-rebuild_docs:
-	source $(VENV) && sphinx-apidoc . --full -o docs -H 'ska' -A 'Artur Barseghyan <artur.barseghyan@gmail.com>' -f -d 20
+rebuild-docs:
+	uv run sphinx-apidoc . --full -o docs -H 'ska' -A 'Artur Barseghyan <artur.barseghyan@gmail.com>' -f -d 20
 	cp docs/conf.py.distrib docs/conf.py
 	cp docs/index.rst.distrib docs/index.rst
 
-build_docs_epub:
+build-docs-epub:
 	$(MAKE) -C docs/ epub
 
-build_docs_pdf:
+build-docs-pdf:
 	$(MAKE) -C docs/ latexpdf
 
-auto_build_docs:
-	source $(VENV) && sphinx-autobuild docs docs/_build/html --port 5001
+auto-build-docs:
+	uv run sphinx-autobuild docs docs/_build/html --port 5001
 
-pre-commit:
+serve-docs:
+	uv run python -m http.server 5001 --directory builddocs/
+
+# ----------------------------------------------------------------------------
+# Pre-commit
+# ----------------------------------------------------------------------------
+
+pre-commit-install:
+	pre-commit install
+
+pre-commit: pre-commit-install
 	pre-commit run --all-files
 
+# ----------------------------------------------------------------------------
+# Linting
+# ----------------------------------------------------------------------------
+
 doc8:
-	source $(VENV) && doc8
+	uv run doc8
 
-# Run ruff on the codebase
 ruff:
-	source $(VENV) && ruff check .
+	uv run ruff check .
 
-# Serve the built docs on port 5001
-serve_docs:
-	source $(VENV) && cd builddocs && python -m http.server 5001
+mypy:
+	uv run mypy src/ska/
 
-# Install the project
-install:
-	source $(VENV) && pip install -e .[all]
+# ----------------------------------------------------------------------------
+# Installation
+# ----------------------------------------------------------------------------
+
+create-venv:
+	uv venv
+
+install: create-venv
+	uv sync --all-extras
 	mkdir -p examples/logs examples/db examples/static examples/tmp examples/media examples/media/foo-images examples/media/static
 
-test: clean
-	source $(VENV) && pytest -vrx -s
+# ----------------------------------------------------------------------------
+# Tests
+# ----------------------------------------------------------------------------
 
-test-all: test \
-django-test
+test: clean
+	uv run pytest -vrx -s
+
+test-all: test django-test
 
 django-test:
 	source $(VENV) && cd examples/django/ && pytest
 
-shell:
-	source $(VENV) && ipython
+test-ci: clean
+	uv run pytest -vrx -s
 
-django-shell:
-	source $(VENV) && python examples/simple/manage.py shell
+# ----------------------------------------------------------------------------
+# Development
+# ----------------------------------------------------------------------------
 
-django-make-messages:
-	source $(VENV) && cd src/ska/contrib/django/ska/ \
-		&& django-admin.py makemessages -l hy \
-		django-admin.py makemessages -l nl \
-		django-admin.py makemessages -l ru
-
-django-runserver:
-	source $(VENV) && python examples/simple/manage.py runserver 0.0.0.0:8000 --traceback -v 3
-
-django-make-migrations:
-	source $(VENV) && python examples/simple/manage.py makemigrations
-
-django-apply-migrations:
-	source $(VENV) && python examples/simple/manage.py migrate
-
-create-secrets:
-	source $(VENV) && detect-secrets scan > .secrets.baseline
-
-detect-secrets:
-	source $(VENV) && detect-secrets scan --baseline .secrets.baseline
-
-# Clean up generated files
 clean:
 	find . -type f -name "*.pyc" -exec rm -f {} \;
 	find . -type f -name "builddocs.zip" -exec rm -f {} \;
@@ -104,8 +107,10 @@ clean:
 	rm -rf src/ska.egg-info/
 	rm -rf examples/logs/
 
+shell:
+	source $(VENV) && ipython
+
 compile-requirements:
-	#source $(VENV) && uv pip compile --all-extras -o docs/requirements.txt pyproject.toml
 	source $(VENV) && uv pip compile pyproject.toml examples/requirements/common.in --all-extras -o examples/requirements/common.txt
 	source $(VENV) && uv pip compile pyproject.toml examples/requirements/debug.in --all-extras -o examples/requirements/debug.txt
 	source $(VENV) && uv pip compile pyproject.toml examples/requirements/deployment.in --all-extras -o examples/requirements/deployment.txt
@@ -120,7 +125,6 @@ compile-requirements:
 	source $(VENV) && uv pip compile pyproject.toml examples/requirements/testing.in --all-extras -o examples/requirements/testing.txt
 
 compile-requirements-upgrade:
-	#source $(VENV) && uv pip compile --all-extras -o docs/requirements.txt pyproject.toml --upgrade
 	source $(VENV) && uv pip compile pyproject.toml examples/requirements/common.in --all-extras -o examples/requirements/common.txt --upgrade
 	source $(VENV) && uv pip compile pyproject.toml examples/requirements/debug.in --all-extras -o examples/requirements/debug.txt --upgrade
 	source $(VENV) && uv pip compile pyproject.toml examples/requirements/deployment.in --all-extras -o examples/requirements/deployment.txt --upgrade
@@ -144,27 +148,97 @@ update-version:
 		sed -i 's/__version__ = "[0-9.]\+"/__version__ = "$(VERSION)"/' src/ska/__init__.py; \
 	fi
 
-make_pypi_long_description:
-	source $(VENV) && python setup.py --long-description | rst2html.py > builddocs/pypi.html
-	source $(VENV) && python setup.py --long-description | rst2html.py | cat
+make-pypi-long-description:
+	uv run python setup.py --long-description | rst2html.py > builddocs/pypi.html
+	uv run python setup.py --long-description | rst2html.py | cat
+
+# ----------------------------------------------------------------------------
+# Django
+# ----------------------------------------------------------------------------
+
+django-shell:
+	uv run python examples/simple/manage.py shell
+
+django-make-messages:
+	source $(VENV) && cd src/ska/contrib/django/ska/ \
+		&& django-admin.py makemessages -l hy \
+		django-admin.py makemessages -l nl \
+		django-admin.py makemessages -l ru
+
+django-runserver:
+	uv run python examples/simple/manage.py runserver 0.0.0.0:8000 --traceback -v 3
+
+django-make-migrations:
+	uv run python examples/simple/manage.py makemigrations
+
+django-apply-migrations:
+	uv run python examples/simple/manage.py migrate
+
+# ----------------------------------------------------------------------------
+# Security
+# ----------------------------------------------------------------------------
+
+create-secrets:
+	uv run detect-secrets scan > .secrets.baseline
+
+detect-secrets:
+	uv run detect-secrets scan --baseline .secrets.baseline
+
+# ----------------------------------------------------------------------------
+# Release
+# ----------------------------------------------------------------------------
 
 build:
-	source $(VENV) && python -m build .
+	uv run python -m build .
 
 check-build:
-	source $(VENV) && twine check dist/*
+	uv run twine check dist/*
 
 check-manifest:
-	source $(VENV) && check-manifest
+	uv run check-manifest
 
 release:
-	source $(VENV) && twine upload dist/* --verbose
+	uv run twine upload dist/* --verbose
 
 test-release:
-	source $(VENV) && twine upload --repository testpypi dist/*
+	uv run twine upload --repository testpypi dist/*
 
-mypy:
-	source $(VENV) && mypy src/ska/
+# ----------------------------------------------------------------------------
+# Docker
+# ----------------------------------------------------------------------------
+
+docker-build:
+	docker compose build
+
+# List all available environments in the Docker container
+docker-list-envs: docker-build
+	docker compose run --rm tox -l
+
+docker-test: docker-build
+	docker compose run --rm tox
+
+# Usage: make docker-test-env ENV=py312-django52
+docker-test-env: docker-build
+	@if [ -z "$(ENV)" ]; then \
+		echo "Usage: make docker-test-env ENV=py312-django52"; \
+		exit 1; \
+	fi
+	docker compose run --rm tox -e $(ENV)
+
+docker-shell: docker-build
+	docker compose run --rm --entrypoint bash tox
+
+# Usage: make shell-env ENV=py312
+docker-shell-env: build
+	@if [ -z "$(ENV)" ]; then \
+		echo "Usage: make docker-shell-env ENV=py312"; \
+		exit 1; \
+	fi
+	docker compose run --rm --entrypoint bash tox -e $(ENV)
+
+# ----------------------------------------------------------------------------
+# Other
+# ----------------------------------------------------------------------------
 
 %:
 	@:

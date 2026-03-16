@@ -31,3 +31,4 @@ monkeytype.sqlite3
 monkeytype.sqlite3
 tmp/
 docs/_build/
+uv.lock

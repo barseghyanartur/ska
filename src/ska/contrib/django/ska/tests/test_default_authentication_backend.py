@@ -19,7 +19,7 @@ __copyright__ = "2013-2023 Artur Barseghyan"
 __license__ = "GPL-2.0-only OR LGPL-2.1-or-later"
 __all__ = ("SkaAuthenticationBackendTest",)
 
-logger = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 
 OVERRIDE_SETTINGS_DB_STORE_SIGNATURES_KWARGS = {
@@ -102,7 +102,7 @@ class SkaAuthenticationBackendTest(TransactionTestCase):
         )
 
         self.assertIsNotNone(signed_login_url)
-        flow.append(("Signed login URL", signed_login_url))
+        LOGGER.debug(("Signed login URL", signed_login_url))
 
         # Testing view with signed URL
         self._client = Client()
@@ -110,7 +110,7 @@ class SkaAuthenticationBackendTest(TransactionTestCase):
         response_status_code = getattr(response, "status_code", None)
 
         self.assertIn(response_status_code, (first_response_code,))
-        flow.append(
+        LOGGER.debug(
             ("Response status code for signed URL", response_status_code)
         )
 
@@ -136,7 +136,7 @@ class SkaAuthenticationBackendTest(TransactionTestCase):
             response = self._client.get(signed_login_url, {})
             response_status_code = getattr(response, "status_code", None)
             self.assertIn(response_status_code, (second_response_code,))
-            flow.append(
+            LOGGER.debug(
                 (
                     "Response status code for signed URL",
                     response_status_code,
