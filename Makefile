@@ -1,5 +1,5 @@
 # Update version ONLY here
-VERSION := 1.11.1
+VERSION := 1.11.2
 SHELL := /bin/bash
 # Makefile for project
 VENV := .venv/bin/activate
