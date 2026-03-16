@@ -14,8 +14,8 @@ __copyright__ = "2013-2023 Artur Barseghyan"
 __license__ = "GPL-2.0-only OR LGPL-2.1-or-later"
 __all__ = (
     "get_provider_data",
-    "get_secret_key",
     "get_safe_redirect_target",
+    "get_secret_key",
     "purge_signature_data",
 )
 
