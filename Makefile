@@ -162,8 +162,8 @@ django-shell:
 django-make-messages:
 	source $(VENV) && cd src/ska/contrib/django/ska/ \
 		&& django-admin.py makemessages -l hy \
-		django-admin.py makemessages -l nl \
-		django-admin.py makemessages -l ru
+		&& django-admin.py makemessages -l nl \
+		&& django-admin.py makemessages -l ru
 
 django-runserver:
 	uv run python examples/simple/manage.py runserver 0.0.0.0:8000 --traceback -v 3
@@ -228,10 +228,10 @@ docker-test-env: docker-build
 docker-shell: docker-build
 	docker compose run --rm --entrypoint bash tox
 
-# Usage: make shell-env ENV=py312
-docker-shell-env: build
+# Usage: make docker-shell-env ENV=py312-django52
+docker-shell-env: docker-build
 	@if [ -z "$(ENV)" ]; then \
-		echo "Usage: make docker-shell-env ENV=py312"; \
+		echo "Usage: make docker-shell-env ENV=py312-django52"; \
 		exit 1; \
 	fi
 	docker compose run --rm --entrypoint bash tox -e $(ENV)
