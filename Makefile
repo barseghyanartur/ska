@@ -204,6 +204,39 @@ test-release:
 	uv run twine upload --repository testpypi dist/*
 
 # ----------------------------------------------------------------------------
+# Docker
+# ----------------------------------------------------------------------------
+
+docker-build:
+	docker compose build
+
+# List all available environments in the Docker container
+docker-list-envs: docker-build
+	docker compose run --rm tox -l
+
+docker-test: docker-build
+	docker compose run --rm tox
+
+# Usage: make docker-test-env ENV=py312-django52
+docker-test-env: docker-build
+	@if [ -z "$(ENV)" ]; then \
+		echo "Usage: make docker-test-env ENV=py312-django52"; \
+		exit 1; \
+	fi
+	docker compose run --rm tox -e $(ENV)
+
+docker-shell: docker-build
+	docker compose run --rm --entrypoint bash tox
+
+# Usage: make shell-env ENV=py312
+docker-shell-env: build
+	@if [ -z "$(ENV)" ]; then \
+		echo "Usage: make docker-shell-env ENV=py312"; \
+		exit 1; \
+	fi
+	docker compose run --rm --entrypoint bash tox -e $(ENV)
+
+# ----------------------------------------------------------------------------
 # Other
 # ----------------------------------------------------------------------------
 
