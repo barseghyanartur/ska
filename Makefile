@@ -234,7 +234,7 @@ docker-shell-env: docker-build
 		echo "Usage: make docker-shell-env ENV=py312-django52"; \
 		exit 1; \
 	fi
-	docker compose run --rm --entrypoint bash tox -e $(ENV)
+	docker compose run --rm -e TOXENV=$(ENV) --entrypoint bash tox
 
 # ----------------------------------------------------------------------------
 # Other
