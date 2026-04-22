@@ -76,6 +76,6 @@ docker-compose.yml     — Docker-based test environment
 2. **When fixing a bug**, write a regression test that reproduces the bug before implementing the fix.
 3. **When adding a feature**, identify the correct module (core signatures → `signatures/`, shortcuts → `shortcuts.py`, Django integration → `contrib/django/`), implement, add tests, and update `README.rst` if the public API changes.
 4. **When updating documentation**, ensure code examples match the actual API (see `.agents/skills/update-documentation/SKILL.md`).
-5. **Before opening a PR**, run `make docker-test` to verify all tests pass in the containerized environment.
-6. **Linting**: run `make ruff` and `make mypy` locally; CI catches failures.
+5. **Before considering a task done**, run `make docker-test` to verify all tests pass in the containerized environment. For indivudual tests, run `make test` or `uv run pytest` directly.
+6. **Linting**: run `make pre-commit` locally; CI catches failures.
 7. **Definition of Done**: lint → fix → test, with retries and explicit stop conditions (see `.agents/skills/dev-workflow/SKILL.md`).

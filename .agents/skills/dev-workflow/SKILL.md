@@ -26,21 +26,17 @@ Repeat until both lint and tests pass, or a stop condition is reached.
 
 ### Step 1 — Lint
 
-Run both linters:
+Run all linters:
 
 ```sh
-make ruff
-make mypy
+make pre-commit
 ```
 
 Collect all lint errors before proceeding to fix.
 
 ### Step 2 — Fix
 
-Fix all lint errors reported by `ruff` and `mypy`. Apply fixes in this order:
-1. Ruff auto-fixes (import sorting, formatting)
-2. Manual fixes for remaining ruff errors
-3. Type annotation fixes for mypy errors
+Fix all lint errors reported.
 
 ### Step 3 — Test
 
@@ -54,6 +50,18 @@ Or for a specific environment:
 
 ```sh
 make docker-test-env ENV=py312-django52
+```
+
+Or run tests outside Docker (for smaller tasks):
+
+```sh
+make test
+```
+
+Or run tests outside Docker using `uv run` directly (for smaller tasks):
+
+```sh
+uv run pytest
 ```
 
 ### Step 4 — Repeat
