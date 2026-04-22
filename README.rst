@@ -3,7 +3,7 @@ ska
 ===
 Lets you easily sign data, using symmetric-key algorithm encryption. Allows
 you to validate signed data and identify possible validation errors. Uses
-sha-(1, 224, 256, 385 and 512)/hmac for signature encryption. Allows to use
+sha-(1, 224, 256, 384 and 512)/hmac for signature encryption. Allows to use
 custom hash algorithms. Comes with shortcut functions for signing (and
 validating) dictionaries and URLs.
 
@@ -418,7 +418,7 @@ It's possible to generate a signed URL from command line using the
                           (GET) param holding the `auth_user` value
 
     -vup VALID_UNTIL_PARAM, --valid-until-param VALID_UNTIL_PARAM
-                          (GET) param holding the `auth_user` value
+                          (GET) param holding the `valid_until` value
 
 :Example:
 
